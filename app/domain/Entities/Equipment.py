@@ -2,14 +2,14 @@ from sqlalchemy import Column, Integer, String, Float, ForeignKey, Date, Boolean
 from sqlalchemy.orm import relationship, as_declarative
 from sqlalchemy.ext.declarative import declared_attr
 
-from Base import Base
+from infrastructure.db_conf import Base
 
 # Entity: Equipment
 class Equipment(Base):
     __tablename__ = 'equipment'
     
-    EquipmentID = Column(Integer, primary_key=True, autoincrement=True)
-    AreaID = Column(Integer, ForeignKey('area.AreaID'), nullable=False)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    AreaID = Column(Integer, ForeignKey('area.id'), nullable=False)
     AverageDailyConsumption = Column(Float, nullable=False)
     MaintenanceStatus = Column(String, nullable=False)
     EnergyEfficiency = Column(Float, nullable=False)

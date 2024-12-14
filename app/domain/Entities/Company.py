@@ -1,14 +1,13 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Date, Boolean, Table
 from sqlalchemy.orm import relationship, as_declarative
 from sqlalchemy.ext.declarative import declared_attr
-
-from Base import Base
+from infrastructure.db_conf import Base
 
 # Entity: Company
 class Company(Base):
     __tablename__ = 'company'
     
-    CompanyID = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     Limit = Column(Float, nullable=False)
     Increase = Column(Float, nullable=False)
     ExtraPercentage = Column(Float, nullable=False)
@@ -18,4 +17,4 @@ class Company(Base):
 
     areas = relationship('Area', back_populates='company')
     bills = relationship('Bill', back_populates='company')
-    people = relationship('Person', back_populates='company')
+    people = relationship('User', back_populates='company')

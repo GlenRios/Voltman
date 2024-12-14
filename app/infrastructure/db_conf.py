@@ -1,11 +1,12 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base, as_declarative
+from sqlalchemy.orm import sessionmaker, as_declarative,declarative_base
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Date, Boolean, Table
 
-# Crear motor de conexión
-DATABASE_URL = "sqlite:///mi_base_de_datos.db"
-engine = create_engine(DATABASE_URL, echo=True)
+DATABASE_URL = "sqlite:///./test.db" 
 
-# Base para los modelos
+engine = create_engine(DATABASE_URL, echo=True)  # `echo=True` muestra las consultas SQL
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
 @as_declarative()
 class Base:
 
@@ -24,8 +25,16 @@ class Base:
     def __repr__(self):
         return self.__str__()
     
+        # Association Table: Group Permission
+    # group_permission = Table(
+    #     'group_permission', Base.metadata,
+    #     Column('GroupID', Integer, ForeignKey('group.id'), primary_key=True),
+    #     Column('PermissionID', Integer, ForeignKey('permission.id'), primary_key=True)
+    # )
+    
 
-# Crear sesión
-SessionLocal = sessionmaker(bind=engine)
 
-Base.metadata.create_all(bind=engine)
+
+
+
+
