@@ -16,6 +16,6 @@ class UserRepo(BaseRepo):
     def _tojson(self, user:User):
         company_repo=CompanyRepo(self.db)
         company_name=company_repo.get(user.CompanyID).Name
-        return {"Username":user.Username, "Password":user.Password, "Company":company_name,"Type":user.GroupID}
+        return {"id":user.id, "Username":user.Username, "Password":user.Password, "Company":company_name,"Type":user.GroupID}
         
         
