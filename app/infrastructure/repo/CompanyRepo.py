@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 from infrastructure.repo.BaseRepo import BaseRepo
 
 class CompanyRepo(BaseRepo):
-    super().__init__(Company)
+    def __init__(self):
+        super().__init__(Company)
     def __init__(self, db: Session):
         self.db = db
     

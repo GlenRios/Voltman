@@ -15,37 +15,38 @@ import os
 from tests.tester_db import Tester
 from controllers import get_users
 
-# # Ruta al archivo de la base de datos
-# db_file = "app/tests/test.db"
+# Ruta al archivo de la base de datos
+db_file = "app/tests/test.db"
 
-# # Verificar si el archivo existe y eliminarlo
-# if os.path.exists(db_file):
-#     os.remove(db_file)
+# Verificar si el archivo existe y eliminarlo
+if os.path.exists(db_file):
+    os.remove(db_file)
 
-# # Crear todas las tablas definidas en los modelos
-# Base.metadata.create_all(bind=engine)
+# Crear todas las tablas definidas en los modelos
+Base.metadata.create_all(bind=engine)
 
-# def init_Groups():
-#     group1= Group(Name='Analyst')
-#     group2= Group(Name='Manacher')
-#     group3= Group(Name='Admin')
-#     db.add(group1)
-#     db.add(group2)
-#     db.add(group3)
-#     db.commit()
+def init_Groups():
+    group1= Group(Name='Analyst')
+    group2= Group(Name='Manacher')
+    group3= Group(Name='Admin')
+    db.add(group1)
+    db.add(group2)
+    db.add(group3)
+    db.commit()
     
 db=SessionLocal()
 
-# init_Groups()
-# user_repo=UserRepo(db)
-# company_repo=CompanyRepo(db)
+init_Groups()
+user_repo=UserRepo(db)
+company_repo=CompanyRepo(db)
 
-# company_repo.post(20,'Type1','Company1','Address1')
+values={'Limit':20,'Name':'Company1', 'Type':'Type1', 'Address':'Address1','Increase':20,'ExtraPercentage':20}
+company_repo.post(values)
 
-# tester= Tester()
-# users=tester.create_users(20)
+tester= Tester()
+users=tester.create_users(20)
 
-# for item in users:
-#     user_repo.post(item)
+for item in users:
+    user_repo.post(item)
 
 

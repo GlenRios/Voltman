@@ -2,7 +2,8 @@ from domain.Entities.Area import Area
 from sqlalchemy.orm import Session
 from infrastructure.repo.BaseRepo import BaseRepo
 class AreaRepo():
-    super().__init__(Area)
+    def __init__(self):
+        super().__init__(Area)
     def __init__(self, db: Session):
         self.db = db
     
