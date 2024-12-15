@@ -22,7 +22,7 @@ def add_user(user):
     values['CompanyID']=company_id
     values['GroupID']=user['Type']
     user_repo = UserRepo(db)
-    user=user_repo.post(values)
+    user=user_repo.post(values)    
     return user_repo._tojson(user)
 
 def modified_user(user):

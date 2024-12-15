@@ -7,7 +7,7 @@ class User(Base):
     __tablename__ = 'user'
     
     id = Column(Integer, primary_key=True, autoincrement=True)
-    Username = Column(String, nullable=False)
+    Username = Column(String, nullable=False, unique=True)
     Password = Column(String, nullable=False)
     CompanyID = Column(Integer, ForeignKey('company.id'), nullable=False)
     GroupID = Column(Integer, ForeignKey('group.id'), nullable=False)
