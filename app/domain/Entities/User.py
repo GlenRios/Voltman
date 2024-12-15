@@ -14,4 +14,4 @@ class User(Base):
 
     company = relationship('Company', back_populates='people')
     group = relationship('Group', back_populates='people')
-    ##token = relationship('Token', uselist=False, back_populates="people")
+    #token = relationship('Token', uselist=False, back_populates="people")

@@ -16,8 +16,8 @@ class UserRepo:
         #given an id returns the user with that id
         return self.db.query(User).filter(User.id==id).first()
     
-    def get(self, name:str)->User:
-        return (self.db.query(User).filter(User.Username==name).first()).User
+    def get_byname(self, name:str)->User:
+        return (self.db.query(User).filter(User.Username==name).first())
 
     def get_all(self, companyID)->list[User]:
         #given a company returns all its users
@@ -41,3 +41,6 @@ class UserRepo:
             self.db.refresh(user)
             return user
         return None
+    
+    def _tojson(self,user:User):
+        return {'nombre':user.Username, 'tipo':user.GroupID, 'sucursal':user.CompanyID, 'contraseña':user.Password}
