@@ -13,7 +13,6 @@ from domain.Entities.Token import Token
 from infrastructure.db_conf import SessionLocal
 import os
 from tests.tester_db import Tester
-from controllers import get_users
 
 # Ruta al archivo de la base de datos
 db_file = "app/tests/test.db"
@@ -48,5 +47,8 @@ users=tester.create_users(20)
 
 for item in users:
     user_repo.post(item)
+
+for item in user_repo.get_all(1):
+    print(item)    
 
 

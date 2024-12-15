@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session
 from infrastructure.repo.CompanyRepo import CompanyRepo
 from infrastructure.repo.BaseRepo import BaseRepo
 class UserRepo(BaseRepo):
-    def __init__(self):
-        super().__init__(User)
+    def __init__(self,db):
+        super().__init__(db, User)
     
     def get_by_username(self, name:str)->User:
         return (self.db.query(User).filter(User.Username==name).first())

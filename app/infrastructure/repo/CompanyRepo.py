@@ -3,10 +3,8 @@ from sqlalchemy.orm import Session
 from infrastructure.repo.BaseRepo import BaseRepo
 
 class CompanyRepo(BaseRepo):
-    def __init__(self):
-        super().__init__(Company)
-    def __init__(self, db: Session):
-        self.db = db
+    def __init__(self,db):
+        super().__init__(db, Company)
     
     def get_byName(self, name:str)->Company:
         return (self.db.query(Company).filter(Company.Name==name).first())
