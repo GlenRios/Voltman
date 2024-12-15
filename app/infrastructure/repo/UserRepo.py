@@ -1,46 +1,21 @@
 from domain.Entities.User import User
 from sqlalchemy.orm import Session
-class UserRepo:
+from infrastructure.repo.CompanyRepo import CompanyRepo
+from infrastructure.repo.BaseRepo import BaseRepo
+class UserRepo(BaseRepo):
     def __init__(self, db: Session):
         self.db = db
-    def post(self, values:dict)->User:
-        new_user= User(Username=' ', Password=' ',CompanyID=1,GroupID=1)
-        for key, value in values.items():
-            setattr(new_user, key, value)
-        self.db.add(new_user)
-        self.db.commit()
-        self.db.refresh(new_user)
-        return new_user
-        
-    def get(self, id:int)->User:
-        #given an id returns the user with that id
-        return self.db.query(User).filter(User.id==id).first()
     
-    def get_byname(self, name:str)->User:
+    def get_by_username(self, name:str)->User:
         return (self.db.query(User).filter(User.Username==name).first())
 
     def get_all(self, companyID)->list[User]:
         #given a company returns all its users
         return self.db.query(User).filter(User.CompanyID==companyID).all()
     
-    def delete(self, id:int)-> bool:
-        #given an id of an user delete him from the bd
-        user = self.get(id)
-        if user:
-            self.db.delete(User)
-            self.db.commit()
-            return True
-        return False
-    
-    def put(self, id:int ,values:dict)-> User:
-        user=self.get(id)
-        if user:
-            for key, value in values.items():
-                setattr(user, key, value)
-            self.db.commit()
-            self.db.refresh(user)
-            return user
-        return None
-    
-    def _tojson(self,user:User):
-        return {'nombre':user.Username, 'tipo':user.GroupID, 'sucursal':user.CompanyID, 'contraseña':user.Password}
+    def _tojson(self, user:User):
+        company_repo=CompanyRepo(self.db)
+        company_name=company_repo.get(user.CompanyID).Name
+        return {"name":user.Username, "password":user.Password, "branch":company_name,"type":user.GroupID}
+        
+        

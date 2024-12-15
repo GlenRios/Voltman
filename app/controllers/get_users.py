@@ -9,3 +9,4 @@ def get_users(user_id:int):
     for item in user_repo.get_all(company_id):
         users.append((user_repo._tojson(item)))
     return users    
+
