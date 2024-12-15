@@ -8,7 +8,7 @@ class BaseRepo:
 
     def validate(self, data: dict):
         columns = {
-            column.name for column in self.Model.__table__.colums if not column.autoincrement
+            column.name for column in self.Model.__table__.columns if not column.autoincrement
         }
         if set(data.keys()).issubset(columns):
             return True

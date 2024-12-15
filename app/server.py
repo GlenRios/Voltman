@@ -24,22 +24,26 @@ def get_users():
 def add_user():
     new_user = request.json
     new_user=op.add_user(new_user)
-    return jsonify(new_user), 201
+    route=201
+    if new_user.__contains__("error"):
+        route= 300
+    return jsonify(new_user), route
 
 # Ruta para actualizar un usuario existente
 @app.route("/api/users/<int:user_id>", methods=["PUT"])
 def update_user(user_id):
     updated_user = request.json
-    updated_user=op.modified_user(updated_user)
-    if updated_user: 
-        return jsonify(updated_user)
-    return jsonify({"error": "User not found"}), 404
+    updated_user=op.modified_user(updated_user, user_id)
+    route=200
+    if not updated_user.__contains__("error"): 
+        route=404
+    return jsonify(updated_user) , route
 
 # Ruta para eliminar un usuario
 @app.route("/api/users/<int:user_id>", methods=["DELETE"])
 def delete_user(user_id):
-    global users
-    users = [user for user in users if user["id"] != user_id]
-    return jsonify({"message": "Usuario eliminado"}), 200
+    if op.delete_user(user_id):
+        return jsonify({"message": "Usuario eliminado"}), 200
+    return jsonify({"error": "User not found"}), 404
 
 app.run(port=5050)

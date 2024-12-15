@@ -1,5 +1,4 @@
 from domain.Entities.User import User
-from sqlalchemy.orm import Session
 from infrastructure.repo.CompanyRepo import CompanyRepo
 from infrastructure.repo.BaseRepo import BaseRepo
 class UserRepo(BaseRepo):

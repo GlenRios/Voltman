@@ -3,16 +3,18 @@ from infrastructure.repo.CompanyRepo import CompanyRepo
 from main import db 
 from domain.Entities.User import User
 
-def get_users(user_id:int):
+def get_users(user_id: int)->list[dict]:
     user_repo=UserRepo(db)
-    user=user_repo.get(user_id)
-    company_id=user.CompanyID
+    if not user_repo.get(user_id):
+        return {"error": "User not found"}
+    user= user_repo.get(user_id)
+    company_id= user.CompanyID
     users=[]
     for item in user_repo.get_all(company_id):
         users.append((user_repo._tojson(item)))
     return users    
 
-def add_user(user):  
+def add_user(user)->dict:  
     values={}
     values['Username']=user['Username']
     values['Password']=user['Password']
@@ -22,10 +24,12 @@ def add_user(user):
     values['CompanyID']=company_id
     values['GroupID']=user['Type']
     user_repo = UserRepo(db)
+    if user_repo.get_by_username(values["Username"]):
+        return {"error":"Username "+values["Username"]+" is already in use"}
     user=user_repo.post(values)    
     return user_repo._tojson(user)
 
-def modified_user(user):
+def modified_user(user, user_id)->dict:
     values={}
     values['Username']=user['Username']
     values['Password']=user['Password']
@@ -35,10 +39,18 @@ def modified_user(user):
     values['CompanyID']=company_id
     values['GroupID']=user['Type']
     user_repo=UserRepo(db)
-    user=user_repo.put(user.id, values)
-    if user:
-        return user_repo._tojson(user)
-    return None
+    if user_repo.get_by_username(values["Username"]).id !=user_id:
+        return {"error":"Username "+values["Username"]+" is already in use"}   
+    user=user_repo.put(user_id, values)
+    return user_repo._tojson(user)
+
+
+def delete_user(user_id):
+    user_repo=UserRepo(db)
+    return user_repo.delete(user_id)
+    
+
+
     
 
 
