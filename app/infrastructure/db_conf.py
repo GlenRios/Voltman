@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, as_declarative,declarative_base
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Date, Boolean, Table
 
-DATABASE_URL = "sqlite:///./test.db" 
+DATABASE_URL = "sqlite:///app/tests/test.db" 
 
 engine = create_engine(DATABASE_URL, echo=True)  # `echo=True` muestra las consultas SQL
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

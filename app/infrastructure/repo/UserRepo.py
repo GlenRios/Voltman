@@ -3,8 +3,10 @@ from sqlalchemy.orm import Session
 class UserRepo:
     def __init__(self, db: Session):
         self.db = db
-    def post(self, username:str, password:str, CompanyID: str, GroupID: int)->User:
-        new_user= User(Username=username, Password=password,CompanyID=CompanyID, GroupID=GroupID)
+    def post(self, values:dict)->User:
+        new_user= User(Username=' ', Password=' ',CompanyID=1,GroupID=1)
+        for key, value in values.items():
+            setattr(new_user, key, value)
         self.db.add(new_user)
         self.db.commit()
         self.db.refresh(new_user)
@@ -34,7 +36,7 @@ class UserRepo:
         user=self.get(id)
         if user:
             for key, value in values.items():
-                setattr(User, key, value)
+                setattr(user, key, value)
             self.db.commit()
             self.db.refresh(user)
             return user
