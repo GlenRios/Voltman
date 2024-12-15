@@ -23,7 +23,7 @@ def get_users():
 @app.route("/api/users", methods=["POST"])
 def add_user():
     new_user = request.json
-    new_user=op.add_user
+    new_user=op.add_user()
     return jsonify(new_user), 201
 
 # Ruta para actualizar un usuario existente

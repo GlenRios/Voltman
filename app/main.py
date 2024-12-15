@@ -47,8 +47,6 @@ users=tester.create_users(20)
 
 for item in users:
     user_repo.post(item)
-
-for item in user_repo.get_all(1):
-    print(item)    
+ 
 
 
