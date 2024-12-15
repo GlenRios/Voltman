@@ -3,8 +3,7 @@ from sqlalchemy.orm import Session
 from infrastructure.repo.CompanyRepo import CompanyRepo
 from infrastructure.repo.BaseRepo import BaseRepo
 class UserRepo(BaseRepo):
-    def __init__(self, db: Session):
-        self.db = db
+    super().__init__(User)
     
     def get_by_username(self, name:str)->User:
         return (self.db.query(User).filter(User.Username==name).first())
@@ -16,6 +15,6 @@ class UserRepo(BaseRepo):
     def _tojson(self, user:User):
         company_repo=CompanyRepo(self.db)
         company_name=company_repo.get(user.CompanyID).Name
-        return {"name":user.Username, "password":user.Password, "branch":company_name,"type":user.GroupID}
+        return {"Username":user.Username, "Password":user.Password, "Company":company_name,"Type":user.GroupID}
         
         

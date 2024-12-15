@@ -2,29 +2,28 @@
 from functools import wraps
 from flask import Blueprint, Flask, jsonify, request, make_response
 from flask_cors import CORS
-from controllers import get_users as gu
+from controllers import User_Op as op
 
 app = Flask(__name__)
 CORS(app)
 api = Blueprint("api", __name__, url_prefix="/api")
 
-@app.route("/")
-def index():
-    print("todo se envio bien")
-    return "ok"
+# @app.route("/")
+# def index():
+#     print("todo se envio bien")
+#     return "ok"
 
 # Ruta para obtener la lista de usuarios
 @app.route("/api/users", methods=["GET"])
 def get_users():
-    users=gu.get_users(1)
+    users=op.get_users(1)
     return jsonify(users),200
 
 # Ruta para agregar un nuevo usuario
 @app.route("/api/users", methods=["POST"])
 def add_user():
     new_user = request.json
-    new_user["id"] = users[-1]["id"] + 1 if users else 1
-    users.append(new_user)
+    new_user=op.add_user
     return jsonify(new_user), 201
 
 # Ruta para actualizar un usuario existente

@@ -2,9 +2,17 @@ from infrastructure.db_conf import Base
 from sqlalchemy.orm import Session
 
 class BaseRepo:
-    def __init__(self, db: Session, Model:Base):
+    def __init__(self, db: Session, Model):
         self.db = db
         self.Model=Model
+
+    def validate(self, data: dict):
+        columns = {
+            column.name for column in self.Model.__table__.colums if not column.autoincrement
+        }
+        if set(data.keys()).issubset(columns):
+            return True
+        return False
 
     def post(self, values: dict):
         #given an object insert it in the bd
