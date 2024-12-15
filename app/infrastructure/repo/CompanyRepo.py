@@ -5,7 +5,7 @@ from infrastructure.repo.BaseRepo import BaseRepo
 class CompanyRepo(BaseRepo):
     def __init__(self,db):
         super().__init__(db, Company)
-    
+
     def get_byName(self, name:str)->Company:
         return (self.db.query(Company).filter(Company.Name==name).first())
 

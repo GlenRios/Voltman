@@ -30,11 +30,10 @@ def add_user():
 @app.route("/api/users/<int:user_id>", methods=["PUT"])
 def update_user(user_id):
     updated_user = request.json
-    for user in users:
-        if user["id"] == user_id:
-            user.update(updated_user)
-            return jsonify(user)
-    return jsonify({"error": "Usuario no encontrado"}), 404
+    updated_user=op.modified_user(updated_user)
+    if updated_user: 
+        return jsonify(updated_user)
+    return jsonify({"error": "User not found"}), 404
 
 # Ruta para eliminar un usuario
 @app.route("/api/users/<int:user_id>", methods=["DELETE"])

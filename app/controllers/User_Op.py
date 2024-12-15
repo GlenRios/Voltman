@@ -22,6 +22,24 @@ def add_user(user):
     values['CompanyID']=company_id
     values['GroupID']=user['Type']
     user_repo = UserRepo(db)
-    return user_repo.post(values)
+    user=user_repo.post(values)
+    return user_repo._tojson(user)
+
+def modified_user(user):
+    values={}
+    values['Username']=user['Username']
+    values['Password']=user['Password']
+    comp_repo=CompanyRepo(db)
+    company=comp_repo.get_byName(user['Company'])
+    company_id=company.id
+    values['CompanyID']=company_id
+    values['GroupID']=user['Type']
+    user_repo=UserRepo(db)
+    user=user_repo.put(user.id, values)
+    if user:
+        return user_repo._tojson(user)
+    return None
+    
+
 
     
