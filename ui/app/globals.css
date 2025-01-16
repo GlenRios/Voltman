@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos globales personalizados */
+body {
+  @apply bg-gray-100 text-gray-800; /* Fondo gris claro y texto oscuro */
+  font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3 {
+  @apply font-bold;
+}
+
+/* Clase personalizada para botones */
+.btn-primary {
+  @apply bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded;
+}
+
+.btn-secondary {
+  @apply bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded;
+}
+
+.a {
+  @apply text-gray-200 dark:hover:text-white dark:text-gray-400
+}
+.panel{
+  @apply bg-slate-200 dark:bg-gray-800 shadow-2xl rounded-lg overflow-hidden border-4 border-transparent /*dark:border-zinc-700*/
+}
+.panel-btn{
+  @apply flex flex-row lg:flex-col items-center w-full lg:w-28 p-1 lg:h-screen panel
+}
+.page{
+  @apply flex flex-col lg:flex-row dark:bg-slate-600
+}
