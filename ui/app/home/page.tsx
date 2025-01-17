@@ -54,7 +54,6 @@ export default function Home() {
             console.error(error);
         }
     };
-
     const users = async () => {
         try {
             const token = getToken();
@@ -99,18 +98,17 @@ export default function Home() {
     };
     const exit = async () => {
         try {
-            const token = getToken();
-            const response = await fetch("http://localhost:5050/api/user/logout", {
-                method: "POST",
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            if (!response.ok) {
-                // const errorData = await response.json();
-                throw new Error('Error desconocido');
+            async function logout() {
+                const response = await fetch('http://localhost:5050/api/user/logout', {
+                    method: 'POST',
+                    credentials: 'include', // Envía las cookies necesarias
+                });
+                if (response.ok) {
+                    router.push("/");
+                } else {
+                    throw new Error('Error al cerrar sesión');
+                }
             }
-            removeToken();
-            router.back();
-            return;
         }
         catch (error) {
             console.error(error);

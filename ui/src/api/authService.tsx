@@ -1,7 +1,8 @@
 'use client';
 import Cookies from "js-cookie";
+import { setToken } from "../utilts/handleToken";
 
-export async function login(Username: string, Password: string):Promise<boolean>{
+export async function login(Username: string, Password: string): Promise<boolean> {
     try {
         const response = await fetch("http://localhost:5050/api/user/login", {
             method: "POST",
@@ -17,13 +18,7 @@ export async function login(Username: string, Password: string):Promise<boolean>
             const errorMessage = `Error ${response.status}: ${data.error}`;
             throw new Error(errorMessage || "Undefined Error");
         }
-
-        Cookies.set("token", data.token, {
-            expires: 1, // Duración de 1 día
-            secure: process.env.NODE_ENV === "production", // HTTPS en producción
-            sameSite: "Strict", // Protección contra CSRF
-        });
-
+        setToken(data.token);
         return true;
 
     } catch (error) {
@@ -33,6 +28,6 @@ export async function login(Username: string, Password: string):Promise<boolean>
     }
 }
 
-export async function logout():Promise<boolean>{
+export async function logout(): Promise<boolean> {
     return true
 }

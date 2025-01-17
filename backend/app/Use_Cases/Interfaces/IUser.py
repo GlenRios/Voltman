@@ -28,9 +28,16 @@ class IUser:
         user= self.repo.put(id, values, ['Username'])
         return self.repo.to_User(user).as_dict()
     
+    def get_all(self):
+        users= self.repo.get_all()
+        return self.convert(users)
+    
     # given a username return the user with that username
     def get_by_username(self, username: str):
-        return self.repo.to_User(self.repo.get_by_username(username))  
+        user= self.repo.get_by_username(username)
+        if user:
+            return self.repo.to_User(user)  
+        raise CustomError('Incorrect username or password', 404)
     
 
     def get_id(self, username: str):
@@ -39,12 +46,12 @@ class IUser:
     # this method is to check that a user is in the database
     def find_out(self, username: str, password: str):
         user= self.get_by_username(username)
-        if password!= user['Password']:
-            raise CustomError("Incorrect username or password")
-        return None
+        if password!= user.Password:
+            raise CustomError("Incorrect username or password", 404)
+        return True
     
     # given a list of UserModel converts it to User Entity
-    def convert(self, users)-> list[User]:
+    def convert(self, users):
         list=[]
         for user in users:
             list.append(self.repo.to_User(user).as_dict())

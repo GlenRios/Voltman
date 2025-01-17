@@ -13,7 +13,7 @@ class UserRepo(BaseRepo):
         return (self.db.query(UserModel).filter(UserModel.Username==name).first())
 
     def to_User(self, user: UserModel)-> User:
-        company= user.company
+        company= self.company_repo.get(user.CompanyID)
         group= user.group
         return User(user.id, 
                     user.Password,
@@ -21,6 +21,9 @@ class UserRepo(BaseRepo):
                     company.Name, 
                     group.Name)
     
+    def get_all(self):
+        return self.db.query(UserModel).all()
+
     # given the initial information provided by the UI, maps these values ​​to the model values 
     def to_model(self, values: dict)-> dict:
         company_id= self.company_repo.get_byName(values['Company']).id

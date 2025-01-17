@@ -32,10 +32,13 @@ export default function Page() {
         try {
             const token = getToken();
             const response = await fetch("http://localhost:5050/api/user", {
-                headers: { Authorization: `Bearer ${token}` },
+                method: 'GET',
+                headers: { 'Authorization': `Bearer ${token}`, 
+                           'Content-Type': 'application/json' }
             });
-            if (!response.ok) throw new Error();
             const data = await response.json();
+            if (!response.ok) throw new Error(data.error);
+            
             // console.log('Usuarios cargados:', data);
             setUsers(data);
         } catch (Error) {
@@ -44,7 +47,7 @@ export default function Page() {
     };
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!Username || !Company || !Type || !Password || !id) {
+        if (!Username || !Company || !Type || !Password ) {
             showNotification('Please complete all fields.', setNotification);
             return;
         }
@@ -52,15 +55,15 @@ export default function Page() {
             const url = isEdit ? `http://127.0.0.1:5050/api/user/${id}` : 'http://127.0.0.1:5050/api/user';
             const response = await fetch(url, {
                 method: isEdit ? 'PUT' : 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json' },
                 body: JSON.stringify(isEdit ? { id, Username, Company, Type, Password, NewPassword }
                     : { id, Username, Company, Type, Password })
             }
             );
-            if (!response.ok) throw new Error(isEdit ? 'Error editing user.' : 'Error adding user.');
+            const user = await response.json();
+            if (!response.ok) throw new Error(user.error);
             // throw new Error(`Error al guardar usuario: ${response.statusText} (Código: ${response.status})`);
-            else {
-                const user = await response.json();
+            else {  
                 if (isEdit) {
                     setUsers(users.map((u) => (u.id === id ? user : u)));
                 } else {

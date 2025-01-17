@@ -7,6 +7,9 @@ def login(values: dict):
     return Iuser.find_out(username, password)
     
 def get(username: str):
+    if username=='SuperAdmin':
+        users= Iuser.get_all()
+        return users
     user= Iuser.get_by_username(username)
     name_company= user.Company
     users= Icompany.get_users(name_company)
@@ -19,7 +22,9 @@ def post(values: dict):
 def put(values: dict, id: int ):
     user = Iuser.get(id)
     if user['Password']== values['Password']:
-        user['Password']= values['NewPassword']
+        user['Username']= values['Username']
+        if values['NewPassword']:
+            user['Password']= values['NewPassword'] 
         return Iuser.update(id, user)
     raise CustomError('Incorrect Password, cant update the user because password is not correct', 500)
 
