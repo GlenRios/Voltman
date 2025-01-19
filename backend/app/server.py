@@ -1,14 +1,29 @@
+import base64
+import importlib
 from functools import wraps
 from flask import Blueprint, Flask, jsonify, request, make_response
 from flask_cors import CORS
 from controllers import user_controller as uc
 from Configurations.CustomError import CustomError
+from Configurations import BASE_DIR
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 import jwt
+import sys
+
+def import_from_path(module_name, file_path):
+    """Import a module given its name and file path."""
+    spec = importlib.util.spec_from_file_location(module_name, file_path)
+    module = importlib.util.module_from_spec(spec)
+    # sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    breakpoint()
+    return module
 
 app = Flask(__name__)
 
 SECRET_KEY=  "hsgsy(add$5231524#bdsjfkelgro*ght*73@gwqt4qthd+pjk^df#"
+
+PLUGIN_FOLDER = "plugins"
 
 app.config["JWT_SECRET_KEY"] = SECRET_KEY
 app.config['JWT_TOKEN_LOCATION'] = ['headers']  # Indica que los tokens se almacenarán en cookies
@@ -71,6 +86,69 @@ def delete_user(user_id):
 def decode_jwt(token):
     decoded_data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
     return decoded_data
+
+
+# helper functions for the plugin functionality
+def get_plugins():
+    """
+    Yield all the available plugins.
+    Notice it's a generator.
+    """
+    for plugin in (BASE_DIR / PLUGIN_FOLDER).glob("*.py"):
+        if plugin.name.endswith("__init__.py"):
+            continue
+        yield plugin.name.split(".")[0]
+
+def export_data(name, data):
+    """
+    1. Dynamically load the required libraries for plugins (must have been installed beforehand)
+    2. Send the data to the controller (usually HTML)
+    3. Clean up by de-importing the libraries (probably not required)
+    """
+    env_path = BASE_DIR / PLUGIN_FOLDER / "env"
+
+    python = f"python{sys.version_info.major}.{sys.version_info.minor}"
+
+    lib = env_path / "lib" / python  / "site-packages"
+    lib64 = env_path / "lib64" / python / "site-packages"
+    plugin_dir = BASE_DIR
+
+    sys.path.extend((
+        str(lib),
+        str(lib64),
+        str(plugin_dir),
+    ))
+
+    plugin = import_from_path(name, plugin_dir / "plugins" / f"{name}.py")
+
+    controller = plugin.Controller
+
+    result = controller.export(data)
+
+    sys.path.remove(str(lib))
+    sys.path.remove(str(lib64))
+    sys.path.remove(str(plugin_dir))
+
+    return result
+
+@app.route("/api/plugin/")
+def plugin_list():
+    return list(get_plugins())
+
+@app.route("/api/plugin/<name>/", methods=["POST",])
+def plugin_export(name):
+    """
+    Wrapper function that, given a plugin and 
+    """
+    kwargs = request.json
+
+    data = kwargs.get("data", "<html></html>")
+
+    result = export_data(name, data)
+
+    return {
+        "data": base64.b64encode(result).decode("utf8"),
+    }
     
 app.run(port= 5050,debug=True)
 
