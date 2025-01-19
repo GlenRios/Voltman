@@ -1,6 +1,6 @@
 'use client';
 import Cookies from "js-cookie";
-import { setToken } from "../utilts/handleToken";
+import { setToken } from "../hooks/handleToken";
 
 export async function login(Username: string, Password: string): Promise<boolean> {
     try {

@@ -1,26 +1,18 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { getToken, removeToken } from '@/src/utilts/handleToken';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { FaTrash } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
+import { goRestrictedRoute } from '@/src/hooks/handleRouts';
+import Notification from '@/src/models/Notification';
+import logo from '@/src/components/logo';
 
 export default function Home() {
 
-    interface Notification {
-        id: number;
-        title: string;
-        message: string;
-    }
-
-
     //Variables
-    const [receiveNotifications, setReceiveNotifications] = useState(true);
     const router = useRouter();
 
     const notificationsData: Notification[] = [
-        { id: 1, title: 'Consumo Alto', message: 'El consumo eléctrico superó el límite establecido.' },
+        { id: 1, title: 'Consumo Alto ', message: 'El consumo eléctrico superó el límite establecido.' },
         { id: 2, title: 'Mantenimiento', message: 'Programado mantenimiento para el próximo lunes.' },
         { id: 3, title: 'Nuevo Usuario', message: 'Se ha registrado un nuevo usuario en el sistema.' },
     ];
@@ -35,88 +27,18 @@ export default function Home() {
         setSelectedNotification(null);
     };
 
-    //Methods:
-    const branches = async () => {
+    const goRoute = async (route: string) => {
         try {
-            const token = getToken();
-            const response = await fetch("http://localhost:5050/api/router/branches", {
-                method: "POST",
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Error desconocido');
-            }
-            router.push("/branches");
-            return;
-        }
-        catch (error) {
-            console.error(error);
-        }
-    };
-    const users = async () => {
-        try {
-            const token = getToken();
-            const response = await fetch("http://localhost:5050/api/router/users", {
-                method: "GET",
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            // if (!response.ok) {
-            //     const errorData = await response.json();
-            //     throw new Error(errorData.error || 'Error desconocido');
-            // }
-
-            router.push("/home/users");
-        } catch (error) {
-            console.error(error);
-        }
-    };
-    const register = async () => {
-        try {
-            const token = getToken();
-            const response = await fetch("http://localhost:5050/api/router/register", {
-                method: "POST",
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Error desconocido');
-            }
-            router.push("/branches");
-            return;
-        }
-        catch (error) {
-            console.error(error);
-        }
-    };
-    const consult = async () => {
-        router.push("/home/consult");
-    };
-    const exit = async () => {
-        try {
-            async function logout() {
-                const response = await fetch('http://localhost:5050/api/user/logout', {
-                    method: 'POST',
-                    credentials: 'include', // Envía las cookies necesarias
-                });
-                if (response.ok) {
-                    router.push("/");
-                } else {
-                    throw new Error('Error al cerrar sesión');
-                }
-            }
+            goRestrictedRoute(router, route);
         }
         catch (error) {
             console.error(error);
         }
     };
 
-
-
+    function handleDeleteNotification(id: number): void {
+        throw new Error('Function not implemented.');
+    }
 
     return (
         <div className="flex h-screen flex-col lg:flex-row">
@@ -134,45 +56,43 @@ export default function Home() {
                                 className="mb-2 flex items-center justify-between cursor-pointer hover:bg-gray-700 p-2 rounded"
                             >
                                 <span onClick={() => openNotification(notification)}>🔔 {notification.title}</span>
-                                {/* <button onClick={() => handleDeleteNotification(notification.id)}>
+                                <button onClick={() => handleDeleteNotification(notification.id)}>
                                     <FaTrash className="text-red-500 hover:text-red-700" />
-                                </button> */}
+                                </button>
                             </li>
                         ))}
                     </ul>
                 </div>
             </div>}
+
             {/* Contenido principal */}
             <div className="flex-1 flex flex-col dark:bg-gray-900">
                 {/* Botón para abrir la barra lateral */}
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="fixed top-8 right-8 z-50 text-3xl"
+                    className="flex flex-col fixed top-8 right-8 z-50 items-center justify-center group"
                 >
                     <img
                         src="/images/alert.png"
                         alt={"alert".charAt(0).toUpperCase() + "alert".slice(1)}
-                        className="w-10 h-10 object-contain"
+                        className="w-10 h-10 object-contain transition-transform duration-300"
                     />
+                    <span className="absolute -top-8 scale-0 group-hover:scale-100 transition-transform bg-gray-800 text-white text-xs px-2 py-1 rounded-md shadow-lg">
+                        Show Alerts
+                    </span>
                 </button>
                 {/* Parte superior */}
                 <div className="flex items-center justify-center flex-col h-5/6 
                                 bg-[url('http://localhost:3000/images/claro.jpg')] 
                                 dark:bg-[url('http://localhost:3000/images/oscuro2.jpg')] 
                                 bg-cover shadow-md dark:shadow-2xl shadow-white">
-                    <Image
-                        src="/images/logo.png"
-                        alt="Logo"
-                        width={200}
-                        height={200}
-                        className="object-contain object-center mr-1"
-                    />
+                    {logo(200, 200)}
                     <div className="text-center p-12 text-black dark:text-white">
                         <h1 className="text-4xl font-bold mb-4 ">Welcome to Voltman! ⚡</h1>
                         <p className="m-4 text-lg">Monitor, analyze, and optimize energy usage!<br />
                             To learn how to use Voltman, check the user guide by clicking the button below.
                             <button
-                                // onClick={}
+                                onClick={() => { }}
                                 className="text-4xl m4 bg-transparent border-none cursor-pointer hover:scale-110 transition-transform">
                                 🔎
                             </button>
@@ -182,21 +102,21 @@ export default function Home() {
 
                 {/* Parte inferior */}
                 <div className="flex justify-around items-center bg-transparent p-10 text-white">
-                    {[{ name: 'consult', detail: "Consults", method: consult },
-                    { name: 'register', detail: "Register", method: register },
-                    { name: 'users', detail: "Users", method: users },
-                    { name: 'branches', detail: "Branches", method: branches },
-                    { name: 'exit', detail: "log out", method: exit }].map((item, index) => (
+                    {[{ name: 'Consult', route: 'consults' },
+                    { name: 'Register', route: 'bills' },
+                    { name: 'Users', route: 'users' },
+                    { name: 'Branches', route: 'branches' },
+                    { name: 'log out', route: '/' }].map((item, index) => (
                         <button
                             key={index}
-                            onClick={item.method}
+                            onClick={() => goRoute(item.route)}
                             className="w-24 h-24 bg-transparent transform transition-all duration-200 hover:scale-125 text-black dark:text-white">
                             <img
                                 src={`/images/${item.name}.png`}
-                                alt={item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+                                // alt={item.name.charAt(0).toUpperCase() + item.name.slice(1)}
                                 className="w-full h-full object-contain dark:filter dark:brightness-0 dark:invert"
                             />
-                            {item.detail}
+                            {item.name}
                         </button>
                     ))}
                 </div>

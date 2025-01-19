@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from "next/image";
 import React from 'react';
-import { getToken } from '@/src/utilts/handleToken';
+import { getToken } from '@/src/hooks/handleToken';
 import User from "@/src/models/User"
 import showNotification from '@/src/utilts/Notifications';
+import { buttonBack } from '@/src/components/buttons';
+import { goHome } from '@/src/hooks/handleRouts';
+import logo from '@/src/components/logo';
 
 export default function Page() {
 
@@ -22,10 +24,6 @@ export default function Page() {
     const [id, setCurrentUserId] = useState<number | null>(null);
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState('');
-
-    const handleRedireccion = () => {
-        router.back();
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps 
     useEffect(() => { fetchUsers(); }, []);
     const fetchUsers = async () => {
@@ -33,12 +31,14 @@ export default function Page() {
             const token = getToken();
             const response = await fetch("http://localhost:5050/api/user", {
                 method: 'GET',
-                headers: { 'Authorization': `Bearer ${token}`, 
-                           'Content-Type': 'application/json' }
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
             });
             const data = await response.json();
             if (!response.ok) throw new Error(data.error);
-            
+
             // console.log('Usuarios cargados:', data);
             setUsers(data);
         } catch (Error) {
@@ -47,7 +47,7 @@ export default function Page() {
     };
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!Username || !Company || !Type || !Password ) {
+        if (!Username || !Company || !Type || !Password) {
             showNotification('Please complete all fields.', setNotification);
             return;
         }
@@ -55,7 +55,7 @@ export default function Page() {
             const url = isEdit ? `http://127.0.0.1:5050/api/user/${id}` : 'http://127.0.0.1:5050/api/user';
             const response = await fetch(url, {
                 method: isEdit ? 'PUT' : 'POST',
-                headers: {'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(isEdit ? { id, Username, Company, Type, Password, NewPassword }
                     : { id, Username, Company, Type, Password })
             }
@@ -63,7 +63,7 @@ export default function Page() {
             const user = await response.json();
             if (!response.ok) throw new Error(user.error);
             // throw new Error(`Error al guardar usuario: ${response.statusText} (Código: ${response.status})`);
-            else {  
+            else {
                 if (isEdit) {
                     setUsers(users.map((u) => (u.id === id ? user : u)));
                 } else {
@@ -117,13 +117,7 @@ export default function Page() {
         <div className="min-h-screen p-8 relative bg-[url('http://localhost:3000/images/claro3.jpg')] dark:bg-[url('http://localhost:3000/images/oscuro2.jpg')] bg-cover bg-no-repeat bg-center bg-fixed ">
 
             <div className='flex justify-center items-center'>
-                <Image
-                    src="/images/logo.png"
-                    alt="Logo"
-                    width={50}
-                    height={50}
-                    className="object-contain object-center mr-1"
-                />
+                {logo(50, 50)}
                 <h2 className="text-4xl font-extrabold text-center text-black dark:text-white">
                     User management!
                 </h2>
@@ -135,30 +129,7 @@ export default function Page() {
                 </div>
             )}
 
-            <button
-                className="bg-white text-center w-48 rounded-2xl h-14 relative text-black text-xl font-semibold group scale-75"
-                type="button"
-                onClick={handleRedireccion}
-            >
-                <div className="bg-green-400 rounded-xl h-12 w-1/4 flex items-center justify-center absolute left-1 top-[4px] group-hover:w-[184px] z-10 duration-500">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 1024 1024"
-                        height="25px"
-                        width="25px"
-                    >
-                        <path
-                            d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"
-                            fill="#000000"
-                        ></path>
-                        <path
-                            d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"
-                            fill="#000000"
-                        ></path>
-                    </svg>
-                </div>
-                <p className="translate-x-2">Go Back</p>
-            </button>
+            {buttonBack(() => goHome(router))}
 
             <button
                 onClick={() => {
@@ -236,13 +207,7 @@ export default function Page() {
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ">
                     <div className="p-6 w-full max-w-md bg-white dark:bg-black shadow-2xl rounded-2xl overflow-hidden border-4 border-transparent dark:border-zinc-700">
                         <h2 className="text-2xl font-semibold mb-4 ">
-                            <Image
-                                src="/images/logo.png"
-                                alt="Logo"
-                                width={30}
-                                height={30}
-                                className="object-contain object-center mr-1"
-                            />
+                            {logo(30, 30)}
                             {isEdit ? "Editar Usuario" : "Agregar Usuario"}
                         </h2>
                         <form onSubmit={handleSubmit}>

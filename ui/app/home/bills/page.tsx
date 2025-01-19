@@ -2,19 +2,19 @@
 
 import { ChangeEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { buttonBack } from "@/src/components/buttons";
+import { goHome } from "@/src/hooks/handleRouts";
+import logo from "@/src/components/logo";
 
 export default function FormularioDinamico() {
 
   const router = useRouter();
+  const [nextIdForm, setNextIdForm] = useState<number>(2);
   const [formularios, setFormularios] = useState([
     { id: 1, fecha: "", consumo: "", sucursal: "" },
   ]);
+
   
-  const handleRedireccion = () => {
-    router.push("/home");
-  };
-  // Lista de sucursales
   const sucursales = ["Sucursal A", "Sucursal B", "Sucursal C", "Sucursal D"];
   const [notification, setNotification] = useState<string | null>(null);
 
@@ -61,13 +61,7 @@ export default function FormularioDinamico() {
     <div className="flex flex-col gap-4 items-center min-h-screen bg-gray-100 p-4 bg-[url('http://localhost:3000/images/claro3.jpg')] dark:bg-[url('http://localhost:3000/images/oscuro2.jpg')] bg-cover bg-no-repeat bg-center overflow-auto bg-fixed">
 
       <div className='flex justify-center items-center'>
-        <Image
-          src="/images/logo.png"
-          alt="Logo"
-          width={50}
-          height={50}
-          className="object-contain object-center mr-1"
-        />
+        {logo(50,50)}
         <h2 className="text-4xl font-extrabold text-center text-black dark:text-white">
           Consumption records!
         </h2>
@@ -80,32 +74,9 @@ export default function FormularioDinamico() {
       )}
 
       <div className="flex flex-row justify-center items-center">
-        
-        <button
-          className="bg-white text-center w-48 rounded-2xl h-14 relative text-black text-xl font-semibold group scale-75"
-          type="button"
-          onClick={handleRedireccion}
-        >
-          <div className="bg-green-400 rounded-xl h-12 w-1/4 flex items-center justify-center absolute left-1 top-[4px] group-hover:w-[184px] z-10 duration-500">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 1024 1024"
-              height="25px"
-              width="25px"
-            >
-              <path
-                d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64z"
-                fill="#000000"
-              ></path>
-              <path
-                d="m237.248 512 265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312L237.248 512z"
-                fill="#000000"
-              ></path>
-            </svg>
-          </div>
-          <p className="translate-x-2">Go Back</p>
-        </button>
-        
+
+        {buttonBack(() => goHome(router))}
+
         <button
           type="button"
           onClick={addForm}
@@ -117,7 +88,7 @@ export default function FormularioDinamico() {
       </div>
 
       <form onSubmit={handleSubmit} className="w-full max-w-md">
-        
+
         {formularios.map((formulario) => (
           <div
             key={formulario.id}

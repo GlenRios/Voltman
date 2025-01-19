@@ -1,10 +1,11 @@
 'use client';
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { login } from "@/src/api/authService";
+import { goHome } from "@/src/hooks/handleRouts";
 // import SocialIcon from "@/src/components/Icon";
 import Icons from "@/src/components/Icon";
+import logo from "@/src/components/logo";
 
 export default function LoginPage() {
 
@@ -22,7 +23,7 @@ export default function LoginPage() {
       else {
         const response = await login(Username, Password);
         if (response) {
-          router.push("/home");
+          goHome(router);
         }
       }
 
@@ -36,17 +37,11 @@ export default function LoginPage() {
       <div className=" w-full lg:w-1/2 flex items-center justify-center p-4 lg:h-screen flex-col sm:h-max dark:bg-black shadow-2xl overflow-hidden dark:border-zinc-800 bg-transparent" >
         <div className="group flex flex-col justify-start items-start gap-2 w-96 h-56 duration-500 relative rounded-lg p-4 bg-gray-200 dark:bg-gray-900 hover:-translate-y-2 hover:shadow-xl shadow-gray-800">
           <div className="flex">
-            <Image
-              src="/images/logo.png"
-              alt="Logo"
-              width={30}
-              height={30}
-              className="object-contain object-center mr-1"
-            />
+            {logo(30, 30)}
             <h2 className="text-2xl font-bold mb-2 text-black dark:text-gray-100">Voltman</h2>
           </div>
           <p className="text-black dark:text-gray-200 line-clamp-4">
-          Voltman is a comprehensive solution designed to help you monitor, analyze, and optimize energy consumption in your company efficiently and in a personalized way.
+            Voltman is a comprehensive solution designed to help you monitor, analyze, and optimize energy consumption in your company efficiently and in a personalized way.
           </p>
         </div>
         {Icons()}
@@ -56,13 +51,7 @@ export default function LoginPage() {
           id="logForm"
           className="bg-slate-200 dark:bg-black shadow-2xl rounded-2xl overflow-hidden border-4 border-transparent dark:border-zinc-700">
           <div className="flex ml-4 mt-4 mb-0 text-black dark:text-white">
-            <Image
-              src="/images/logo.png"
-              alt="Logo"
-              width={30}
-              height={30}
-              className="object-contain object-center mr-1"
-            />
+            {logo(30, 30)}
             Voltman
           </div>
           <div className="px-8 py-10 md:px-10">
