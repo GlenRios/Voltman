@@ -3,11 +3,10 @@ import importlib
 from functools import wraps
 from flask import Blueprint, Flask, jsonify, request, make_response
 from flask_cors import CORS
-from controllers import user_controller as uc
+from main import UC as uc
 from Configurations.CustomError import CustomError
 from Configurations import BASE_DIR
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
-import jwt
 import sys
 
 def import_from_path(module_name, file_path):
@@ -57,7 +56,7 @@ def login():
 @app.route("/api/user/", methods=["GET"])
 @jwt_required( optional=False )
 def get_users():
-    username = get_jwt_identity()  # Obtén las reclamaciones del token
+    username = get_jwt_identity()
     users= uc.get(username)
     return jsonify(users), 200
 
@@ -81,11 +80,6 @@ def update_user(user_id):
 def delete_user(user_id):
     uc.delete(user_id)
     return jsonify({"message": "User deleted successfully"}), 200
-
-
-def decode_jwt(token):
-    decoded_data = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
-    return decoded_data
 
 
 # helper functions for the plugin functionality
@@ -149,7 +143,7 @@ def plugin_export(name):
     return {
         "data": base64.b64encode(result).decode("utf8"),
     }
-    
+
 app.run(port= 5050,debug=True)
 
 
