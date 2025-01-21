@@ -12,9 +12,14 @@ class AreaRepo(BaseRepo):
         company= self.company_repo.get_byName(company_name)
         return self.db.query(AreaModel).filter(AreaModel.Name==name and AreaModel.CompanyID==company.id).first()
     
+    def get_equipments(self, id: int):
+        area= self.get(id)
+        return area.equipments
+    
     def to_Area(self, area: AreaModel)-> Area:
         company= self.company_repo.get(area.CompanyID)
-        return Area(company.Name, 
+        return Area(area.id,
+                    company.Name, 
                     area.Name, 
                     area.Responsible)
     

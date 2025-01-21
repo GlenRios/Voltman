@@ -1,6 +1,7 @@
 class Company:
     
-    def __init__(self, name: str, limit: int, type: str, addr: str, increase=20 , extra_percent=15):
+    def __init__(self,id: int, name: str, limit: int, type: str, addr: str, increase=20 , extra_percent=15):
+        self.id= id
         self.Name= name
         self.Limit= limit
         self.Type= type

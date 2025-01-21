@@ -57,7 +57,7 @@ def login():
 @jwt_required( optional=False )
 def get_users():
     username = get_jwt_identity()
-    users= uc.get(username)
+    users= uc.get_all_in_company(username)
     return jsonify(users), 200
 
 # Route to add a new user
@@ -156,44 +156,39 @@ BRANCH_WRITE_PERMISSION = (
 )
 
 # branch
-@app.route("/api/branch/")
+
+@app.route("/api/branch/", methods= ['GET'])
 @jwt_required(optional=False)
 def list_branch():
-    #username = get_jwt_identity()
-    #users= uc.get(username)
+    username = get_jwt_identity()
+    user= uc.get(username)
+    group= user.Type
+    if group is 'SuperAdmin':
+        companies= cc.get_all()
+        return jsonify(companies) , 200
+    
+    company = cc.get(user.Company)
+    return jsonify(company), 200
 
-    group = uc.Iuser.repo.get(1).group
-    if group.Name not in BRANCH_READ_PERMISSION:
-        raise CustomError("Not allowed", 403)
-
-    company = uc.Iuser.repo.get(1).company
-
-    return company.as_dict()
 
 @app.route("/api/branch/", methods=["POST",])
-@jwt_required( optional=False )
 def create_branch():
     data = request.json
     new_company = cc.post(data)
-
     return new_company
 
 @app.route("/api/branch/<int:id>", methods=["PUT", "PATCH"])
-@jwt_required(optional=False)
 def update_branch(id):
     data = request.json
-    repo = cc.Icompany.repo
-    updated_company = repo.put(id, data, ["Name",])
-    if not updated_company:
-        return "Not found", 404
-    return updated_company.as_dict()
+    updated_company= cc.put(id, data)
+    return jsonify(updated_company) , 200
 
 @app.route("/api/branch/<int:id>", methods=["DELETE",])
 def delete_branch(id):
-    repo = cc.Icompany.repo
-    existed = repo.delete(id)
-    
-    return "", 200 if existed else 404
+    cc.delete(id)
+    return jsonify({'message': 'Company deleted successfully'}), 200
+
+
 
 # area
 @app.route("/api/area/")

@@ -2,21 +2,18 @@ from db.models.Equipment import EquipmentModel
 from db.repos.BaseRepo import BaseRepo
 from db.repos.AreaRepo import AreaRepo
 from domain.Equipment import Equipment
+import datetime
 
 class EquipmentRepo(BaseRepo):
     
     def __init__(self, db, area_repo):
         super().__init__(db, EquipmentModel)
         self.area_repo= area_repo
-
-    
-    def get_allInArea(self, idArea: int)->list[EquipmentModel]:
-        return self.db.query(EquipmentModel).filter(EquipmentModel.AreaID==idArea).all()
-
     
     def to_Equipment(self, equipment: EquipmentModel)-> Equipment:
         area= equipment.area
-        return Equipment(area.Name, 
+        return Equipment(equipment.id,
+                         area.Name, 
                          equipment.AverageDailyConsumption, 
                          equipment.MaintenanceStatus, 
                          equipment.EnergyEfficiency, 
@@ -31,14 +28,14 @@ class EquipmentRepo(BaseRepo):
     def to_model(self, values: dict)-> dict:
         area_id= self.area_repo.get_by_company(values['Area'], values['Company']).id
         return { 'AreaID': area_id,
-                 'AverageDailyConsumption': values['AverageDailyConsumption'],
-                 'MaintenanceStatus': values['MaintenanceStatus'],
-                 'EnergyEfficience': values['EnergyEfficiency'],
-                 'NominalCapacity': values['NominalCapacity'],
-                 'EstimatedLifespan': values['EstimatedLifespan'],
-                 'InstallationDate': values['InstallationDate'],
-                 'UsageFrecuency': values['UsageFrecuency'],
-                 'Type': values['Type'],
-                 'Brand': values['Brand'],
-                 'Model': values['Model'],
-                 'CriticalEnergySystem': values['CriticalEnergySystem']}
+                 'AverageDailyConsumption': values['AverageDailyConsumption'] if values.__contains__ ('AverageDailyConsumption') else 0,
+                 'MaintenanceStatus': values['MaintenanceStatus']if values.__contains__ ('MaintenanceStatus') else "",
+                 'EnergyEfficience': values['EnergyEfficiency']if values.__contains__ ('EnergyEfficiency') else 0,
+                 'NominalCapacity': values['NominalCapacity']if values.__contains__ ('NominalCapacity') else 0,
+                 'EstimatedLifespan': values['EstimatedLifespan']if values.__contains__ ('EtimatedLifespan') else 0,
+                 'InstallationDate': values['InstallationDate']if values.__contains__ ('InstallationDate') else datetime.now(),
+                 'UsageFrecuency': values['UsageFrecuency']if values.__contains__ ('UsageFrecuency') else "",
+                 'Type': values['Type']if values.__contains__ ('Type') else "",
+                 'Brand': values['Brand']if values.__contains__ ('Brand') else "",
+                 'Model': values['Model']if values.__contains__ ('Model') else "",
+                 'CriticalEnergySystem': values['CriticalEnergySystem']if values.__contains__ ('CriticalEnergySystem') else ""}

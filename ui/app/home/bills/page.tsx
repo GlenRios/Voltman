@@ -1,10 +1,12 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import buttonBack from "@/src/components/buttons";
 import { goHome } from "@/src/hooks/handleRouts";
 import logo from "@/src/components/logo";
+import { fetchBranchesService } from "@/src/api/branchService";
+import { getToken } from "@/src/hooks/handleToken";
 
 export default function FormularioDinamico() {
 
@@ -14,10 +16,8 @@ export default function FormularioDinamico() {
     { id: 1, fecha: "", consumo: "", sucursal: "" },
   ]);
 
-
-  const sucursales = ["Sucursal A", "Sucursal B", "Sucursal C", "Sucursal D"];
   const [notification, setNotification] = useState<string | null>(null);
-  const [branches, setBranches] = useState<[]>([]);
+  const [sucursales, setBranches] = useState<[]>([]);
   // Manejar cambios en los campos de un formulario específico
   const handleInputChange = (
     e: ChangeEvent<HTMLSelectElement> | ChangeEvent<HTMLInputElement>,
@@ -28,6 +28,28 @@ export default function FormularioDinamico() {
       prev.map((form) => (form.id === id ? { ...form, [name]: value } : form))
     );
   };
+
+  useEffect(() => { fetchBranches(); }, []);
+      const fetchBranches = async () => {
+          try {
+              const token = getToken();
+              const response = await fetch("http://localhost:5050/api/branch", {
+                  method: 'GET',
+                  headers: {
+                      'Authorization': `Bearer ${token}`,
+                      'Content-Type': 'application/json'
+                  }
+              });
+              const data = await response.json();
+              if (!response.ok) throw new Error(data.error);
+  
+              setBranches(data);
+          } catch (Error) {
+              console.error(Error)
+          }
+      };
+
+
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {

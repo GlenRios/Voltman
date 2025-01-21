@@ -8,10 +8,13 @@ from controllers import (
     equipment_controller as ec,
 )
 
+# from tests.test_db import build_test_db
+# build_test_db()
 
 path= "app/tests/test.db"
 if not os.path.exists(path):
     init_db()
+    
 
 tester= Tester()
 
@@ -33,9 +36,9 @@ Iequipment = IEquipment.IEquipment(equipment_repo)
 UC= uc.UserController(Iuser, Icompany)
 CC= cc.CompanyController(Icompany)
 AC= ac.AreaController(Iarea)
-EC= ec.EquipmentController(Iequipment)
+EC= ec.EquipmentController(Iequipment, Icompany, Iarea)
 
-############test############
+# ###########test############
 # list_companies=[]
 # groups=['Admin', 'Manacher', 'Analyst']
 
@@ -50,5 +53,12 @@ EC= ec.EquipmentController(Iequipment)
 #     for user in users:
 #         UC.post(user)
 
+# def create_areas(n: int):
+#     areas= tester.create_areas(n,list_companies)
+#     for area in areas:
+#         AC.post(area)
+
 # create_companies(6)
 # create_users(30)
+# create_areas(30)
+

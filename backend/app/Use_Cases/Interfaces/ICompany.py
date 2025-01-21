@@ -18,13 +18,11 @@ class ICompany:
         company= self.repo.get_byName(name)
         self.repo.delete(company.id)
 
-    def update(self, name: str, values: dict)-> dict:
-        id= self.repo.get_byName(name).id
+    def update(self, id: int, values: dict)-> dict:
         company= self.repo.put(id, values, ['Name'])
         return self.repo.to_Company(company).as_dict()
     
-    def get_areas(self, name: str):
-        id= self.repo.get_byName(name).id
+    def get_areas(self, id: int):
         areas= self.repo.get_areas(id)
         return areas
     

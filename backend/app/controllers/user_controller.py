@@ -11,7 +11,7 @@ class UserController:
         password= values['Password']
         return self.Iuser.find_out(username, password)
         
-    def get(self, username: str):
+    def get_all_in_company(self, username: str):
         if username=='SuperAdmin':
             users= self.Iuser.get_all()
             return users
@@ -19,6 +19,10 @@ class UserController:
         name_company= user.Company
         users= self.Icompany.get_users(name_company)
         return self.Iuser.convert(users)
+    
+    def get(self, username:str):
+        return self.Iuser.get_by_username(username)
+
 
     def post(self, values: dict):
         return self.Iuser.create(values)

@@ -8,7 +8,7 @@ class Tester:
         self.fake=Faker()
     
     def create_user(self, companies, groups):
-        return  {'Username':self.fake.text(20), 'Password': self.fake.password(8),'Company': random.choice(companies), 'Type': random.choice(groups)}
+        return  {'Username':self.fake.user_name(), 'Password': self.fake.password(8),'Company': random.choice(companies), 'Type': random.choice(groups)}
     
     def create_users(self,n:int, companies, groups):
         users=[]
@@ -27,3 +27,14 @@ class Tester:
         companies=[]
         for _ in range(n): companies.append(self.create_company())
         return companies
+    
+    def create_area(self, companies):
+        return {'Name': self.fake.text(10), 'Company': random.choice(companies), 'Responsible': self.fake.name()}
+    
+    def create_areas(self, n: int, companies):
+        areas=[]
+        for _ in range(n): areas.append(self.create_area(companies))
+        return areas
+    
+
+

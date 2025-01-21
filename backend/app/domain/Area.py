@@ -1,6 +1,7 @@
 class Area:
     
-    def __init__(self, company: str, name:str, responsible:str):
+    def __init__(self, id: int, company: str, name:str, responsible:str):
+        self.id= id
         self.Company= company
         self.Name= name
         self.Responsible= responsible

@@ -1,3 +1,4 @@
+
 class AreaController:
 
     def __init__(self, iarea):
@@ -14,5 +15,6 @@ class AreaController:
     
     def put(self, id, values: dict):
         return self.Iarea.update(id, values)
+    
     
     

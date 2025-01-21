@@ -22,7 +22,8 @@ class CompanyRepo(BaseRepo):
         return company.people
     
     def to_Company(self, company: CompanyModel)-> Company:
-        return Company(company.Name, 
+        return Company(company.id,
+                       company.Name, 
                        company.Limit, 
                        company.Type, 
                        company.Addr, 
