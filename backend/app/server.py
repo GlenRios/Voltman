@@ -3,7 +3,7 @@ import importlib
 from functools import wraps
 from flask import Blueprint, Flask, jsonify, request, make_response
 from flask_cors import CORS
-from main import UC as uc
+from main import UC as uc, CC as cc, AC as ac, EC as ec
 from Configurations.CustomError import CustomError
 from Configurations import BASE_DIR
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
@@ -143,6 +143,141 @@ def plugin_export(name):
     return {
         "data": base64.b64encode(result).decode("utf8"),
     }
+
+BRANCH_READ_PERMISSION = (
+    "SuperAdmin",
+    "Admin",
+    "Manacher", # lmao
+)
+
+BRANCH_WRITE_PERMISSION = (
+    "SuperAdmin",
+    "Admin",
+)
+
+# branch
+@app.route("/api/branch/")
+@jwt_required(optional=False)
+def list_branch():
+    #username = get_jwt_identity()
+    #users= uc.get(username)
+
+    group = uc.Iuser.repo.get(1).group
+    if group.Name not in BRANCH_READ_PERMISSION:
+        raise CustomError("Not allowed", 403)
+
+    company = uc.Iuser.repo.get(1).company
+
+    return company.as_dict()
+
+@app.route("/api/branch/", methods=["POST",])
+@jwt_required( optional=False )
+def create_branch():
+    data = request.json
+    new_company = cc.post(data)
+
+    return new_company
+
+@app.route("/api/branch/<int:id>", methods=["PUT", "PATCH"])
+@jwt_required(optional=False)
+def update_branch(id):
+    data = request.json
+    repo = cc.Icompany.repo
+    updated_company = repo.put(id, data, ["Name",])
+    if not updated_company:
+        return "Not found", 404
+    return updated_company.as_dict()
+
+@app.route("/api/branch/<int:id>", methods=["DELETE",])
+def delete_branch(id):
+    repo = cc.Icompany.repo
+    existed = repo.delete(id)
+    
+    return "", 200 if existed else 404
+
+# area
+@app.route("/api/area/")
+#@jwt_required(optional=False)
+def list_area():
+    #username = get_jwt_identity()
+    #users= uc.get(username)
+
+    group = uc.Iuser.repo.get(1).group
+    if group.Name not in BRANCH_READ_PERMISSION:
+        raise CustomError("Not allowed", 403)
+
+    company = uc.Iuser.repo.get(1).company
+
+    return [area.as_dict() for area in company.areas]
+
+@app.route("/api/area/", methods=["POST",])
+#@jwt_required( optional=False )
+def create_area():
+    data = request.json
+    new_area = ac.post(data)
+
+    return new_area
+
+@app.route("/api/area/<int:id>", methods=["PUT", "PATCH"])
+#@jwt_required(optional=False)
+def update_area(id):
+    data = request.json
+    repo = ac.Iarea.repo
+    updated_area = repo.put(id, data, ["Name",])
+    if not updated_area:
+        return "Not found", 404
+    return updated_area.as_dict()
+
+@app.route("/api/area/<int:id>", methods=["DELETE",])
+def delete_area(id):
+    repo = ac.Iarea.repo
+    existed = repo.delete(id)
+    
+    return "", 200 if existed else 404
+
+# equipment
+@app.route("/api/equipment/")
+#@jwt_required(optional=False)
+def list_equipment():
+    #username = get_jwt_identity()
+    #users= uc.get(username)
+
+    group = uc.Iuser.repo.get(1).group
+    if group.Name not in BRANCH_READ_PERMISSION:
+        raise CustomError("Not allowed", 403)
+
+    company = uc.Iuser.repo.get(1).company
+
+    items = []
+    for area in company.areas:
+        for equipment in area.equipments:
+            items.append(equipment.as_dict())
+    return items
+
+@app.route("/api/equipment/", methods=["POST",])
+#@jwt_required( optional=False )
+def create_equipment():
+    data = request.json
+    new_equipment = ec.post(data)
+
+    return new_equipment
+
+@app.route("/api/equipment/<int:id>", methods=["PUT", "PATCH"])
+#@jwt_required(optional=False)
+def update_equipment(id):
+    data = request.json
+    repo = ec.Iequipment.repo
+    updated_equipment = repo.put(id, data, ["Name",])
+    if not updated_equipment:
+        return "Not found", 404
+    return updated_equipment.as_dict()
+
+@app.route("/api/equipment/<int:id>", methods=["DELETE",])
+def delete_equipment(id):
+    repo = ec.Iequipment.repo
+    existed = repo.delete(id)
+    
+    return "", 200 if existed else 404
 
 app.run(port= 5050,debug=True)
 

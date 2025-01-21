@@ -9,11 +9,11 @@ class AreaRepo(BaseRepo):
         self.company_repo= company_repo
     
     def get_by_company(self, name: str, company_name: str)-> AreaModel:
-        company= self.repo_company.get_byName(company_name)
+        company= self.company_repo.get_byName(company_name)
         return self.db.query(AreaModel).filter(AreaModel.Name==name and AreaModel.CompanyID==company.id).first()
     
     def to_Area(self, area: AreaModel)-> Area:
-        company= self.repo_company.get(area.CompanyID)
+        company= self.company_repo.get(area.CompanyID)
         return Area(company.Name, 
                     area.Name, 
                     area.Responsible)
