@@ -14,9 +14,8 @@ class ICompany:
         company= self.repo.get_byName(name)
         return self.repo.to_Company(company).as_dict()
 
-    def delete(self, name: str):
-        company= self.repo.get_byName(name)
-        self.repo.delete(company.id)
+    def delete(self, id):
+        self.repo.delete(id)
 
     def update(self, id: int, values: dict)-> dict:
         company= self.repo.put(id, values, ['Name'])

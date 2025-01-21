@@ -11,8 +11,8 @@ class CompanyController:
     def post(self, values: dict):
         return self.Icompany.create(values)
     
-    def delete(self, name: str):
-        return self.Icompany.delete(name)
+    def delete(self, id):
+        return self.Icompany.delete(id)
     
     def put(self, id: int, values: dict):
         return self.Icompany.update(id, values)

@@ -163,15 +163,19 @@ def list_branch():
     username = get_jwt_identity()
     user= uc.get(username)
     group= user.Type
-    if group is 'SuperAdmin':
+    if group == 'SuperAdmin':
         companies= cc.get_all()
         return jsonify(companies) , 200
     
     company = cc.get(user.Company)
     return jsonify(company), 200
 
+@app.route("/api/branch/info/<string:name>", methods= ['GET'])
+def get_branch(name):
+    company= cc.get(name)
+    return jsonify(company), 200
 
-@app.route("/api/branch/", methods=["POST",])
+@app.route("/api/branch", methods=["POST",])
 def create_branch():
     data = request.json
     new_company = cc.post(data)
@@ -184,10 +188,15 @@ def update_branch(id):
     return jsonify(updated_company) , 200
 
 @app.route("/api/branch/<int:id>", methods=["DELETE",])
+@jwt_required(optional=False)
 def delete_branch(id):
-    cc.delete(id)
-    return jsonify({'message': 'Company deleted successfully'}), 200
+    username = get_jwt_identity()
+    user= uc.get(username)
+    if user.Type== 'SuperAdmin':
+        cc.delete(id)
+        return jsonify({'message': 'Company deleted successfully'}), 200
 
+    return jsonify({'error': 'you dont have permission'})
 
 
 # area

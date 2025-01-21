@@ -30,24 +30,24 @@ export default function FormularioDinamico() {
   };
 
   useEffect(() => { fetchBranches(); }, []);
-      const fetchBranches = async () => {
-          try {
-              const token = getToken();
-              const response = await fetch("http://localhost:5050/api/branch", {
-                  method: 'GET',
-                  headers: {
-                      'Authorization': `Bearer ${token}`,
-                      'Content-Type': 'application/json'
-                  }
-              });
-              const data = await response.json();
-              if (!response.ok) throw new Error(data.error);
-  
-              setBranches(data);
-          } catch (Error) {
-              console.error(Error)
-          }
-      };
+  const fetchBranches = async () => {
+    try {
+      const token = getToken();
+      const response = await fetch("http://localhost:5050/api/branch", {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error);
+
+      setBranches(data);
+    } catch (Error) {
+      console.error(Error)
+    }
+  };
 
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {

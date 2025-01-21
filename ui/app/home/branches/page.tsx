@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from "react"
-import BranchProps from "@/src/models/Branch";
+import Branch from "@/src/models/Branch";
 import Area from "@/src/models/Areas";
 import Equipments from "@/src/models/Equipments";
 import { fetchBranchesService, submitBranchService, deleteBranchService } from "@/src/api/branchService";
@@ -17,68 +17,182 @@ export default function branchesPage() {
     const token = getToken();
 
     //============================== BRANCHES ==============================================
-    const [branches, setBranches] = useState<BranchProps[]>([
-        { name: "Company1", address: "calle 23/K & L", type: "Humanidades", limit: 1250, aumento: 100, porciento: 0.32 },
-        { name: "Company2", address: "calle 43/I & Lima", type: "Venta", limit: 3000, aumento: 250, porciento: 1.00 },
-        { name: "Company3", address: "calle 42525/243 & Xem", type: "Compra", limit: 750, aumento: 50, porciento: 0.50 }
-    ]);
 
-    const [selectedBranch, setSelectedBranch] = useState<string | null>("Company1");
-
-    const [selectedArea, setSelectedArea] = useState<Area | null>(null);
-
+    const [branchesName, setBranchesName] = useState<{ name: string; id: number }[]>([]);
+    const [branchInfo, setBranchInfo] = useState<Branch>({
+        id: -1,
+        name: "",
+        address: "",
+        type: "",
+        limit: '0',
+        aumento: '0',
+        porciento: '0.0',
+    })
+    const [selectedBranch, setSelectedBranch] = useState<string | null>(null);
     const handleSelectBranch = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedBranch(event.target.value);
     };
-    const originalData = {
-        nombre: "John Doe",
-        direccion: "1234 Elm Street",
-        tipo: "Residencial",
-        limite: 500,
-        aumento: 50,
-        extra: 10.5,
-    };
+    const [formData, setFormData] = useState<Branch>(branchInfo);
+    const [branchName, setBranchName] = useState<string>('');
+    const [branchAddress, setBranchAddress] = useState<string>('');
+    const [branchType, setBranchType] = useState<string>('');
+    const [branchLimit, setBranchLimit] = useState<string>('0');
+    const [branchPercent, setBranchPercent] = useState<string>('15');
+    const [branchIncrease, setBranchIncrease] = useState<string>('20');
 
-    const [formData, setFormData] = useState(originalData);
+    //Obtener nombres de las branches al abrir la pagina
+    useEffect(() => { fetchBranches(); }, []);
+    const fetchBranches = async () => {
+        try {
+            const response = await fetch("http://localhost:5050/api/branch", {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error);
+            const names = data.map((item: { id: number; Name: string; }) => ({
+                id: item.id ?? null,       // Si falta, asigna null
+                name: item.Name ?? "N/A"   // Si falta, asigna "N/A"
+            }))// Elimina valores vacíos
+            setBranchesName(names);
 
-    // Manejo de cambios en los inputs
-    const handleChange = (e: { target: { id: any; value: any; }; }) => {
-        const { id, value } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [id]: value,
-        }));
+        } catch (Error) {
+            console.error(Error)
+        }
     };
-    // Restablecer datos al original
-    const handleReset = () => {
-        setFormData(originalData);
-    };
+    //Obtener los datos de la sucursal seleccionada
+    const getBranchInfo = async () => {
+        try {
+            if (!selectedBranch) {
+                throw Error("Select a Branch");
+            }
+            const response = await fetch(`http://localhost:5050/api/branch/info/${selectedBranch}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error);
+            const info = {
+                id: data.id,
+                name: data.Name,
+                address: data.Addr,
+                type: data.Type,
+                limit: data.Limit,
+                aumento: data.Increase,
+                porciento: data.Extra_Percent
+            }
+            setBranchInfo(info);
+            setBranchName(info.name);
+            setBranchType(info.type);
+            setBranchAddress(info.address);
+            setBranchLimit(info.limit);
+            setBranchPercent(info.porciento);
+            setBranchIncrease(info.aumento);
 
+        } catch (error) {
+            console.error(error);
+        }
+    }
     const addBranch = () => {
         throw new Error("function not implement");
     }
-    const deletedBranch = () => {
-        throw new Error("function not implement");
+    const deletedBranch = async () => {
+        try {
+            const response = await fetch(`http://localhost:5050/api/branch/formule/${branchInfo.id}`, {
+                method: "DELETE",
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    { Extra_Percent: branchPercent, Increase: branchIncrease }
+                )
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error);
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
-    const editInfoBranch = () => {
-        throw new Error("function not implement");
+    const editInfoBranch = async () => {
+        try {
+            if (!branchName || !branchType || !branchAddress || !branchLimit) {
+                throw new Error("Please complete all fields.");
+            }
+            else if (branchInfo.id === -1) {
+                throw new Error("Invalid branch id");
+            }
+            const response = await fetch(`http://localhost:5050/api/branch/${branchInfo.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    { Name: branchName, Addr: branchAddress, Type: branchType, Limit: branchLimit }
+                )
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error);
+            }
+            setBranchInfo({
+                id: branchInfo.id,
+                name: branchName,
+                address: branchAddress,
+                type: branchType,
+                limit: branchLimit,
+                aumento: branchIncrease,
+                porciento: branchPercent,
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
-    const editRestInfoBranch = () => {
-        throw new Error("function not implement");
+    const editRestInfoBranch = async () => {
+        try {
+            const response = await fetch(`http://localhost:5050/api/branch/${branchInfo.id}`, {
+                method: "PUT",
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error);
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
-
-
-    const [editFormData, setEditFormData] = useState({ name: "", responsable: "" });
+    const restInfoBranch = () => {
+        setBranchName(branchInfo.name);
+        setBranchType(branchInfo.type);
+        setBranchAddress(branchInfo.address);
+        setBranchLimit(branchInfo.limit);
+        setBranchPercent(branchInfo.porciento);
+        setBranchIncrease(branchInfo.aumento);
+    }
 
     //========================= AREAS ===========================================
 
     const [areas, setAreas] = useState<Area[]>([])
+    // const [selectedArea, setSelectedArea] = useState<Area | null>(null);
     const [editingId, setEditingId] = useState<number | null>(null); // ID de la fila que se esta editando
     const [isAdding, setIsAdding] = useState(false); // Controla si se está agregando una nueva área
     const [newArea, setNewArea] = useState({ name: "", responsable: "" }); // Datos de la nueva área
     const [searchQuery, setSearchQuery] = useState("");
+    const [editFormData, setEditFormData] = useState({ name: "", responsable: "" });
     // Obtener la lista de areas de la sucursal seleccionada
-    const fetchArea = async (branchname: string) => {
+    const fetchArea = async (branchName: string) => {
         try {
             if (!token) {
                 throw new Error("Please log in");
@@ -222,17 +336,12 @@ export default function branchesPage() {
                     className="border border-gray-700 rounded-lg p-2 text-lg dark:bg-gray-800 dark:text-white"
                 >
                     <option value="">Selecciona una sucursal</option>
-                    {branches.map((branch, index) => (
-                        <option key={index} value={branch.name}>
-                            {branch.name} - {branch.address}
+                    {branchesName.map((branch, index) => (
+                        <option key={index} value={branch.name} onClick={() => getBranchInfo()}>
+                            {branch.name}
                         </option>
                     ))}
                 </select>
-                {/* {selectedBranch && (
-                    <p className="text-green-500 font-medium">
-                        Sucursal seleccionada: {selectedBranch}
-                    </p>
-                )} */}
             </div>
 
             {/* Brach management */}
@@ -257,7 +366,8 @@ export default function branchesPage() {
                                         id="nombre"
                                         type="text"
                                         className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        onChange={(e) => console.log("Nombre cambiado a:", e.target.value)}
+                                        value={branchName}
+                                        onChange={(e) => setBranchName(e.target.value)}
                                     />
                                 </div>
 
@@ -270,7 +380,8 @@ export default function branchesPage() {
                                         id="direccion"
                                         type="text"
                                         className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        onChange={(e) => console.log("Dirección cambiada a:", e.target.value)}
+                                        value={branchAddress}
+                                        onChange={(e) => setBranchAddress(e.target.value)}
                                     />
                                 </div>
 
@@ -283,7 +394,8 @@ export default function branchesPage() {
                                         id="tipo"
                                         type="text"
                                         className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        onChange={(e) => console.log("Tipo cambiado a:", e.target.value)}
+                                        value={branchType}
+                                        onChange={(e) => setBranchType(e.target.value)}
                                     />
                                 </div>
 
@@ -296,7 +408,8 @@ export default function branchesPage() {
                                         id="limite"
                                         type="number"
                                         className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        onChange={(e) => console.log("Límite cambiado a:", e.target.value)}
+                                        value={branchLimit}
+                                        onChange={(e) => setBranchLimit(e.target.value)}
                                     />
                                 </div>
                             </div>
@@ -304,13 +417,13 @@ export default function branchesPage() {
                             {/* Botones */}
                             <div className="flex justify-end space-x-2 mt-4">
                                 <button
-                                    onClick={() => console.log("Formulario restablecido")}
+                                    onClick={() => restInfoBranch}
                                     className="px-4 py-2 text-gray-800 dark:text-white bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-200"
                                 >
                                     Restablecer
                                 </button>
                                 <button
-                                    onClick={() => console.log("Formulario guardado")}
+                                    onClick={() => editInfoBranch()}
                                     className="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
                                 >
                                     Guardar
@@ -330,8 +443,8 @@ export default function branchesPage() {
                                     id="aumento"
                                     type="number"
                                     className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                // value={}
-                                // onChange={}
+                                    value={branchIncrease}
+                                    onChange={(e) => setBranchIncrease(e.target.value)}
                                 />
                             </div>
 
@@ -345,8 +458,8 @@ export default function branchesPage() {
                                     type="number"
                                     step="0.01"
                                     className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                // value={}
-                                // onChange={}
+                                    value={branchPercent}
+                                    onChange={(e) => setBranchPercent(e.target.value)}
                                 />
                             </div>
 

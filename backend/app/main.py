@@ -39,24 +39,24 @@ AC= ac.AreaController(Iarea)
 EC= ec.EquipmentController(Iequipment, Icompany, Iarea)
 
 # ###########test############
-# list_companies=[]
-# groups=['Admin', 'Manacher', 'Analyst']
+list_companies=[]
+groups=['Admin', 'Manacher', 'Analyst']
 
-# def create_companies(n: int):
-#     companies= tester.create_companies(n)
-#     for company in companies:
-#         list_companies.append(company['Name'])
-#         CC.post(company)
+def create_companies(n: int):
+    companies= tester.create_companies(n)
+    for company in companies:
+        list_companies.append(company['Name'])
+        CC.post(company)
 
-# def create_users(n: int):
-#     users= tester.create_users(n, list_companies, groups)
-#     for user in users:
-#         UC.post(user)
+def create_users(n: int):
+    users= tester.create_users(n, list_companies, groups)
+    for user in users:
+        UC.post(user)
 
-# def create_areas(n: int):
-#     areas= tester.create_areas(n,list_companies)
-#     for area in areas:
-#         AC.post(area)
+def create_areas(n: int):
+    areas= tester.create_areas(n,list_companies)
+    for area in areas:
+        AC.post(area)
 
 # create_companies(6)
 # create_users(30)
