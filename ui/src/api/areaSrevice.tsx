@@ -1,9 +1,9 @@
 "use client"
-import Branch from "../models/Branch";
+import Area from "../models/Areas";
 
-export async function fetchBranchesService(token: string): Promise<Branch[]> {
+export async function fetchAreasService(token: string): Promise<Area[]> {
     try {
-        const response = await fetch(`http://localhost:5050/api/branch`, {
+        const response = await fetch(`http://localhost:5050/api/area`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -14,7 +14,7 @@ export async function fetchBranchesService(token: string): Promise<Branch[]> {
             const data = await response.json();
             throw new Error(data.error);
         }
-        const data: Branch[] = await response.json();
+        const data: Area[] = await response.json();
         return data;
 
     } catch (error) {
@@ -22,13 +22,13 @@ export async function fetchBranchesService(token: string): Promise<Branch[]> {
     }
 }
 
-export async function submitBranchService(token: string, isEdit: boolean, data: Branch, id?: number) {
+export async function submitAreaService(token: string, isEdit: boolean, data: Area, id?: number) {
 
     try {
         if (!token) {
             throw new Error("Please login");
         }
-        const url = isEdit ? `http://127.0.0.1:5050/api/branch/${id}` : 'http://127.0.0.1:5050/api/branch';
+        const url = isEdit ? `http://127.0.0.1:5050/api/area/${id}` : 'http://127.0.0.1:5050/api/area';
         const response = await fetch(url, {
             method: isEdit ? 'PUT' : 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -48,14 +48,14 @@ export async function submitBranchService(token: string, isEdit: boolean, data: 
     }
 }
 
-export async function deleteBranchService(token: string, id: number) {
+export async function deleteAreaService(token: string, id: number) {
 
     try {
         if (!token) {
             throw new Error("Please login");
         }
         else {
-            const response = await fetch(`http://localhost:5050/api/branch`, {
+            const response = await fetch(`http://localhost:5050/api/area`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -68,6 +68,6 @@ export async function deleteBranchService(token: string, id: number) {
             }
         }
     } catch (error) {
-        console.error(error);
+        throw error;
     }
 }

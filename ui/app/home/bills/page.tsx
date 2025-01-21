@@ -2,7 +2,7 @@
 
 import { ChangeEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { buttonBack } from "@/src/components/buttons";
+import buttonBack from "@/src/components/buttons";
 import { goHome } from "@/src/hooks/handleRouts";
 import logo from "@/src/components/logo";
 
@@ -14,10 +14,10 @@ export default function FormularioDinamico() {
     { id: 1, fecha: "", consumo: "", sucursal: "" },
   ]);
 
-  
+
   const sucursales = ["Sucursal A", "Sucursal B", "Sucursal C", "Sucursal D"];
   const [notification, setNotification] = useState<string | null>(null);
-
+  const [branches, setBranches] = useState<[]>([]);
   // Manejar cambios en los campos de un formulario específico
   const handleInputChange = (
     e: ChangeEvent<HTMLSelectElement> | ChangeEvent<HTMLInputElement>,
@@ -31,7 +31,7 @@ export default function FormularioDinamico() {
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5050/api/user/", {
+      const response = await fetch("http://localhost:5050/api/bill/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formularios),
@@ -51,8 +51,9 @@ export default function FormularioDinamico() {
   const addForm = () => {
     setFormularios((prev) => [
       ...prev,
-      { id: prev.length + 1, fecha: "", consumo: "", sucursal: "" },
+      { id: nextIdForm, fecha: "", consumo: "", sucursal: "" },
     ]);
+    setNextIdForm(nextIdForm + 1);
   };
   const deleteForm = (id: number) => {
     setFormularios((prev) => prev.filter((form) => form.id !== id));
@@ -61,7 +62,7 @@ export default function FormularioDinamico() {
     <div className="flex flex-col gap-4 items-center min-h-screen bg-gray-100 p-4 bg-[url('http://localhost:3000/images/claro3.jpg')] dark:bg-[url('http://localhost:3000/images/oscuro2.jpg')] bg-cover bg-no-repeat bg-center overflow-auto bg-fixed">
 
       <div className='flex justify-center items-center'>
-        {logo(50,50)}
+        {logo(50, 50)}
         <h2 className="text-4xl font-extrabold text-center text-black dark:text-white">
           Consumption records!
         </h2>

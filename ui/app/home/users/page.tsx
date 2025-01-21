@@ -6,7 +6,7 @@ import React from 'react';
 import { getToken } from '@/src/hooks/handleToken';
 import User from "@/src/models/User"
 import showNotification from '@/src/utilts/Notifications';
-import { buttonBack } from '@/src/components/buttons';
+import buttonBack from '@/src/components/buttons';
 import { goHome } from '@/src/hooks/handleRouts';
 import logo from '@/src/components/logo';
 
@@ -24,7 +24,7 @@ export default function Page() {
     const [id, setCurrentUserId] = useState<number | null>(null);
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState('');
-    // eslint-disable-next-line react-hooks/exhaustive-deps 
+
     useEffect(() => { fetchUsers(); }, []);
     const fetchUsers = async () => {
         try {
@@ -45,6 +45,7 @@ export default function Page() {
             console.error(Error)
         }
     };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!Username || !Company || !Type || !Password) {
@@ -78,17 +79,18 @@ export default function Page() {
     };
     const handleDeleteUser = async (id: number) => {
         const confirmed = window.confirm('Are you sure you want to delete the user?');
-        if (!confirmed) return;
-
-        try {
-            const response = await fetch(`http://127.0.0.1:5050/api/user/${id}`, { method: 'DELETE' });
-            if (!response.ok) throw new Error('Error deleting user');
-            setUsers(users.filter((user) => user.id !== id));
-            showNotification('User successfully deleted.', setNotification);
-        } catch (Error) {
-            console.error(Error)
+        if (confirmed) {
+            try {
+                const response = await fetch(`http://127.0.0.1:5050/api/user/${id}`, { method: 'DELETE' });
+                if (!response.ok) throw new Error('Error deleting user');
+                setUsers(users.filter((user) => user.id !== id));
+                showNotification('User successfully deleted.', setNotification);
+            } catch (Error) {
+                console.error(Error)
+            }
         }
     };
+
     const handleEditUser = (user: User) => {
         setName(user.Username);
         setCompany(user.Company);
@@ -99,6 +101,7 @@ export default function Page() {
         setIsEdit(true);
         setShowForm(true);
     };
+
     const resetForm = () => {
         setName('');
         setCompany('');
@@ -109,6 +112,7 @@ export default function Page() {
         setIsEdit(false);
         setShowForm(false);
     };
+
     const filteredUsers = users.filter((user) =>
         user.Username.toLowerCase().includes(searchTerm.toLowerCase())
     );
