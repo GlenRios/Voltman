@@ -35,7 +35,7 @@ Iequipment = IEquipment.IEquipment(equipment_repo)
 
 UC= uc.UserController(Iuser, Icompany)
 CC= cc.CompanyController(Icompany)
-AC= ac.AreaController(Iarea)
+AC= ac.AreaController(Iarea, Icompany)
 EC= ec.EquipmentController(Iequipment, Icompany, Iarea)
 
 # ###########test############
@@ -54,7 +54,7 @@ def create_users(n: int):
         UC.post(user)
 
 def create_areas(n: int):
-    areas= tester.create_areas(n,list_companies)
+    areas= tester.create_areas(n, list_companies)
     for area in areas:
         AC.post(area)
 

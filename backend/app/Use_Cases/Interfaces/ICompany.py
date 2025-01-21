@@ -13,6 +13,10 @@ class ICompany:
     def get(self,name: str):
         company= self.repo.get_byName(name)
         return self.repo.to_Company(company).as_dict()
+    
+    def get_by_id(self, id: int):
+        company= self.repo.get(id)
+        return self.repo.to_Company(company).as_dict()
 
     def delete(self, id):
         self.repo.delete(id)

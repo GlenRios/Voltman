@@ -178,14 +178,29 @@ def get_branch(name):
 @app.route("/api/branch", methods=["POST",])
 def create_branch():
     data = request.json
-    new_company = cc.post(data)
-    return new_company
+    username = get_jwt_identity()
+    user= uc.get(username)
+    if user.Type== 'SuperAdmin':
+        new_company = cc.post(data)
+        return jsonify(new_company), 200
+    return jsonify({'error':'You dont have permission'}), 300
 
 @app.route("/api/branch/<int:id>", methods=["PUT", "PATCH"])
 def update_branch(id):
     data = request.json
     updated_company= cc.put(id, data)
     return jsonify(updated_company) , 200
+
+@app.route("/api/branch/formule/<int:id>", methods=["PUT", "PATCH"])
+@jwt_required(optional=False)
+def update_formule(id):
+    data = request.json
+    username= get_jwt_identity()
+    user= uc.get(username)
+    if user.Type not in BRANCH_WRITE_PERMISSION:
+        return jsonify({'error': 'You dont have permission'}), 300
+    updated_company= cc.update_formule(data, id)
+    return jsonify(updated_company), 200
 
 @app.route("/api/branch/<int:id>", methods=["DELETE",])
 @jwt_required(optional=False)
@@ -195,49 +210,32 @@ def delete_branch(id):
     if user.Type== 'SuperAdmin':
         cc.delete(id)
         return jsonify({'message': 'Company deleted successfully'}), 200
-
-    return jsonify({'error': 'you dont have permission'})
+    return jsonify({'error': 'you dont have permission'}), 300
 
 
 # area
-@app.route("/api/area/")
-#@jwt_required(optional=False)
-def list_area():
-    #username = get_jwt_identity()
-    #users= uc.get(username)
-
-    group = uc.Iuser.repo.get(1).group
-    if group.Name not in BRANCH_READ_PERMISSION:
-        raise CustomError("Not allowed", 403)
-
-    company = uc.Iuser.repo.get(1).company
-
-    return [area.as_dict() for area in company.areas]
+@app.route("/api/area/<int:id>", methods=['GET'])
+def list_area(id):
+    areas= ac.get_all(id)
+    return jsonify(areas), 200
 
 @app.route("/api/area/", methods=["POST",])
-#@jwt_required( optional=False )
 def create_area():
     data = request.json
     new_area = ac.post(data)
-
-    return new_area
+    return jsonify(new_area), 200
 
 @app.route("/api/area/<int:id>", methods=["PUT", "PATCH"])
-#@jwt_required(optional=False)
 def update_area(id):
     data = request.json
-    repo = ac.Iarea.repo
-    updated_area = repo.put(id, data, ["Name",])
-    if not updated_area:
-        return "Not found", 404
-    return updated_area.as_dict()
+    updated_area= ac.put(id, data)
+    return jsonify(updated_area), 200
 
 @app.route("/api/area/<int:id>", methods=["DELETE",])
 def delete_area(id):
-    repo = ac.Iarea.repo
-    existed = repo.delete(id)
-    
-    return "", 200 if existed else 404
+    ac.delete(id)
+    return jsonify({'messagge': 'Area deleted successfully.'}), 200
+
 
 # equipment
 @app.route("/api/equipment/")
@@ -284,5 +282,4 @@ def delete_equipment(id):
     return "", 200 if existed else 404
 
 app.run(port= 5050,debug=True)
-
 

@@ -1,5 +1,6 @@
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session 
+from sqlalchemy.exc import IntegrityError, NoResultFound
 from sqlalchemy import or_
 from Configurations.CustomError import CustomError
 
@@ -33,9 +34,18 @@ class BaseRepo:
         #given an id of a Model delete it from the bd
         model = self.get(id)
         if model:
-            self.db.delete(model)
-            self.db.commit()
-            return True
+            try:
+                self.db.delete(model)
+                self.db.commit()
+                return True
+            except NoResultFound:
+                raise CustomError("Error: Item does not exist.",404)
+            except IntegrityError as e:
+                self.db.rollback()
+                raise CustomError(f"Integrity Error: there may be dependencies that prevent deletion.", 300)
+            except Exception as e:
+                self.db.rollback()
+                raise CustomError(f"Error inesperado: {e}", 500)
         return False
     
    
