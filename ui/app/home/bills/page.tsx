@@ -5,19 +5,23 @@ import { useRouter } from "next/navigation";
 import buttonBack from "@/src/components/buttons";
 import { goHome } from "@/src/hooks/handleRouts";
 import logo from "@/src/components/logo";
-import { fetchBranchesService } from "@/src/api/branchService";
 import { getToken } from "@/src/hooks/handleToken";
 
 export default function FormularioDinamico() {
 
+  const token = getToken();
   const router = useRouter();
   const [nextIdForm, setNextIdForm] = useState<number>(2);
-  const [formularios, setFormularios] = useState([
-    { id: 1, fecha: "", consumo: "", sucursal: "" },
+  const [formularios, setFormularios] = useState<{ id: number, fecha: string, consumo: number, sucursal: string }[]>([
+    { id: 1, fecha: "", consumo: 0, sucursal: "" },
   ]);
-
-  const [notification, setNotification] = useState<string | null>(null);
-  const [sucursales, setBranches] = useState<[]>([]);
+  const [branchesName, setBranchesName] = useState<{ name: string; id: number }[]>([]);
+  // nombre de la sucursal seleccionada
+  const [selectedBranch, setSelectedBranch] = useState<string | null>(null);
+  // maneja el cambio en la sucursal seleccionada
+  const handleSelectBranch = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedBranch(event.target.value);
+  };
   // Manejar cambios en los campos de un formulario específico
   const handleInputChange = (
     e: ChangeEvent<HTMLSelectElement> | ChangeEvent<HTMLInputElement>,
@@ -32,7 +36,6 @@ export default function FormularioDinamico() {
   useEffect(() => { fetchBranches(); }, []);
   const fetchBranches = async () => {
     try {
-      const token = getToken();
       const response = await fetch("http://localhost:5050/api/branch", {
         method: 'GET',
         headers: {
@@ -42,8 +45,12 @@ export default function FormularioDinamico() {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);
+      const names = data.map((item: { id: number; Name: string; }) => ({
+        id: item.id ?? null,       // Si falta, asigna null
+        name: item.Name ?? "N/A"   // Si falta, asigna "N/A"
+      }))// Elimina valores vacíos
+      setBranchesName(names);
 
-      setBranches(data);
     } catch (Error) {
       console.error(Error)
     }
@@ -61,7 +68,7 @@ export default function FormularioDinamico() {
 
       if (response.ok) {
         alert("Datos enviados correctamente");
-        setFormularios([{ id: 1, fecha: "", consumo: "", sucursal: "" }]); // Reiniciar formularios
+        setFormularios([{ id: 1, fecha: "", consumo: 0, sucursal: "" }]); // Reiniciar formularios
       } else {
         alert("Hubo un problema al enviar los datos");
       }
@@ -73,7 +80,7 @@ export default function FormularioDinamico() {
   const addForm = () => {
     setFormularios((prev) => [
       ...prev,
-      { id: nextIdForm, fecha: "", consumo: "", sucursal: "" },
+      { id: nextIdForm, fecha: "", consumo: 0, sucursal: "" },
     ]);
     setNextIdForm(nextIdForm + 1);
   };
@@ -89,12 +96,6 @@ export default function FormularioDinamico() {
           Consumption records!
         </h2>
       </div>
-
-      {notification && (
-        <div className="mb-4 p-4 h-10 bg-green-100 text-green-700 rounded">
-          {notification}
-        </div>
-      )}
 
       <div className="flex flex-row justify-center items-center">
 
@@ -132,23 +133,23 @@ export default function FormularioDinamico() {
                 htmlFor={`sucursal-${formulario.id}`}
                 className="block text-gray-700 text-sm dark:text-white font-bold mb-2"
               >
-                Sucursal:
+                Branch:
               </label>
               <select
-                id={`sucursal-${formulario.id}`}
+                id={`branch-selector-${formulario.id}`} // ID único para cada selector
                 name="sucursal"
                 value={formulario.sucursal}
-                onChange={(e) => handleInputChange(e, formulario.id)}
-                className="shadow appearance-none border w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:border-zinc-700 dark:border-2 rounded-lg"
-                required
+                onChange={(e) => handleInputChange(e, formulario.id)} // Actualiza el campo del formulario específico
+                className="w-auto max-w-64 border border-gray-700 rounded-lg p-2 text-lg dark:bg-gray-800 dark:text-white"
               >
-                <option value="">Seleccione una sucursal</option>
-                {sucursales.map((sucursal, index) => (
-                  <option key={index} value={sucursal}>
-                    {sucursal}
+                <option value="">Selecciona una sucursal</option>
+                {branchesName.map((branch, index) => (
+                  <option key={index} value={branch.name}>
+                    {branch.name}
                   </option>
                 ))}
               </select>
+
             </div>
 
             {/* Fecha */}

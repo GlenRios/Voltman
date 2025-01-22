@@ -3,20 +3,20 @@ import React, { useEffect, useState } from "react"
 import Branch from "@/src/models/Branch";
 import Area from "@/src/models/Areas";
 import Equipment from "@/src/models/Equipments";
-// import { fetchBranchesService, submitBranchService, deleteBranchService } from "@/src/api/branchService";
-// import { fetchAreasService, submitAreaService, deleteAreaService } from "@/src/api/areaSrevice";
 import { useRouter } from "next/navigation";
 import logo from "@/src/components/logo";
 import { Boton } from "@/src/components/buttons";
 import { goHome } from "@/src/hooks/handleRouts";
 import { getToken } from "@/src/hooks/handleToken";
 import FormComponent from "@/src/components/formAddBranch";
-import EquipmentForm from "@/src/components/frormAddEquipment";
+import { useAlert } from "@/src/hooks/alertContxt";
+import Alert from "@/src/components/Alert";
 
 export default function branchesPage() {
 
     const router = useRouter();
     const token = getToken();
+    const { showAlert, alertData } = useAlert();
 
     //============================== BRANCHES ==============================================
 
@@ -59,12 +59,15 @@ export default function branchesPage() {
                 }
             });
             const data = await response.json();
-            if (!response.ok) throw new Error(data.error);
+            if (!response.ok) {
+                showAlert(true, data.error, 5000)
+            }
             const names = data.map((item: { id: number; Name: string; }) => ({
                 id: item.id ?? null,       // Si falta, asigna null
                 name: item.Name ?? "N/A"   // Si falta, asigna "N/A"
             }))// Elimina valores vacíos
             setBranchesName(names);
+            // showAlert(false, data.message || "Operation was successful!", 3000)
 
         } catch (Error) {
             console.error(Error)
@@ -74,7 +77,7 @@ export default function branchesPage() {
     const getBranchInfo = async () => {
         try {
             if (!selectedBranch) {
-                throw Error("Select a Branch");
+                showAlert(true, "Select a Branch", 5000);
             }
             const response = await fetch(`http://localhost:5050/api/branch/info/${selectedBranch}`, {
                 method: 'GET',
@@ -84,7 +87,9 @@ export default function branchesPage() {
                 }
             });
             const data = await response.json();
-            if (!response.ok) throw new Error(data.error);
+            if (!response.ok) {
+                showAlert(true, data.error, 5000);
+            }
             const info = {
                 id: data.id,
                 name: data.Name,
@@ -121,7 +126,10 @@ export default function branchesPage() {
             });
             const data = await response.json();
             if (!response.ok) {
-                throw new Error(data.error);
+                showAlert(true, data.error, 5000);
+            }
+            else {
+                showAlert(false, "Operation was successful!", 3000);
             }
         } catch (error) {
             console.log(error);
@@ -131,7 +139,7 @@ export default function branchesPage() {
     const editInfoBranch = async () => {
         try {
             if (!branchName || !branchType || !branchAddress || !branchLimit) {
-                throw new Error("Please complete all fields.");
+                showAlert(true,"Please complete all fields.",5000);
             }
             else if (branchInfo.id === -1) {
                 throw new Error("Invalid branch id");
@@ -147,7 +155,7 @@ export default function branchesPage() {
             });
             const data = await response.json();
             if (!response.ok) {
-                throw new Error(data.error);
+                showAlert(true,data.error,5000);
             }
             setBranchInfo({
                 id: branchInfo.id,
@@ -158,6 +166,7 @@ export default function branchesPage() {
                 aumento: branchIncrease,
                 porciento: branchPercent,
             });
+            showAlert(false,"Operation was successful!",3000);
         } catch (error) {
             console.log(error);
         }
@@ -165,17 +174,21 @@ export default function branchesPage() {
     // Editar la informcaion que solo el administrador puede cambiar
     const editRestInfoBranch = async () => {
         try {
-            const response = await fetch(`http://localhost:5050/api/branch/${branchInfo.id}`, {
+            const response = await fetch(`http://localhost:5050/api/branch/formule/${branchInfo.id}`, {
                 method: "PUT",
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify(
+                    { Increase: branchIncrease, Extra_Percent: branchPercent }
+                )
             });
             const data = await response.json();
             if (!response.ok) {
-                throw new Error(data.error);
+                showAlert(true,data.error,5000);
             }
+            showAlert(false, "Operation was successful!", 3000)
         } catch (error) {
             console.log(error);
         }
@@ -230,7 +243,7 @@ export default function branchesPage() {
                     });
                     if (!response.ok) {
                         const data = await response.json();
-                        throw new Error(data.error);
+                        showAlert(true,data.error,5000);
                     }
                     const data: Area[] = await response.json();
                     setAreas(data);
@@ -257,12 +270,13 @@ export default function branchesPage() {
             });
             const data = await response.json();
             if (!response.ok) {
-                throw new Error(data.error);
+                showAlert(true,data.error,5000);
             }
             else {
                 setAreas((prev) => [...prev, data]);
                 setNewArea({ Name: "", Responsible: "" });
                 setIsAdding(false);
+                showAlert(false, "Operation was successful!", 3000);
             }
         } catch (error) {
             console.error(error);
@@ -309,7 +323,7 @@ export default function branchesPage() {
             });
             const data = await response.json();
             if (!response.ok) {
-                throw new Error(data.error);
+                showAlert(true,data.error,5000);
             }
             else {
                 setAreas((prev) =>
@@ -320,6 +334,7 @@ export default function branchesPage() {
                     )
                 );
                 setEditingId(null);
+                showAlert(false, "Operation was successful!", 3000);
             }
         } catch (error) {
             console.log(error);
@@ -343,9 +358,10 @@ export default function branchesPage() {
             );
             if (!response.ok) {
                 const data = await response.json();
-                throw new Error(data.error);
+                showAlert(true,data.error,5000);
             }
             setAreas((prev) => prev.filter((area) => area.id !== id));
+            showAlert(false, "Operation was successful!", 3000);
         }
         catch (error) {
             console.error(error)
@@ -369,7 +385,7 @@ export default function branchesPage() {
         Model: "",
         Type: "",
         Nominal_Capacity: 0,
-        Installation_Date: "" ,
+        Installation_Date: "",
         Estimated_Lifespan: 0,
         Maintenance_Status: "",
         CriticalEnergySystem: 0,
@@ -407,7 +423,7 @@ export default function branchesPage() {
                     });
                     if (!response.ok) {
                         const data = await response.json();
-                        throw new Error(data.error);
+                        showAlert(true,data.error,5000);
                     }
                     const data: Equipment[] = await response.json();
                     setEquipments(data);
@@ -430,16 +446,17 @@ export default function branchesPage() {
                 },
                 body: JSON.stringify(
                     { ...newEquipment, Company: branchInfo.name }
-                )  
+                )
             });
             const data = await response.json();
             if (!response.ok) {
-                throw new Error(data.error);
+                showAlert(true,data.error,5000);
             }
             else {
                 setEquipments((prev) => [...prev, data]);
                 setNewEquipment(defaultEq);
                 setIsAddingEq(false);
+                showAlert(false, "Operation was successful!", 3000);
             }
         } catch (error) {
             console.error(error);
@@ -481,12 +498,12 @@ export default function branchesPage() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(
-                    { ...editFormDataEq , Company:branchInfo.name}
+                    { ...editFormDataEq, Company: branchInfo.name }
                 )
             });
             const data = await response.json();
             if (!response.ok) {
-                throw new Error(data.error);
+                showAlert(true,data.error,5000);
             }
             else {
                 setEquipments((prev) =>
@@ -497,6 +514,7 @@ export default function branchesPage() {
                     )
                 );
                 setEditingId(null);
+                showAlert(false, "Operation was successful!", 3000);
             }
         } catch (error) {
             console.log(error);
@@ -520,9 +538,10 @@ export default function branchesPage() {
             );
             if (!response.ok) {
                 const data = await response.json();
-                throw new Error(data.error);
+                showAlert(true,data.error,5000);
             }
             setEquipments((prev) => prev.filter((equipment) => equipment.id !== id));
+            showAlert(false, "Operation was successful!", 3000);
         } catch (error) {
             console.log(error)
         }
@@ -558,7 +577,7 @@ export default function branchesPage() {
         };
 
         return (
-            <div className="max-w-2xl mx-auto p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-lg">
+            <div className="max-w-2xl mx-auto m-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-lg">
                 <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
                     {newEquipment.Area ? "Editar Equipo" : "Crear Nuevo Equipo"}
                 </h2>
@@ -787,13 +806,17 @@ export default function branchesPage() {
         );
     };
 
-
-
     return (
         <main className="min-h-screen p-8 relative bg-[url('http://localhost:3000/images/claro3.jpg')] 
         //               dark:bg-[url('http://localhost:3000/images/oscuro2.jpg')] bg-cover 
         //               bg-no-repeat bg-center bg-fixed ">
-
+            {alertData.isVisible && (
+                <Alert
+                    type={alertData.type}
+                    message={alertData.message}
+                    onClose={() => showAlert(false, "", 0)}
+                />
+            )}
             {/* Encabezado de pagina*/}
             <div className='flex justify-center items-center p-4 m-4'>
                 {logo(50, 50)}

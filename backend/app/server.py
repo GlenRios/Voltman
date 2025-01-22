@@ -281,6 +281,9 @@ def protected(permission):
         return "ok",( 403 if role not in BRANCHES_PERMISSIONS else 200)
     if permission=='bills':
         return "ok", (403 if role not in BILLS_PERMISSIONS else 200)
+    if permission == 'log_out':
+        #implementar logout
+        return "ok", 200
     if permission=='consults':
         return "ok", 200
     # return " ", (200 if uc.protected(role, permission) else 403)

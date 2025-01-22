@@ -1,7 +1,7 @@
 'use client';
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import fetchAccesRoute from "../api/accesService";
-import { getToken } from "./handleToken";
+import { removeToken } from "./handleToken";
 import { MouseEventHandler } from "react";
 
 export function goHome(router: AppRouterInstance) {
@@ -13,10 +13,18 @@ export async function goRestrictedRoute(router: AppRouterInstance, route: string
     try {
         const response = await fetchAccesRoute(route)
         if (response) {
+            if (route === "log_out") {
+                removeToken();
+                router.push('/');
+                return;
+            }
             router.push(`/home/${route}`);
             return;
         }
-        throw new Error(`error accessing ${route}`);
+        else{
+            router.push("/");
+        }
+        // throw new Error(`error accessing ${route}`);
     } catch (error) {
         throw error;
     }

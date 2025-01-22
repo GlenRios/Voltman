@@ -12,8 +12,7 @@ export default async function fetchAccesRoute(route: string): Promise<boolean> {
         });
 
         if (!response.ok) {
-            const data = await response.json();
-            throw new Error(data.error);
+            return false;
         }
         return true;
     }
