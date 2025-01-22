@@ -36,12 +36,12 @@ Iequipment = IEquipment.IEquipment(equipment_repo)
 UC= uc.UserController(Iuser, Icompany)
 CC= cc.CompanyController(Icompany)
 AC= ac.AreaController(Iarea, Icompany)
-EC= ec.EquipmentController(Iequipment, Icompany, Iarea)
+EC= ec.EquipmentController(Iequipment, Iarea)
 
 # ###########test############
 list_companies=[]
 groups=['Admin', 'Manacher', 'Analyst']
-
+list_areas=[]
 def create_companies(n: int):
     companies= tester.create_companies(n)
     for company in companies:
@@ -56,9 +56,18 @@ def create_users(n: int):
 def create_areas(n: int):
     areas= tester.create_areas(n, list_companies)
     for area in areas:
+        list_areas.append([area['Name'], area['Company']])
         AC.post(area)
 
-# create_companies(6)
-# create_users(30)
-# create_areas(30)
+
+def create_equipments(n: int):
+    equipments= tester.create_equipments(n, list_areas)
+    for eq in equipments:
+        EC.post(eq)
+
+# create_companies(10)
+# create_users(50)
+# create_areas(50)
+# create_equipments(200)
+
 

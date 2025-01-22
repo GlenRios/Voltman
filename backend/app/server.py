@@ -7,7 +7,8 @@ from main import UC as uc, CC as cc, AC as ac, EC as ec
 from Configurations.CustomError import CustomError
 from Configurations import BASE_DIR
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
-import sys
+import sys 
+from datetime import datetime
 
 def import_from_path(module_name, file_path):
     """Import a module given its name and file path."""
@@ -238,48 +239,27 @@ def delete_area(id):
 
 
 # equipment
-@app.route("/api/equipment/")
-#@jwt_required(optional=False)
-def list_equipment():
-    #username = get_jwt_identity()
-    #users= uc.get(username)
-
-    group = uc.Iuser.repo.get(1).group
-    if group.Name not in BRANCH_READ_PERMISSION:
-        raise CustomError("Not allowed", 403)
-
-    company = uc.Iuser.repo.get(1).company
-
-    items = []
-    for area in company.areas:
-        for equipment in area.equipments:
-            items.append(equipment.as_dict())
-    return items
+@app.route("/api/equipment/<int:id>", methods=['GET'])
+def list_equipment(id):
+    areas= ac.get_all(id)
+    equipments= ec.get_all(areas)
+    return jsonify(equipments), 200
 
 @app.route("/api/equipment/", methods=["POST",])
-#@jwt_required( optional=False )
 def create_equipment():
     data = request.json
     new_equipment = ec.post(data)
-
-    return new_equipment
+    return jsonify(new_equipment), 200
 
 @app.route("/api/equipment/<int:id>", methods=["PUT", "PATCH"])
-#@jwt_required(optional=False)
 def update_equipment(id):
     data = request.json
-    repo = ec.Iequipment.repo
-    updated_equipment = repo.put(id, data, ["Name",])
-    if not updated_equipment:
-        return "Not found", 404
-    return updated_equipment.as_dict()
+    updated_equipment= ec.put(id, data)
+    return jsonify(updated_equipment), 200
 
 @app.route("/api/equipment/<int:id>", methods=["DELETE",])
 def delete_equipment(id):
-    repo = ec.Iequipment.repo
-    existed = repo.delete(id)
-    
-    return "", 200 if existed else 404
+    ec.delete(id)
+    return jsonify({'message':'Equipment deleted successfully'})
 
 app.run(port= 5050,debug=True)
-

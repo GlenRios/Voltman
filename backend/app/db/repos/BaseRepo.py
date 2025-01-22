@@ -16,7 +16,7 @@ class BaseRepo:
             if filters:
                 existing_entity = self.db.query(self.Model).filter_by(**filters).first()
                 if existing_entity:
-                    raise CustomError('Error creating user. Object has an attribute unique that is already in use', 500)
+                    raise CustomError('Error creating item. Object has an attribute unique that is already in use', 500)
         
         new_model=self.Model(**values)
         self.db.add(new_model)
@@ -42,7 +42,7 @@ class BaseRepo:
                 raise CustomError("Error: Item does not exist.",404)
             except IntegrityError as e:
                 self.db.rollback()
-                raise CustomError(f"Integrity Error: there may be dependencies that prevent deletion.", 300)
+                raise CustomError("Integrity Error: there may be dependencies that prevent deletion.", 500)
             except Exception as e:
                 self.db.rollback()
                 raise CustomError(f"Error inesperado: {e}", 500)
@@ -57,7 +57,7 @@ class BaseRepo:
                 filters = {field: values[field] for field in unique_fields if field in values}
                 existing_entity = self.db.query(self.Model).filter_by(**filters).first()
                 if existing_entity and existing_entity.id!= id:
-                    raise CustomError('Error modifying user. Object has an attribute unique that is already in use', 500)
+                    raise CustomError('Error modifying item. Object has an attribute unique that is already in use', 500)
 
             for key, value in values.items():
                 setattr(model, key, value)

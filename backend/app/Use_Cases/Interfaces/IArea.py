@@ -17,6 +17,7 @@ class IArea:
 
     def get_equipments(self, id: int):
         equipments= self.repo.get_equipments(id)
+        return equipments
 
     def delete(self, id: int):
         self.repo.delete(id)
@@ -28,7 +29,9 @@ class IArea:
 
     def get_by_name(self,name: str, company: str):
         area= self.repo.get_by_company(name, company)
-        return self.repo.to_Area(area).as_dict()
+        if area:
+            return self.repo.to_Area(area).as_dict()
+        return None
     
     def convert(self, areas: list):
         list=[]
