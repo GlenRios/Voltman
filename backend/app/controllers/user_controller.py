@@ -36,10 +36,9 @@ class UserController:
     def put(self, values: dict, id: int ):
         user = self.Iuser.get(id)
         if user['Password']== values['Password']:
-            user['Username']= values['Username']
             if values['NewPassword']:
-                user['Password']= values['NewPassword'] 
-            return self.Iuser.update(id, user)
+                values['Password']= values['NewPassword'] 
+            return self.Iuser.update(id, values)
         raise CustomError('Incorrect Password, cant update the user because password is not correct', 500)
 
     def delete(self, id: int):

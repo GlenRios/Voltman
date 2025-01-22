@@ -262,12 +262,28 @@ def delete_equipment(id):
     ec.delete(id)
     return jsonify({'message':'Equipment deleted successfully'})
 
-@app.route("/api/access/<string:permission>", methods=["PUT", "PATCH"])
+
+
+USERS_PERMISSIONS=['SuperAdmin', 'Admin']
+BRANCHES_PERMISSIONS=['SuperAdmin', 'Admin', 'Manacher']
+BILLS_PERMISSIONS=['SuperAdmin', 'Manacher']
+
+@app.route("/api/access/<string:permission>", methods=["GET"])
 @jwt_required(optional=False)
 def protected(permission):
     username= get_jwt_identity()
     user= uc.get(username)
     role= user.Type
-    return " ", (200 if uc.protected(role, permission) else 403)
+
+    if permission=='users': 
+        return "ok", (403 if role not in USERS_PERMISSIONS else 200)
+    if permission=='branches':
+        return "ok",( 403 if role not in BRANCHES_PERMISSIONS else 200)
+    if permission=='bills':
+        return "ok", (403 if role not in BILLS_PERMISSIONS else 200)
+    if permission=='consults':
+        return "ok", 200
+    # return " ", (200 if uc.protected(role, permission) else 403)
+
 
 app.run(port= 5050,debug=True)
