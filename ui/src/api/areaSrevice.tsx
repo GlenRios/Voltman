@@ -1,9 +1,9 @@
 "use client"
 import Area from "../models/Areas";
 
-export async function fetchAreasService(token: string): Promise<Area[]> {
+export async function fetchAreasService(token: string, branch: string): Promise<Area[]> {
     try {
-        const response = await fetch(`http://localhost:5050/api/area`, {
+        const response = await fetch(`http://localhost:5050/api/area/${branch}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
