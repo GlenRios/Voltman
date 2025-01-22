@@ -12,7 +12,11 @@ class EquipmentController:
         return self.Iequipment.get(id)
 
     def post(self, values: dict):
-        return self.Iequipment.create(values)
+        values['Installation_Date']= datetime.strptime(values['Installation_Date'], '%Y-%m-%d').date()
+        area= self.Iarea.get_by_name(values['Area'], values['Company'])
+        if area:
+            return self.Iequipment.create( values)
+        raise CustomError('Invalid Area', 500)
     
     def delete(self, id: int):
         return self.Iequipment.delete(id)
