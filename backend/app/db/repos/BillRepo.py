@@ -1,5 +1,4 @@
 from db.models.Bill import BillModel
-from sqlalchemy import func
 from datetime import datetime
 from db.repos.BaseRepo import BaseRepo
 from domain.Bill import Bill

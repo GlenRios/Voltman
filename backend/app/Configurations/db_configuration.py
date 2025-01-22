@@ -58,7 +58,13 @@ def init_db():
     Base.metadata.create_all(bind= engine)
 
     db= SessionLocal()
-
+    permissions= [
+        Permission.PermissionModel(Type= 'users'),
+        Permission.PermissionModel(Type= 'bills'),
+        Permission.PermissionModel(Type= 'branches'),
+        Permission.PermissionModel(Type= 'consult'),
+    ]
+    
     groups=[
         Group.GroupModel(Name= 'SuperAdmin'),
         Group.GroupModel(Name= 'Admin'),
@@ -67,15 +73,16 @@ def init_db():
     ]
 
     db.add_all(groups)
+    db.add_all(permissions)
 
-    company= Company.CompanyModel(Limit= 100.0, Increase= 20.0, Extra_Percent= 15.0, Type= 'type0', Name= 'company0', Addr= 'addr0')
-        
+    company= Company.CompanyModel(Limit= 100.0, Increase= 20.0, Extra_Percent= 15.0, Type= 'type0', Name= 'company0', Addr= 'addr0')        
     db.add(company)
     db.commit()
 
     super_user= User.UserModel(Username= 'SuperAdmin', Password= 'voltman000', CompanyID= 1, GroupID= 1)
     db.add(super_user)
     db.commit()
+
     db.close()
 
 

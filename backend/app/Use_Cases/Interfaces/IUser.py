@@ -39,9 +39,11 @@ class IUser:
             return self.repo.to_User(user)  
         raise CustomError('Incorrect username or password', 404)
     
-
     def get_id(self, username: str):
         return self.repo.get_by_username(username).id
+    
+    def get_permissions(self, group: str):
+        return self.repo.get_permissions(group)
     
     # this method is to check that a user is in the database
     def find_out(self, username: str, password: str):

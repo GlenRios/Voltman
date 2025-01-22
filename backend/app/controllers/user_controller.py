@@ -1,5 +1,4 @@
 from Configurations.CustomError import CustomError
-
 class UserController:
 
     def __init__(self, iuser, icompany):
@@ -26,6 +25,12 @@ class UserController:
 
     def post(self, values: dict):
         return self.Iuser.create(values)
+    
+    def protected(self, role: str, permission: str):
+        permissions= self.Iuser.get_permissions(role)
+        if permissions not in permissions:
+            return False
+        return True
 
 
     def put(self, values: dict, id: int ):

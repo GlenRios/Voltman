@@ -262,4 +262,12 @@ def delete_equipment(id):
     ec.delete(id)
     return jsonify({'message':'Equipment deleted successfully'})
 
+@app.route("/api/access/<string:permission>", methods=["PUT", "PATCH"])
+@jwt_required(optional=False)
+def protected(permission):
+    username= get_jwt_identity()
+    user= uc.get(username)
+    role= user.Type
+    return " ", (200 if uc.protected(role, permission) else 403)
+
 app.run(port= 5050,debug=True)

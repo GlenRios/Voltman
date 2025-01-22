@@ -18,13 +18,14 @@ if not os.path.exists(path):
 
 tester= Tester()
 
-from db.repos import UserRepo, CompanyRepo, AreaRepo, EquipmentRepo
+from db.repos import UserRepo, CompanyRepo, AreaRepo, EquipmentRepo, GroupRepo
 from Use_Cases.Interfaces import IUser, ICompany, IArea, IEquipment
 
 db= SessionLocal()
 
 company_repo= CompanyRepo.CompanyRepo(db)
-user_repo= UserRepo.UserRepo(db, company_repo)
+group_repo= GroupRepo.GroupRepo(db)
+user_repo= UserRepo.UserRepo(db, company_repo, group_repo)
 area_repo = AreaRepo.AreaRepo(db, company_repo)
 equipment_repo = EquipmentRepo.EquipmentRepo(db, area_repo)
 
