@@ -10,6 +10,7 @@ import logo from "@/src/components/logo";
 import { Boton } from "@/src/components/buttons";
 import { goHome } from "@/src/hooks/handleRouts";
 import { getToken } from "@/src/hooks/handleToken";
+import FormComponent from "@/src/components/formAddBranch";
 
 export default function branchesPage() {
 
@@ -39,7 +40,7 @@ export default function branchesPage() {
     const [branchLimit, setBranchLimit] = useState<string>('0');
     const [branchPercent, setBranchPercent] = useState<string>('15');
     const [branchIncrease, setBranchIncrease] = useState<string>('20');
-
+    const [showAddForm, setShowAddForm] = useState<boolean>(false);
     //Obtener nombres de las branches al abrir la pagina
     useEffect(() => { fetchBranches(); }, []);
     const fetchBranches = async () => {
@@ -99,12 +100,9 @@ export default function branchesPage() {
             console.error(error);
         }
     }
-    const addBranch = () => {
-        throw new Error("function not implement");
-    }
     const deletedBranch = async () => {
         try {
-            const response = await fetch(`http://localhost:5050/api/branch/formule/${branchInfo.id}`, {
+            const response = await fetch(`http://localhost:5050/api/branch/${branchInfo.id}`, {
                 method: "DELETE",
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -178,50 +176,89 @@ export default function branchesPage() {
         setBranchType(branchInfo.type);
         setBranchAddress(branchInfo.address);
         setBranchLimit(branchInfo.limit);
+    }
+    const restRestrictInfoBranch = () => {
         setBranchPercent(branchInfo.porciento);
         setBranchIncrease(branchInfo.aumento);
+    }
+    const addBranch = () => {
+        setShowAddForm(!showAddForm);
     }
 
     //========================= AREAS ===========================================
 
     const [areas, setAreas] = useState<Area[]>([])
+    const [showAreas, setShowAreas] = useState<boolean>(false);
     // const [selectedArea, setSelectedArea] = useState<Area | null>(null);
     const [editingId, setEditingId] = useState<number | null>(null); // ID de la fila que se esta editando
     const [isAdding, setIsAdding] = useState(false); // Controla si se está agregando una nueva área
-    const [newArea, setNewArea] = useState({ name: "", responsable: "" }); // Datos de la nueva área
+    const [newArea, setNewArea] = useState({ Name: "", Responsible: "" }); // Datos de la nueva área
     const [searchQuery, setSearchQuery] = useState("");
-    const [editFormData, setEditFormData] = useState({ name: "", responsable: "" });
+    const [editFormData, setEditFormData] = useState({ id: -1, Name: "", Responsible: "", Company: "" });
     // Obtener la lista de areas de la sucursal seleccionada
-    const fetchArea = async (branchName: string) => {
+    const fetchAreas = async () => {
         try {
             if (!token) {
                 throw new Error("Please log in");
             }
             else {
-                setAreas(await fetchAreasService(token))
+                if (!showAreas) {
+                    const response = await fetch(`http://localhost:5050/api/area/${branchInfo.id}`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    if (!response.ok) {
+                        const data = await response.json();
+                        throw new Error(data.error);
+                    }
+                    const data: Area[] = await response.json();
+                    setAreas(data);
+                    setShowAreas(true);
+                }
+                setShowAreas(!showAreas);
             }
         } catch (error) {
-
+            console.error(error);
         }
     }
     // Agrega una nueva área
-    const handleAddArea = () => {
-        setAreas((prev) => [
-            ...prev,
-            { id: Date.now(), name: newArea.name, responsable: newArea.responsable },
-        ]);
-        setNewArea({ name: "", responsable: "" });
-        setIsAdding(false); // Cierra el formulario de agregar
+    const handleAddArea = async () => {
+        try {
+            const response = await fetch("http://localhost:5050/api/area/", {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    { Name: newArea.Name, Responsible: newArea.Responsible, Company: branchInfo.name }
+                )
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error);
+            }
+            else {
+                setAreas((prev) => [...prev, data]);
+                setNewArea({ Name: "", Responsible: "" });
+                setIsAdding(false);
+            }
+        } catch (error) {
+            console.error(error);
+        }
     };
     // Cancela la adición de una nueva área
     const handleCancelAdd = () => {
-        setNewArea({ name: "", responsable: "" });
+        setNewArea({ Name: "", Responsible: "" });
         setIsAdding(false);
     };
     // Inicia la edición de una fila
     const handleEditClick = (area: Area) => {
         setEditingId(area.id);
-        setEditFormData({ name: area.name, responsable: area.responsable });
+        setEditFormData({ id: area.id, Name: area.Name, Responsible: area.Responsible, Company: area.Company });
     };
     // Maneja los cambios en el formulario de edición
     const handleEditChangeArea = (e: { target: { id: any; value: any; }; }) => {
@@ -240,23 +277,60 @@ export default function branchesPage() {
         }));
     };
     // Guarda los cambios realizados en el formulario de edición
-    const handleSaveClick = () => {
-        setAreas((prev) =>
-            prev.map((area) =>
-                area.id === editingId
-                    ? { ...area, name: editFormData.name, responsable: editFormData.responsable }
-                    : area
-            )
-        );
-        setEditingId(null);
+    const handleSaveClick = async () => {
+        try {
+            const response = await fetch(`http://localhost:5050/api/area/${editFormData.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    { Name: editFormData.Name, Responsible: editFormData.Responsible, Company: editFormData.Company }
+                )
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error);
+            }
+            else {
+                setAreas((prev) =>
+                    prev.map((area) =>
+                        area.id === editingId
+                            ? { ...area, Name: editFormData.Name, Responsible: editFormData.Responsible }
+                            : area
+                    )
+                );
+                setEditingId(null);
+            }
+        } catch (error) {
+            console.log(error);
+        }
     };
     // Cancela la edición 
     const handleCancelClick = () => {
         setEditingId(null);
     };
-    // Elimina una fila
-    const handleDeleteClick = (id: number) => {
-        setAreas((prev) => prev.filter((area) => area.id !== id));
+    // Elimina un area
+    const handleDeleteClick = async (id: number) => {
+        try {
+            const response = await fetch(`http://localhost:5050/api/area/${id}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.error);
+            }
+            setAreas((prev) => prev.filter((area) => area.id !== id));
+        } catch (error) {
+            console.log(error)
+        }
     };
     // Maneja el filtro por búsqueda
     const handleSearchChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
@@ -264,7 +338,7 @@ export default function branchesPage() {
     };
     // Filtra las áreas según la búsqueda
     const filteredAreas = areas.filter((area) =>
-        area.name.toLowerCase().includes(searchQuery.toLowerCase())
+        area.Name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     // ================================= EQUIPMENTS ========================================
@@ -298,7 +372,7 @@ export default function branchesPage() {
             </div>
 
             {/* Botones */}
-            <div className="flex flex-col justify-center p-4 m-4">
+            <div className="flex flex-col items-center justify-center p-4 m-4">
                 <div className="flex flex-crow items-center  justify-center gap-4 p-4">
                     <div className="flex flex-row">
                         <button
@@ -329,11 +403,15 @@ export default function branchesPage() {
                         {Boton("Delete", "red", deletedBranch)}
                     </div>
                 </div>
+                {showAddForm &&
+                    <div className="flex flex-col w-1/4 h-auto m-2 item-center justify-center">
+                        <FormComponent />
+                    </div>}
                 <select
                     id="branch-selector"
                     value={selectedBranch ? selectedBranch : ""}
                     onChange={handleSelectBranch}
-                    className="border border-gray-700 rounded-lg p-2 text-lg dark:bg-gray-800 dark:text-white"
+                    className="w-auto max-w-64 border border-gray-700 rounded-lg p-2 text-lg dark:bg-gray-800 dark:text-white"
                 >
                     <option value="">Selecciona una sucursal</option>
                     {branchesName.map((branch, index) => (
@@ -343,7 +421,6 @@ export default function branchesPage() {
                     ))}
                 </select>
             </div>
-
             {/* Brach management */}
             {selectedBranch &&
                 <div className="flex flex-col">
@@ -417,7 +494,7 @@ export default function branchesPage() {
                             {/* Botones */}
                             <div className="flex justify-end space-x-2 mt-4">
                                 <button
-                                    onClick={() => restInfoBranch}
+                                    onClick={restInfoBranch}
                                     className="px-4 py-2 text-gray-800 dark:text-white bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-200"
                                 >
                                     Restablecer
@@ -466,13 +543,13 @@ export default function branchesPage() {
                             {/* Botones */}
                             <div className="flex justify-end space-x-2">
                                 <button
-                                    // onClick={}
+                                    onClick={restRestrictInfoBranch}
                                     className="px-4 py-2 text-gray-800 dark:text-white bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-200"
                                 >
                                     Restablecer
                                 </button>
                                 <button
-                                    // onClick={}
+                                    onClick={() => editRestInfoBranch}
                                     className="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
                                 >
                                     Guardar
@@ -482,147 +559,155 @@ export default function branchesPage() {
                     </div>
 
                     {/* Areas information */}
-                    <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
-                        <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Áreas</h2>
-                        {/* Barra de busqueda de areas */}
-                        <input
-                            type="text"
-                            placeholder="Buscar por nombre de área..."
-                            value={searchQuery}
-                            onChange={handleSearchChange}
-                            className="w-full px-3 py-2 mb-4 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                        <div className="overflow-y-auto max-h-64 rounded-xl">
-                            <table className="w-full table-fixed border-collapse border rounded-xl border-gray-300 dark:border-gray-700">
-                                <thead>
-                                    <tr className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300">
-                                        <th className="border border-gray-300 dark:border-gray-700 p-2 text-left w-1/3">
-                                            Nombre
-                                        </th>
-                                        <th className="border border-gray-300 dark:border-gray-700 p-2 text-left w-1/3">
-                                            Responsable
-                                        </th>
-                                        <th className="border border-gray-300 dark:border-gray-700 p-2 text-center w-1/3">
-                                            Acciones
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filteredAreas.map((area) => (
-                                        <tr key={area.id} className="odd:bg-gray-100 dark:odd:bg-gray-700">
-                                            {editingId === area.id ? (
-                                                <>
-                                                    <td className="border border-gray-300 dark:border-gray-700 p-2 overflow-hidden max-w-xs whitespace-nowrap">
-                                                        <input
-                                                            id="name"
-                                                            type="text"
-                                                            className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                            value={editFormData.name}
-                                                            onChange={handleEditChangeArea}
-                                                        />
-                                                    </td>
-                                                    <td className="border border-gray-300 dark:border-gray-700 p-2 overflow-hidden max-w-xs whitespace-nowrap">
-                                                        <input
-                                                            id="responsable"
-                                                            type="text"
-                                                            className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                            value={editFormData.responsable}
-                                                            onChange={handleEditChangeArea}
-                                                        />
-                                                    </td>
-                                                    <td className="border border-gray-300 dark:border-gray-700 p-2 text-center">
-                                                        <button
-                                                            onClick={handleSaveClick}
-                                                            className="px-4 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600 transition duration-200 mr-2"
-                                                        >
-                                                            Guardar
-                                                        </button>
-                                                        <button
-                                                            onClick={handleCancelClick}
-                                                            className="px-4 py-2 text-gray-800 dark:text-white bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-200"
-                                                        >
-                                                            Cancelar
-                                                        </button>
-                                                    </td>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <td className="border border-gray-300 dark:border-gray-700 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
-                                                        {area.name}
-                                                    </td>
-                                                    <td className="border border-gray-300 dark:border-gray-700 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
-                                                        {area.responsable}
-                                                    </td>
-                                                    <td className="border border-gray-300 dark:border-gray-700 p-2 text-center m-1">
-                                                        <button
-                                                            onClick={() => handleEditClick(area)}
-                                                            className="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200 mr-2"
-                                                        >
-                                                            Editar
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleDeleteClick(area.id)}
-                                                            className="px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600 transition duration-200"
-                                                        >
-                                                            Eliminar
-                                                        </button>
-                                                    </td>
-                                                </>
-                                            )}
-                                        </tr>
-                                    ))}
-                                    {isAdding && (
-                                        <tr>
-                                            <td className="border border-gray-300 dark:border-gray-700 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
-                                                <input
-                                                    id="name"
-                                                    type="text"
-                                                    placeholder="Nombre del área"
-                                                    className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                    value={newArea.name}
-                                                    onChange={handleNewAreaChange}
-                                                />
-                                            </td>
-                                            <td className="border border-gray-300 dark:border-gray-700 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
-                                                <input
-                                                    id="responsable"
-                                                    type="text"
-                                                    placeholder="Responsable"
-                                                    className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                    value={newArea.responsable}
-                                                    onChange={handleNewAreaChange}
-                                                />
-                                            </td>
-                                            <td className="border border-gray-300 dark:border-gray-700 p-2 text-center m-1">
-                                                <button
-                                                    onClick={handleAddArea}
-                                                    className="px-4 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600 transition duration-200 mr-2"
-                                                >
-                                                    Agregar
-                                                </button>
-                                                <button
-                                                    onClick={handleCancelAdd}
-                                                    className="px-4 py-2 text-gray-800 dark:text-white bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-200"
-                                                >
-                                                    Cancelar
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
-                        {!isAdding && (
-                            <button
-                                onClick={() => setIsAdding(true)}
-                                className="mt-4 px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
-                            >
-                                Agregar Área
-                            </button>
-                        )}
+                    <div className="m-4">
+                        <button
+                            onClick={() => fetchAreas()}
+                            className="px-4 py-2  text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
+                        >
+                            {showAreas ? "Hide Areas" : "Show Areas"}
+                        </button>
                     </div>
-
-
+                    {showAreas &&
+                        <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+                            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Áreas</h2>
+                            {/* Barra de busqueda de areas */}
+                            <input
+                                type="text"
+                                placeholder="Buscar por nombre de área..."
+                                value={searchQuery}
+                                onChange={handleSearchChange}
+                                className="w-full px-3 py-2 mb-4 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <div className="overflow-y-auto max-h-64 rounded-xl">
+                                <table className="w-full table-fixed border-collapse border rounded-xl border-gray-300 dark:border-gray-700">
+                                    <thead>
+                                        <tr className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300">
+                                            <th className="border border-gray-300 dark:border-gray-700 p-2 text-left w-1/3">
+                                                Nombre
+                                            </th>
+                                            <th className="border border-gray-300 dark:border-gray-700 p-2 text-left w-1/3">
+                                                Responsable
+                                            </th>
+                                            <th className="border border-gray-300 dark:border-gray-700 p-2 text-center w-1/3">
+                                                Acciones
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {filteredAreas.map((area) => (
+                                            <tr key={area.id} className="odd:bg-gray-100 dark:odd:bg-gray-700">
+                                                {editingId === area.id ? (
+                                                    <>
+                                                        <td className="border border-gray-300 dark:border-gray-700 p-2 overflow-hidden max-w-xs whitespace-nowrap">
+                                                            <input
+                                                                id="Name"
+                                                                type="text"
+                                                                className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                                value={editFormData.Name}
+                                                                onChange={handleEditChangeArea}
+                                                            />
+                                                        </td>
+                                                        <td className="border border-gray-300 dark:border-gray-700 p-2 overflow-hidden max-w-xs whitespace-nowrap">
+                                                            <input
+                                                                id="Responsible"
+                                                                type="text"
+                                                                className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                                value={editFormData.Responsible}
+                                                                onChange={handleEditChangeArea}
+                                                            />
+                                                        </td>
+                                                        <td className="border border-gray-300 dark:border-gray-700 p-2 text-center">
+                                                            <button
+                                                                onClick={handleSaveClick}
+                                                                className="px-4 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600 transition duration-200 mr-2"
+                                                            >
+                                                                Guardar
+                                                            </button>
+                                                            <button
+                                                                onClick={handleCancelClick}
+                                                                className="px-4 py-2 text-gray-800 dark:text-white bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-200"
+                                                            >
+                                                                Cancelar
+                                                            </button>
+                                                        </td>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <td className="border border-gray-300 dark:border-gray-700 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
+                                                            {area.Name}
+                                                        </td>
+                                                        <td className="border border-gray-300 dark:border-gray-700 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
+                                                            {area.Responsible}
+                                                        </td>
+                                                        <td className="border border-gray-300 dark:border-gray-700 p-2 text-center m-1">
+                                                            <button
+                                                                onClick={() => handleEditClick(area)}
+                                                                className="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200 mr-2"
+                                                            >
+                                                                Editar
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleDeleteClick(area.id)}
+                                                                className="px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600 transition duration-200"
+                                                            >
+                                                                Eliminar
+                                                            </button>
+                                                        </td>
+                                                    </>
+                                                )}
+                                            </tr>
+                                        ))}
+                                        {isAdding && (
+                                            <tr>
+                                                <td className="border border-gray-300 dark:border-gray-700 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
+                                                    <input
+                                                        id="Name"
+                                                        type="text"
+                                                        placeholder="Name"
+                                                        className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        value={newArea.Name}
+                                                        onChange={handleNewAreaChange}
+                                                    />
+                                                </td>
+                                                <td className="border border-gray-300 dark:border-gray-700 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
+                                                    <input
+                                                        id="Responsible"
+                                                        type="text"
+                                                        placeholder="Responsible"
+                                                        className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        value={newArea.Responsible}
+                                                        onChange={handleNewAreaChange}
+                                                    />
+                                                </td>
+                                                <td className="border border-gray-300 dark:border-gray-700 p-2 text-center m-1">
+                                                    <button
+                                                        onClick={handleAddArea}
+                                                        className="px-4 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600 transition duration-200 mr-2"
+                                                    >
+                                                        Agregar
+                                                    </button>
+                                                    <button
+                                                        onClick={handleCancelAdd}
+                                                        className="px-4 py-2 text-gray-800 dark:text-white bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-200"
+                                                    >
+                                                        Cancelar
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {!isAdding && (
+                                <button
+                                    onClick={() => setIsAdding(true)}
+                                    className="mt-4 px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
+                                >
+                                    Agregar Área
+                                </button>
+                            )}
+                        </div>
+                    }
 
                     {/* Equipments info*/}
                     <div
