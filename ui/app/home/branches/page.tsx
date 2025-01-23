@@ -187,6 +187,7 @@ export default function branchesPage() {
             const data = await response.json();
             if (!response.ok) {
                 showAlert(true,data.error,5000);
+                return;
             }
             showAlert(false, "Operation was successful!", 3000)
         } catch (error) {
@@ -359,6 +360,7 @@ export default function branchesPage() {
             if (!response.ok) {
                 const data = await response.json();
                 showAlert(true,data.error,5000);
+                return;
             }
             setAreas((prev) => prev.filter((area) => area.id !== id));
             showAlert(false, "Operation was successful!", 3000);
@@ -1002,7 +1004,7 @@ export default function branchesPage() {
                                     Restablecer
                                 </button>
                                 <button
-                                    onClick={() => editRestInfoBranch}
+                                    onClick={editRestInfoBranch}
                                     className="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
                                 >
                                     Guardar

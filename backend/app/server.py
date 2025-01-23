@@ -164,12 +164,15 @@ def list_branch():
     username = get_jwt_identity()
     user= uc.get(username)
     group= user.Type
+    if group not in BRANCH_READ_PERMISSION:
+        return jsonify({'error': 'You have no permission'}) , 405
+    
     if group == 'SuperAdmin':
         companies= cc.get_all()
         return jsonify(companies) , 200
     
     company = cc.get(user.Company)
-    return jsonify(company), 200
+    return jsonify([company]), 200
 
 @app.route("/api/branch/info/<string:name>", methods= ['GET'])
 def get_branch(name):
@@ -184,7 +187,7 @@ def create_branch():
     if user.Type== 'SuperAdmin':
         new_company = cc.post(data)
         return jsonify(new_company), 200
-    return jsonify({'error':'You dont have permission'}), 300
+    return jsonify({'error':'You dont have permission'}), 405
 
 @app.route("/api/branch/<int:id>", methods=["PUT", "PATCH"])
 def update_branch(id):
@@ -199,7 +202,7 @@ def update_formule(id):
     username= get_jwt_identity()
     user= uc.get(username)
     if user.Type not in BRANCH_WRITE_PERMISSION:
-        return jsonify({'error': 'You dont have permission'}), 300
+        return jsonify({'error': 'You dont have permission'}), 405
     updated_company= cc.update_formule(data, id)
     return jsonify(updated_company), 200
 
