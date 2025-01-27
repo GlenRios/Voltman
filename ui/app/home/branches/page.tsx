@@ -4,7 +4,7 @@ import Branch from "@/src/models/Branch";
 import Area from "@/src/models/Areas";
 import Equipment from "@/src/models/Equipments";
 import { useRouter } from "next/navigation";
-import logo from "@/src/components/logo";
+import Logo from "@/src/components/logo";
 import { Boton } from "@/src/components/buttons";
 import { goHome } from "@/src/hooks/handleRouts";
 import { getToken } from "@/src/hooks/handleToken";
@@ -139,7 +139,7 @@ export default function branchesPage() {
     const editInfoBranch = async () => {
         try {
             if (!branchName || !branchType || !branchAddress || !branchLimit) {
-                showAlert(true,"Please complete all fields.",5000);
+                showAlert(true, "Please complete all fields.", 5000);
             }
             else if (branchInfo.id === -1) {
                 throw new Error("Invalid branch id");
@@ -155,7 +155,7 @@ export default function branchesPage() {
             });
             const data = await response.json();
             if (!response.ok) {
-                showAlert(true,data.error,5000);
+                showAlert(true, data.error, 5000);
             }
             setBranchInfo({
                 id: branchInfo.id,
@@ -166,7 +166,7 @@ export default function branchesPage() {
                 aumento: branchIncrease,
                 porciento: branchPercent,
             });
-            showAlert(false,"Operation was successful!",3000);
+            showAlert(false, "Operation was successful!", 3000);
         } catch (error) {
             console.log(error);
         }
@@ -186,7 +186,7 @@ export default function branchesPage() {
             });
             const data = await response.json();
             if (!response.ok) {
-                showAlert(true,data.error,5000);
+                showAlert(true, data.error, 5000);
                 return;
             }
             showAlert(false, "Operation was successful!", 3000)
@@ -244,7 +244,7 @@ export default function branchesPage() {
                     });
                     if (!response.ok) {
                         const data = await response.json();
-                        showAlert(true,data.error,5000);
+                        showAlert(true, data.error, 5000);
                     }
                     const data: Area[] = await response.json();
                     setAreas(data);
@@ -271,7 +271,7 @@ export default function branchesPage() {
             });
             const data = await response.json();
             if (!response.ok) {
-                showAlert(true,data.error,5000);
+                showAlert(true, data.error, 5000);
             }
             else {
                 setAreas((prev) => [...prev, data]);
@@ -324,7 +324,7 @@ export default function branchesPage() {
             });
             const data = await response.json();
             if (!response.ok) {
-                showAlert(true,data.error,5000);
+                showAlert(true, data.error, 5000);
             }
             else {
                 setAreas((prev) =>
@@ -359,7 +359,7 @@ export default function branchesPage() {
             );
             if (!response.ok) {
                 const data = await response.json();
-                showAlert(true,data.error,5000);
+                showAlert(true, data.error, 5000);
                 return;
             }
             setAreas((prev) => prev.filter((area) => area.id !== id));
@@ -425,7 +425,7 @@ export default function branchesPage() {
                     });
                     if (!response.ok) {
                         const data = await response.json();
-                        showAlert(true,data.error,5000);
+                        showAlert(true, data.error, 5000);
                     }
                     const data: Equipment[] = await response.json();
                     setEquipments(data);
@@ -452,7 +452,7 @@ export default function branchesPage() {
             });
             const data = await response.json();
             if (!response.ok) {
-                showAlert(true,data.error,5000);
+                showAlert(true, data.error, 5000);
             }
             else {
                 setEquipments((prev) => [...prev, data]);
@@ -505,7 +505,7 @@ export default function branchesPage() {
             });
             const data = await response.json();
             if (!response.ok) {
-                showAlert(true,data.error,5000);
+                showAlert(true, data.error, 5000);
             }
             else {
                 setEquipments((prev) =>
@@ -540,7 +540,7 @@ export default function branchesPage() {
             );
             if (!response.ok) {
                 const data = await response.json();
-                showAlert(true,data.error,5000);
+                showAlert(true, data.error, 5000);
             }
             setEquipments((prev) => prev.filter((equipment) => equipment.id !== id));
             showAlert(false, "Operation was successful!", 3000);
@@ -821,7 +821,10 @@ export default function branchesPage() {
             )}
             {/* Encabezado de pagina*/}
             <div className='flex justify-center items-center p-4 m-4'>
-                {logo(50, 50)}
+                <Logo
+                    width={50}
+                    height={50}>
+                </Logo>
                 <h2 className="text-4xl font-extrabold text-center text-black dark:text-white">
                     Branch management!
                 </h2>

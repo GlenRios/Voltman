@@ -6,9 +6,9 @@ import React from 'react';
 import { getToken } from '@/src/hooks/handleToken';
 import User from "@/src/models/User"
 import showNotification from '@/src/utilts/Notifications';
-import buttonBack from '@/src/components/buttons';
+import ButtonBack from '@/src/components/buttons/ButtonBack';
 import { goHome } from '@/src/hooks/handleRouts';
-import logo from '@/src/components/logo';
+import Logo from '@/src/components/logo';
 
 export default function Page() {
 
@@ -121,7 +121,10 @@ export default function Page() {
         <div className="min-h-screen p-8 relative bg-[url('http://localhost:3000/images/claro3.jpg')] dark:bg-[url('http://localhost:3000/images/oscuro2.jpg')] bg-cover bg-no-repeat bg-center bg-fixed ">
 
             <div className='flex justify-center items-center'>
-                {logo(50, 50)}
+                <Logo
+                    width={50}
+                    height={50}>
+                </Logo>
                 <h2 className="text-4xl font-extrabold text-center text-black dark:text-white">
                     User management!
                 </h2>
@@ -132,9 +135,7 @@ export default function Page() {
                     {notification}
                 </div>
             )}
-
-            {buttonBack(() => goHome(router))}
-
+            <ButtonBack />
             <button
                 onClick={() => {
                     setShowForm(true);
@@ -211,7 +212,10 @@ export default function Page() {
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ">
                     <div className="p-6 w-full max-w-md bg-white dark:bg-black shadow-2xl rounded-2xl overflow-hidden border-4 border-transparent dark:border-zinc-700">
                         <h2 className="text-2xl font-semibold mb-4 ">
-                            {logo(30, 30)}
+                            <Logo
+                                width={30}
+                                height={30}>
+                            </Logo>
                             {isEdit ? "Editar Usuario" : "Agregar Usuario"}
                         </h2>
                         <form onSubmit={handleSubmit}>

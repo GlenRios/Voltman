@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export default function logo(width: number, height: number) {
+const Logo: React.FC<{ width: number, height: number }> = ({ width, height }) => {
 
     return (
         <Image
@@ -12,3 +12,5 @@ export default function logo(width: number, height: number) {
         />
     );
 }
+
+export default Logo;

@@ -1,5 +1,6 @@
 "use client"
 import Branch from "../models/Branch";
+import { getToken } from "../hooks/handleToken";
 
 export async function fetchBranchesService(token: string): Promise<Branch[]> {
     try {
@@ -71,3 +72,18 @@ export async function deleteBranchService(token: string, id: number) {
         console.error(error);
     }
 }
+
+export async function fetchBranches(){
+    try {
+        const token = getToken();
+        return await fetch("http://localhost:5050/api/branch", {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        throw error;
+    }
+};

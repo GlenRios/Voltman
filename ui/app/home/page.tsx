@@ -4,7 +4,7 @@ import { FaTrash } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import { goRestrictedRoute } from '@/src/hooks/handleRouts';
 import Notification from '@/src/models/Notification';
-import logo from '@/src/components/logo';
+import Logo from '@/src/components/logo';
 
 export default function Home() {
 
@@ -86,7 +86,10 @@ export default function Home() {
                                 bg-[url('http://localhost:3000/images/claro.jpg')] 
                                 dark:bg-[url('http://localhost:3000/images/oscuro2.jpg')] 
                                 bg-cover shadow-md dark:shadow-2xl shadow-white">
-                    {logo(200, 200)}
+                    <Logo
+                        width={200}
+                        height={200}>
+                    </Logo>
                     <div className="text-center p-12 text-black dark:text-white">
                         <h1 className="text-4xl font-bold mb-4 ">Welcome to Voltman! ⚡</h1>
                         <p className="m-4 text-lg">Monitor, analyze, and optimize energy usage!<br />
