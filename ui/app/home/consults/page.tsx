@@ -1,88 +1,100 @@
-"use client"
+"use client";
+import { useState } from 'react';
+import TotalConsumption from '@/src/components/consults/TotalConsumption';
+import MonthlyAverage from '@/src/components/consults/MonthlyAverage';
+import EfficiencyComparison from '@/src/components/consults/EfficiencyComparison';
 import ButtonBack from '@/src/components/buttons/ButtonBack';
-import { useState } from "react";
 import Logo from '@/src/components/logo';
-import { ButtonNew } from '@/src/components/buttons';
+import EquipmentQuery from '@/src/components/consults/EquipmentsQuery';
+import { fetchBranchesNames } from '@/src/api/branchService';
 
+interface Query {
+    id: number;
+    type: string | null;
+}
 
+export default function QueriesPage() {
 
-export default function consultPage() {
-    const [idView, setIdView] = useState<number>(2)
-    const [views, setViews] = useState<number[]>([1])
+    const [branchesNames, setbranchesName] = useState([]);
+    const [queries, setQueries] = useState<Query[]>([]);
 
-    function handleNewItem() {
-        setViews([...views, idView]);
-        setIdView(idView + 1);
-    }
+    const handleAddQuery = () => {
+        setQueries([...queries, { id: Date.now(), type: null }]);
+    };
+
+    const handleSelectQuery = (id: number, type: string) => {
+        setQueries(
+            queries.map((query) =>
+                query.id === id ? { ...query, type } : query
+            )
+        );
+    };
+
+    const handleRemoveQuery = (id: number) => {
+        setQueries(queries.filter((query) => query.id !== id)); // Eliminar la consulta por ID
+    };
+
+    const renderQueryComponent = (type: string | null, id: number) => {
+        switch (type) {
+            case 'total':
+                return <TotalConsumption key={id} />;
+            case 'average':
+                return <MonthlyAverage key={id} />;
+            case 'comparison':
+                return <EfficiencyComparison key={id} />;
+            case 'equipments': <EquipmentQuery key={id} />;
+            default:
+                return null;
+        }
+    };
 
     return (
+        <div className="flex flex-col items-center justify-center fondo">
 
-        <div className="flex flex-col item-center justify-center m-4 h-screen">
+            <div className="flex flex-col items-center justify-center">
+                <Logo height={200} width={200} />
+                <h1 className="text-2xl font-bold mb-4">Consultas de Consumo Energético</h1>
+            </div>
 
-            {/*encabezado de la pagina */}
             <div>
-                <div className='flex flex-col item-center justify-center'>
-                    <Logo
-                        width={30}
-                        height={30}
-                    >
-                    </Logo>
-                    <ButtonBack />
+                <ButtonBack />
+            </div>
+
+            {queries.map((query) => (
+                <div key={query.id} className="mb-4 p-4 border rounded shadow">
+                    <div className="flex justify-between items-center">
+                        {!query.type ? (
+                            <select
+                                className="w-full p-2 border rounded"
+                                onChange={(e) => handleSelectQuery(query.id, e.target.value)}
+                            >
+                                <option value="">Selecciona una consulta</option>
+                                <option value="total">Consumo Total</option>
+                                <option value="average">Promedio Mensual</option>
+                                <option value="comparison">Comparación de Eficiencia</option>
+                                <option value="equipments">Mostrar equipos</option>
+                                <option value="exceeded">Identificar las sucursales</option>
+                            </select>
+                        ) : (
+                            renderQueryComponent(query.type, query.id)
+                        )}
+                        <button
+                            className="ml-4 p-2 bg-red-500 text-white rounded hover:bg-red-600"
+                            onClick={() => handleRemoveQuery(query.id)}
+                        >
+                            Eliminar
+                        </button>
+                    </div>
                 </div>
-            </div>
-
-            {/* Formularios */}
-            <div>
-                {views.map(viewID => (
-                    <QueryItem key={viewID} />
-                ))}
-            </div>
-
+            ))}
 
             <button
-                type="button"
-                onClick={handleNewItem}
-                className=" bg-green-500 hover:bg-green-700 text-white w-14 h-10 
-                    rounded focus:outline-none focus:shadow-outline
-                    dark:shadow-slate-900 dark:shadow-lg shadow-zinc-700 shadow-md"
+                className="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                onClick={handleAddQuery}
             >
                 New
             </button>
+
         </div>
-    )
-}
-
-function QueryItem() {
-    const options = ["A", "B", "C"]
-    const [option, setOption] = useState("A")
-
-    return (
-        <div className="flex flex-col bg-gray-700">
-            <div className="flex flex-row">
-                <select className="p-2 m-4 inline bg-red-700" value={option} onChange={e => setOption(e.target.value)}>
-                    {options.map(option => (
-                        <option key={option} value={option}>{option}</option>
-                    ))}
-                </select>
-            </div>
-
-            <div className="p-2 m-4 flex flex-row bg-red-700 gap-4">
-                {option == "A" && <p className="p-2 bg-orange-300">Elegiste la opcion A</p>}
-                {option == "B" && <p className="p-2 bg-orange-300">Elegiste la opcion B</p>}
-                {option == "C" && <p className="p-2 bg-orange-300">Elegiste la opcion C</p>}
-                {/*<p className="p-2 bg-orange-300">Set first parameter</p>
-					<p className="p-2 bg-orange-300">Set second parameter</p>
-					<p className="p-2 bg-orange-300">Set third parameter</p>*/}
-            </div>
-
-            <div className="m-4 bg-yellow-700">
-
-                <div className="flex flex-row">
-                    <p className="p-2 m-4 bg-red-700">Exportar</p>
-                </div>
-
-                Graficos
-            </div>
-        </div>
-    )
+    );
 }

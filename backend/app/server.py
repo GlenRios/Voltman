@@ -301,10 +301,9 @@ def create_bill():
 def get_all_companies():
     return cc.get_all(), 200
 
-@app.route('/api/consult/equipments/', methods=['GET'])
-def get_equipments_in_area():
-    data= request.json
-    id= ac.get_by_company(data['Company'], data['Name'])
+@app.route('/api/consult/equipments/<string:Company>/<string:Name>', methods=['GET'])
+def get_equipments_in_area(Company, Name):
+    id= ac.get_by_company(Company, Name)
     return ac.get_equipments(id), 200
 
 

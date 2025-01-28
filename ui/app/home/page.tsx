@@ -109,7 +109,7 @@ export default function Home() {
                     { name: 'Register', route: 'bills' },
                     { name: 'Users', route: 'users' },
                     { name: 'Branches', route: 'branches' },
-                    { name: 'log out', route: 'log_out' }].map((item, index) => (
+                    { name: 'Log out', route: 'log_out' }].map((item, index) => (
                         <button
                             key={index}
                             onClick={() => goRoute(item.route)}

@@ -8,7 +8,7 @@ class BillController():
 
     def post(self, values: list):
         for val in values:
-            val['Date']= datetime.strptime(val['Date'], '%Y-%m-%d').date()
+            val['Date']= datetime.strptime(val['Date'], '%Y-%m-%d')
             self.Ibill.create(val)
         return True    
     

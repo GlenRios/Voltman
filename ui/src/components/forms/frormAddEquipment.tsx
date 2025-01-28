@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Equipment from "@/src/models/Equipments";
 
 const EquipmentForm = ({ initialData, onSubmit, onCancel }) => {
     const [formData, setFormData] = useState({
@@ -35,7 +34,7 @@ const EquipmentForm = ({ initialData, onSubmit, onCancel }) => {
     return (
         <div className="max-w-2xl mx-auto p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
-                {initialData.Area ? "Editar Equipo" : "Crear Nuevo Equipo"}
+                {initialData.Area ? "Edit Equipment" : "Create Equipment"}
             </h2>
             <form className="space-y-4" onSubmit={handleCreate}>
                 <div>
@@ -43,7 +42,7 @@ const EquipmentForm = ({ initialData, onSubmit, onCancel }) => {
                         htmlFor="Area"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                        Área
+                        Area
                     </label>
                     <input
                         id="Area"
@@ -60,7 +59,7 @@ const EquipmentForm = ({ initialData, onSubmit, onCancel }) => {
                         htmlFor="Brand"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                        Marca
+                        Brand
                     </label>
                     <input
                         id="Brand"
@@ -77,7 +76,7 @@ const EquipmentForm = ({ initialData, onSubmit, onCancel }) => {
                         htmlFor="Model"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                        Modelo
+                        Model
                     </label>
                     <input
                         id="Model"
@@ -94,7 +93,7 @@ const EquipmentForm = ({ initialData, onSubmit, onCancel }) => {
                         htmlFor="Type"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                        Tipo
+                        Type
                     </label>
                     <input
                         id="Type"
@@ -111,7 +110,7 @@ const EquipmentForm = ({ initialData, onSubmit, onCancel }) => {
                         htmlFor="Nominal_Capacity"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                        Capacidad Nominal
+                        Nominal Capacity
                     </label>
                     <input
                         id="Nominal_Capacity"
@@ -128,7 +127,7 @@ const EquipmentForm = ({ initialData, onSubmit, onCancel }) => {
                         htmlFor="Installation_Date"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                        Fecha de Instalación
+                        Installation Date
                     </label>
                     <input
                         id="Installation_Date"
@@ -145,7 +144,7 @@ const EquipmentForm = ({ initialData, onSubmit, onCancel }) => {
                         htmlFor="Estimated_Lifespan"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                        Vida Útil Estimada (años)
+                        Estimated useful life (years)
                     </label>
                     <input
                         id="Estimated_Lifespan"
@@ -162,7 +161,7 @@ const EquipmentForm = ({ initialData, onSubmit, onCancel }) => {
                         htmlFor="Maintenance_Status"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                        Estado de Mantenimiento
+                        Maintenance Status
                     </label>
                     <input
                         id="Maintenance_Status"
@@ -179,7 +178,7 @@ const EquipmentForm = ({ initialData, onSubmit, onCancel }) => {
                         htmlFor="CriticalEnergySystem"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                        Sistema Energético Crítico
+                        Critical Energy System
                     </label>
                     <input
                         id="CriticalEnergySystem"
@@ -196,7 +195,7 @@ const EquipmentForm = ({ initialData, onSubmit, onCancel }) => {
                         htmlFor="Usage_Frequency"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                        Frecuencia de Uso
+                        Frequency of Use
                     </label>
                     <input
                         id="Usage_Frequency"
@@ -213,7 +212,7 @@ const EquipmentForm = ({ initialData, onSubmit, onCancel }) => {
                         htmlFor="Energy_Efficiency"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                        Eficiencia Energética
+                        Energy Efficiency
                     </label>
                     <input
                         id="Energy_Efficiency"
@@ -230,7 +229,7 @@ const EquipmentForm = ({ initialData, onSubmit, onCancel }) => {
                         htmlFor="Average_Daily_Consumption"
                         className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                     >
-                        Consumo Diario Promedio
+                        Average Daily Consumption
                     </label>
                     <input
                         id="Average_Daily_Consumption"
@@ -247,14 +246,14 @@ const EquipmentForm = ({ initialData, onSubmit, onCancel }) => {
                         type="submit"
                         className="px-6 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
                     >
-                        Guardar
+                        Save
                     </button>
                     <button
                         type="button"
                         onClick={handleCancel}
                         className="ml-4 px-6 py-2 text-gray-800 dark:text-white bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-200"
                     >
-                        Cancelar
+                        Cancel
                     </button>
                 </div>
             </form>

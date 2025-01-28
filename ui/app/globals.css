@@ -48,3 +48,7 @@ h3 {
   color: #fff; /* Texto */
   gap: 0.5rem;
 }
+
+.fondo{
+  @apply bg-[url('http://localhost:3000/images/claro3.jpg')] dark:bg-[url('http://localhost:3000/images/oscuro2.jpg')] bg-cover bg-no-repeat bg-center bg-fixed
+}

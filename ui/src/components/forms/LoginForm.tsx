@@ -5,7 +5,7 @@ import { login } from "@/src/api/authService";
 import { goHome } from "@/src/hooks/handleRouts";
 import Logo from "@/src/components/logo";
 import { useAlert } from "@/src/hooks/alertContxt";
-import Alert from "@/src/components/Alert";
+import Alert from "@/src/components/alerts/Alert";
 
 
 const LoginForm = () => {

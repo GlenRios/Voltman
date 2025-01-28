@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { getToken } from "../hooks/handleToken";
+import { getToken } from "../../hooks/handleToken";
 
 const FormComponent: React.FC = () => {
 

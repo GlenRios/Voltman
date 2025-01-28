@@ -7,7 +7,6 @@ import { getToken } from '@/src/hooks/handleToken';
 import User from "@/src/models/User"
 import showNotification from '@/src/utilts/Notifications';
 import ButtonBack from '@/src/components/buttons/ButtonBack';
-import { goHome } from '@/src/hooks/handleRouts';
 import Logo from '@/src/components/logo';
 
 export default function Page() {
@@ -118,7 +117,7 @@ export default function Page() {
     );
 
     return (
-        <div className="min-h-screen p-8 relative bg-[url('http://localhost:3000/images/claro3.jpg')] dark:bg-[url('http://localhost:3000/images/oscuro2.jpg')] bg-cover bg-no-repeat bg-center bg-fixed ">
+        <div className="min-h-screen p-8 relative fondo ">
 
             <div className='flex justify-center items-center'>
                 <Logo
@@ -216,7 +215,7 @@ export default function Page() {
                                 width={30}
                                 height={30}>
                             </Logo>
-                            {isEdit ? "Editar Usuario" : "Agregar Usuario"}
+                            {isEdit ? "Edit User" : "Add Usuer"}
                         </h2>
                         <form onSubmit={handleSubmit}>
                             <div className="mb-4">

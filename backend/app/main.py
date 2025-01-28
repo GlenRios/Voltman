@@ -83,6 +83,6 @@ def create_bills(n, company):
 # create_areas(50)
 # create_equipments(300)
 # for companie in list_companies:
-#     create_bills(1000, companie)
+#     create_bills(100, companie)
 
 

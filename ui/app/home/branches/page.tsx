@@ -1,16 +1,23 @@
 'use client'
 import React, { useEffect, useState } from "react"
+import { useRouter } from "next/navigation";
+
+//models
 import Branch from "@/src/models/Branch";
 import Area from "@/src/models/Areas";
 import Equipment from "@/src/models/Equipments";
-import { useRouter } from "next/navigation";
-import Logo from "@/src/components/logo";
-import { Boton } from "@/src/components/buttons";
+
+//utils and hooks
 import { goHome } from "@/src/hooks/handleRouts";
 import { getToken } from "@/src/hooks/handleToken";
-import FormComponent from "@/src/components/formAddBranch";
 import { useAlert } from "@/src/hooks/alertContxt";
-import Alert from "@/src/components/Alert";
+
+//Components
+import Alert from "@/src/components/alerts/Alert";
+import Logo from "@/src/components/logo";
+import FormComponent from "@/src/components/forms/formAddBranch";
+import { Boton } from "@/src/components/buttons/buttons";
+
 
 export default function branchesPage() {
 
@@ -474,22 +481,6 @@ export default function branchesPage() {
         setEditingIdEq(Equipment.id);
         setEditFormDataEq(Equipment);
     };
-    // // Maneja los cambios en el formulario de edición
-    // const handleEditChangeEquipment = (e: { target: { id: any; value: any; }; }) => {
-    //     const { id, value } = e.target;
-    //     setEditFormData((prev) => ({
-    //         ...prev,
-    //         [id]: value,
-    //     }));
-    // };
-    // // Maneja los cambios en el formulario de nueva área
-    // const handleNewEquipmentChange = (e: { target: { id: any; value: any; }; }) => {
-    //     const { id, value } = e.target;
-    //     setNewEquipment((prev) => ({
-    //         ...prev,
-    //         [id]: value,
-    //     }));
-    // };
     // Guarda los cambios realizados
     const handleSaveClickEq = async () => {
         try {
@@ -556,7 +547,6 @@ export default function branchesPage() {
     const filteredEquipments = equipments.filter((Equipment) =>
         Equipment.Area.toLowerCase().includes(searchQueryEq.toLowerCase())
     );
-
     const EquipmentForm = (onSubmit: () => void, onCancel: () => void, isAddForm: boolean) => {
 
         const handleChange = (e: { target: { name: any; value: any; }; }) => {
@@ -579,228 +569,235 @@ export default function branchesPage() {
         };
 
         return (
-            <div className="max-w-2xl mx-auto m-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-lg">
+            <div className="w-auto mx-auto m-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-lg">
                 <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
-                    {newEquipment.Area ? "Editar Equipo" : "Crear Nuevo Equipo"}
+                    {newEquipment.Area ? "Edit Equipment" : "Add Equipment"}
                 </h2>
                 <form className="space-y-4" onSubmit={handleCreate}>
-                    <div>
-                        <label
-                            htmlFor="Area"
-                            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                        >
-                            Área
-                        </label>
-                        <input
-                            id="Area"
-                            name="Area"
-                            type="text"
-                            value={isAddForm ? newEquipment.Area : editFormDataEq.Area}
-                            onChange={handleChange}
-                            className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
+
+                    <div className="flex flex-row gap-2">
+                        <div className="flex flex-col gap-2">
+                            <div>
+                                <label
+                                    htmlFor="Area"
+                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >
+                                    Area
+                                </label>
+                                <input
+                                    id="Area"
+                                    name="Area"
+                                    type="text"
+                                    value={isAddForm ? newEquipment.Area : editFormDataEq.Area}
+                                    onChange={handleChange}
+                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor="Brand"
+                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >
+                                    Brand
+                                </label>
+                                <input
+                                    id="Brand"
+                                    name="Brand"
+                                    type="text"
+                                    value={isAddForm ? newEquipment.Brand : editFormDataEq.Brand}
+                                    onChange={handleChange}
+                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor="Model"
+                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >
+                                    Model
+                                </label>
+                                <input
+                                    id="Model"
+                                    name="Model"
+                                    type="text"
+                                    value={isAddForm ? newEquipment.Model : editFormDataEq.Model}
+                                    onChange={handleChange}
+                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor="Type"
+                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >
+                                    Type
+                                </label>
+                                <input
+                                    id="Type"
+                                    name="Type"
+                                    type="text"
+                                    value={isAddForm ? newEquipment.Type : editFormDataEq.Type}
+                                    onChange={handleChange}
+                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor="Nominal_Capacity"
+                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >
+                                    Nominal Capacity
+                                </label>
+                                <input
+                                    id="Nominal_Capacity"
+                                    name="Nominal_Capacity"
+                                    type="number"
+                                    value={isAddForm ? newEquipment.Nominal_Capacity : editFormDataEq.Nominal_Capacity}
+                                    onChange={handleChange}
+                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor="Installation_Date"
+                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >
+                                    Installation Date
+                                </label>
+                                <input
+                                    id="Installation_Date"
+                                    name="Installation_Date"
+                                    type="Date"
+                                    value={isAddForm ? newEquipment.Installation_Date.split(" ")[0] : editFormDataEq.Installation_Date.split(" ")[0]}
+                                    onChange={handleChange}
+                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <div>
+                                <label
+                                    htmlFor="Estimated_Lifespan"
+                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >
+                                    Estimated Lifespan (years)
+                                </label>
+                                <input
+                                    id="Estimated_Lifespan"
+                                    name="Estimated_Lifespan"
+                                    type="number"
+                                    value={isAddForm ? newEquipment.Estimated_Lifespan : editFormDataEq.Estimated_Lifespan}
+                                    onChange={handleChange}
+                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor="Maintenance_Status"
+                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >
+                                    Mantenance Status
+                                </label>
+                                <input
+                                    id="Maintenance_Status"
+                                    name="Maintenance_Status"
+                                    type="text"
+                                    value={isAddForm ? newEquipment.Maintenance_Status : editFormDataEq.Maintenance_Status}
+                                    onChange={handleChange}
+                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor="CriticalEnergySystem"
+                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >
+                                    Critical Energy System
+                                </label>
+                                <input
+                                    id="CriticalEnergySystem"
+                                    name="CriticalEnergySystem"
+                                    type="number"
+                                    value={isAddForm ? newEquipment.CriticalEnergySystem : editFormDataEq.CriticalEnergySystem}
+                                    onChange={handleChange}
+                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor="Usage_Frequency"
+                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >
+                                    Usage Frequency
+                                </label>
+                                <input
+                                    id="Usage_Frequency"
+                                    name="Usage_Frequency"
+                                    type="text"
+                                    value={isAddForm ? newEquipment.Usage_Frequency : editFormDataEq.Usage_Frequency}
+                                    onChange={handleChange}
+                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor="Energy_Efficiency"
+                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >
+                                    Energy Efficiency
+                                </label>
+                                <input
+                                    id="Energy_Efficiency"
+                                    name="Energy_Efficiency"
+                                    type="number"
+                                    value={isAddForm ? newEquipment.Energy_Efficiency : editFormDataEq.Energy_Efficiency}
+                                    onChange={handleChange}
+                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor="Average_Daily_Consumption"
+                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >
+                                    Average Daily Consumption
+                                </label>
+                                <input
+                                    id="Average_Daily_Consumption"
+                                    name="Average_Daily_Consumption"
+                                    type="number"
+                                    value={isAddForm ? newEquipment.Average_Daily_Consumption : editFormDataEq.Average_Daily_Consumption}
+                                    onChange={handleChange}
+                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required
+                                />
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <label
-                            htmlFor="Brand"
-                            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                        >
-                            Marca
-                        </label>
-                        <input
-                            id="Brand"
-                            name="Brand"
-                            type="text"
-                            value={isAddForm ? newEquipment.Brand : editFormDataEq.Brand}
-                            onChange={handleChange}
-                            className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label
-                            htmlFor="Model"
-                            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                        >
-                            Modelo
-                        </label>
-                        <input
-                            id="Model"
-                            name="Model"
-                            type="text"
-                            value={isAddForm ? newEquipment.Model : editFormDataEq.Model}
-                            onChange={handleChange}
-                            className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label
-                            htmlFor="Type"
-                            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                        >
-                            Tipo
-                        </label>
-                        <input
-                            id="Type"
-                            name="Type"
-                            type="text"
-                            value={isAddForm ? newEquipment.Type : editFormDataEq.Type}
-                            onChange={handleChange}
-                            className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label
-                            htmlFor="Nominal_Capacity"
-                            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                        >
-                            Capacidad Nominal
-                        </label>
-                        <input
-                            id="Nominal_Capacity"
-                            name="Nominal_Capacity"
-                            type="number"
-                            value={isAddForm ? newEquipment.Nominal_Capacity : editFormDataEq.Nominal_Capacity}
-                            onChange={handleChange}
-                            className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label
-                            htmlFor="Installation_Date"
-                            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                        >
-                            Fecha de Instalación
-                        </label>
-                        <input
-                            id="Installation_Date"
-                            name="Installation_Date"
-                            type="Date"
-                            value={isAddForm ? newEquipment.Installation_Date.split(" ")[0] : editFormDataEq.Installation_Date.split(" ")[0]}
-                            onChange={handleChange}
-                            className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label
-                            htmlFor="Estimated_Lifespan"
-                            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                        >
-                            Vida Útil Estimada (años)
-                        </label>
-                        <input
-                            id="Estimated_Lifespan"
-                            name="Estimated_Lifespan"
-                            type="number"
-                            value={isAddForm ? newEquipment.Estimated_Lifespan : editFormDataEq.Estimated_Lifespan}
-                            onChange={handleChange}
-                            className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label
-                            htmlFor="Maintenance_Status"
-                            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                        >
-                            Estado de Mantenimiento
-                        </label>
-                        <input
-                            id="Maintenance_Status"
-                            name="Maintenance_Status"
-                            type="text"
-                            value={isAddForm ? newEquipment.Maintenance_Status : editFormDataEq.Maintenance_Status}
-                            onChange={handleChange}
-                            className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label
-                            htmlFor="CriticalEnergySystem"
-                            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                        >
-                            Sistema Energético Crítico
-                        </label>
-                        <input
-                            id="CriticalEnergySystem"
-                            name="CriticalEnergySystem"
-                            type="number"
-                            value={isAddForm ? newEquipment.CriticalEnergySystem : editFormDataEq.CriticalEnergySystem}
-                            onChange={handleChange}
-                            className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label
-                            htmlFor="Usage_Frequency"
-                            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                        >
-                            Frecuencia de Uso
-                        </label>
-                        <input
-                            id="Usage_Frequency"
-                            name="Usage_Frequency"
-                            type="text"
-                            value={isAddForm ? newEquipment.Usage_Frequency : editFormDataEq.Usage_Frequency}
-                            onChange={handleChange}
-                            className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label
-                            htmlFor="Energy_Efficiency"
-                            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                        >
-                            Eficiencia Energética
-                        </label>
-                        <input
-                            id="Energy_Efficiency"
-                            name="Energy_Efficiency"
-                            type="number"
-                            value={isAddForm ? newEquipment.Energy_Efficiency : editFormDataEq.Energy_Efficiency}
-                            onChange={handleChange}
-                            className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label
-                            htmlFor="Average_Daily_Consumption"
-                            className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                        >
-                            Consumo Diario Promedio
-                        </label>
-                        <input
-                            id="Average_Daily_Consumption"
-                            name="Average_Daily_Consumption"
-                            type="number"
-                            value={isAddForm ? newEquipment.Average_Daily_Consumption : editFormDataEq.Average_Daily_Consumption}
-                            onChange={handleChange}
-                            className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            required
-                        />
-                    </div>
-                    <div className="text-center">
+                    <div className="flex flex-row items-center justify-center text-center gap-2">
                         <button
                             type="submit"
                             className="px-6 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
                         >
-                            Guardar
+                            Save
                         </button>
                         <button
                             type="button"
                             onClick={handleCancel}
                             className="ml-4 px-6 py-2 text-gray-800 dark:text-white bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-200"
                         >
-                            Cancelar
+                            Cancel
                         </button>
                     </div>
                 </form>
@@ -809,9 +806,7 @@ export default function branchesPage() {
     };
 
     return (
-        <main className="min-h-screen p-8 relative bg-[url('http://localhost:3000/images/claro3.jpg')] 
-        //               dark:bg-[url('http://localhost:3000/images/oscuro2.jpg')] bg-cover 
-        //               bg-no-repeat bg-center bg-fixed ">
+        <main className="min-h-screen p-8 relative fondo">
             {alertData.isVisible && (
                 <Alert
                     type={alertData.type}
@@ -896,7 +891,7 @@ export default function branchesPage() {
                                 {/* Nombre */}
                                 <div>
                                     <label className="block text-gray-700 dark:text-gray-300 mb-1" htmlFor="nombre">
-                                        Nombre
+                                        Name
                                     </label>
                                     <input
                                         id="nombre"
@@ -910,7 +905,7 @@ export default function branchesPage() {
                                 {/* Dirección */}
                                 <div>
                                     <label className="block text-gray-700 dark:text-gray-300 mb-1" htmlFor="direccion">
-                                        Dirección
+                                        Address
                                     </label>
                                     <input
                                         id="direccion"
@@ -924,7 +919,7 @@ export default function branchesPage() {
                                 {/* Tipo */}
                                 <div>
                                     <label className="block text-gray-700 dark:text-gray-300 mb-1" htmlFor="tipo">
-                                        Tipo
+                                        Type
                                     </label>
                                     <input
                                         id="tipo"
@@ -938,7 +933,7 @@ export default function branchesPage() {
                                 {/* Límite */}
                                 <div>
                                     <label className="block text-gray-700 dark:text-gray-300 mb-1" htmlFor="limite">
-                                        Límite
+                                        Limit
                                     </label>
                                     <input
                                         id="limite"
@@ -956,13 +951,13 @@ export default function branchesPage() {
                                     onClick={restInfoBranch}
                                     className="px-4 py-2 text-gray-800 dark:text-white bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-200"
                                 >
-                                    Restablecer
+                                    Restart
                                 </button>
                                 <button
                                     onClick={() => editInfoBranch()}
                                     className="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
                                 >
-                                    Guardar
+                                    Save
                                 </button>
                             </div>
                         </div>
@@ -972,7 +967,7 @@ export default function branchesPage() {
                             {/* Aumento */}
                             <div className="mb-4">
                                 <label className="block text-gray-700 dark:text-gray-300 mb-1" htmlFor="aumento">
-                                    Aumento
+                                    Increase
                                 </label>
                                 <input
                                     id="aumento"
@@ -986,7 +981,7 @@ export default function branchesPage() {
                             {/* % Extra */}
                             <div className="mb-4">
                                 <label className="block text-gray-700 dark:text-gray-300 mb-1" htmlFor="extra">
-                                    Porcentaje Extra
+                                    Extra Percent
                                 </label>
                                 <input
                                     id="extra"
@@ -1004,13 +999,13 @@ export default function branchesPage() {
                                     onClick={restRestrictInfoBranch}
                                     className="px-4 py-2 text-gray-800 dark:text-white bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-200"
                                 >
-                                    Restablecer
+                                    Restart
                                 </button>
                                 <button
                                     onClick={editRestInfoBranch}
                                     className="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
                                 >
-                                    Guardar
+                                    Save
                                 </button>
                             </div>
                         </div>
@@ -1032,7 +1027,7 @@ export default function branchesPage() {
                             {/* Barra de busqueda de areas */}
                             <input
                                 type="text"
-                                placeholder="Buscar por nombre de área..."
+                                placeholder="Search by name..."
                                 value={searchQuery}
                                 onChange={handleSearchChange}
                                 className="w-full px-3 py-2 mb-4 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -1041,14 +1036,14 @@ export default function branchesPage() {
                                 <table className="w-full table-fixed border-collapse border rounded-xl border-gray-300 dark:border-gray-700">
                                     <thead>
                                         <tr className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300">
-                                            <th className="border border-gray-300 dark:border-gray-700 p-2 text-left w-1/3">
-                                                Nombre
+                                            <th className="border border-gray-300 dark:border-gray-900 p-2 text-left w-1/3">
+                                                Name
                                             </th>
-                                            <th className="border border-gray-300 dark:border-gray-700 p-2 text-left w-1/3">
-                                                Responsable
+                                            <th className="border border-gray-300 dark:border-gray-900 p-2 text-left w-1/3">
+                                                Responsible
                                             </th>
-                                            <th className="border border-gray-300 dark:border-gray-700 p-2 text-center w-1/3">
-                                                Acciones
+                                            <th className="border border-gray-300 dark:border-gray-900 p-2 text-center w-1/3">
+                                                Actions
                                             </th>
                                         </tr>
                                     </thead>
@@ -1080,13 +1075,13 @@ export default function branchesPage() {
                                                         onClick={handleAddArea}
                                                         className="px-4 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600 transition duration-200 mr-2"
                                                     >
-                                                        Agregar
+                                                        Add
                                                     </button>
                                                     <button
                                                         onClick={handleCancelAdd}
                                                         className="px-4 py-2 text-gray-800 dark:text-white bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-200"
                                                     >
-                                                        Cancelar
+                                                        Cancel
                                                     </button>
                                                 </td>
                                             </tr>
@@ -1120,36 +1115,36 @@ export default function branchesPage() {
                                                                 onClick={handleSaveClick}
                                                                 className="px-4 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600 transition duration-200 mr-2"
                                                             >
-                                                                Guardar
+                                                                Save
                                                             </button>
                                                             <button
                                                                 onClick={handleCancelClick}
                                                                 className="px-4 py-2 text-gray-800 dark:text-white bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-200"
                                                             >
-                                                                Cancelar
+                                                                Cance
                                                             </button>
                                                         </td>
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <td className="border border-gray-300 dark:border-gray-700 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
+                                                        <td className="border text-gray-800 dark:text-gray-400 border-gray-300 dark:border-gray-900 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
                                                             {area.Name}
                                                         </td>
-                                                        <td className="border border-gray-300 dark:border-gray-700 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
+                                                        <td className="border text-gray-800 dark:text-gray-400 border-gray-300 dark:border-gray-900 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
                                                             {area.Responsible}
                                                         </td>
-                                                        <td className="border border-gray-300 dark:border-gray-700 p-2 text-center m-1">
+                                                        <td className="border text-gray-800 dark:text-gray-400 border-gray-300 dark:border-gray-900 p-2 text-center m-1">
                                                             <button
                                                                 onClick={() => handleEditClick(area)}
                                                                 className="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200 mr-2"
                                                             >
-                                                                Editar
+                                                                Edit
                                                             </button>
                                                             <button
                                                                 onClick={() => handleDeleteClick(area.id)}
                                                                 className="px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600 transition duration-200"
                                                             >
-                                                                Eliminar
+                                                                Delete
                                                             </button>
                                                         </td>
                                                     </>
@@ -1164,7 +1159,7 @@ export default function branchesPage() {
                                     onClick={() => setIsAdding(true)}
                                     className="mt-4 px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
                                 >
-                                    Agregar Área
+                                    Add Area
                                 </button>
                             )}
                         </div>
@@ -1261,10 +1256,14 @@ export default function branchesPage() {
                     }
                     <div className="flex flex-col lg:flex-row">
                         {isAddingEq &&
-                            EquipmentForm(handleAddEquipment, handleCancelAddEq, true)
+                            <div className="overflow-y-auto max-h-screen fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                {EquipmentForm(handleAddEquipment, handleCancelAddEq, true)}
+                            </div>
                         }
                         {editingIdEq &&
-                            EquipmentForm(handleSaveClickEq, handleCancelClickEq, false)
+                            <div className="overflow-y-auto max-h-screen fixted inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                {EquipmentForm(handleSaveClickEq, handleCancelClickEq, false)}
+                            </div>
                         }
                     </div>
                 </div>

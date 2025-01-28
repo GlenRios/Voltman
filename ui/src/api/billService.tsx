@@ -1,5 +1,5 @@
 
-export default async function submitBills(formularios: any) {
+export default async function submitBills(formularios: any[]) {
     try {
         return await fetch("http://localhost:5050/api/bill/", {
             method: "POST",
