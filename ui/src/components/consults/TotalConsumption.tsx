@@ -11,6 +11,7 @@ interface TotalConsumptionProps {
 const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
 
     const { showAlert, alertData } = useAlert();
+    const [responseData, setResponseData] = useState([])
     const [formData, setFormData] = useState<TotalConsumptionProps>({
         startDate: '',
         endDate: '',
@@ -37,7 +38,8 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
             if (!response.ok) {
                 showAlert(true, data.error, 5000)
             }
-            setTotalConsumption(data)
+            setTotalConsumption(data.Total);
+            setResponseData(data.Data);
 
         } catch (Error) {
             console.error(Error)

@@ -6,7 +6,6 @@ import EfficiencyComparison from '@/src/components/consults/EfficiencyComparison
 import ButtonBack from '@/src/components/buttons/ButtonBack';
 import Logo from '@/src/components/logo';
 import EquipmentQuery from '@/src/components/consults/EquipmentsQuery';
-import { fetchBranchesNames } from '@/src/api/branchService';
 import { getToken } from '@/src/hooks/handleToken';
 import { useAlert } from "@/src/hooks/alertContxt";
 import Alert from "@/src/components/alerts/Alert";
@@ -71,14 +70,15 @@ export default function QueriesPage() {
                 return <MonthlyAverage key={id} />;
             case 'comparison':
                 return <EfficiencyComparison key={id} />;
-            case 'equipments': <EquipmentQuery key={id} />;
+            case 'equipments': 
+                return<EquipmentQuery key={id} names={CompaniesNames}/>;
             default:
                 return null;
         }
     };
 
     return (
-        <div className="flex flex-col items-center justify-center fondo">
+        <div className="flex flex-col items-center justify-center fondo min-h-screen">
             {alertData.isVisible && (
                 <Alert
                     type={alertData.type}
