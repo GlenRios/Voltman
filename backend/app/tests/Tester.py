@@ -1,7 +1,7 @@
  
 from faker import Faker
 import random
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class Tester:
     
@@ -199,12 +199,23 @@ class Tester:
         return{'Area': area[0], 'Company': area[1], 
                'Type':random.choice(equipos_electricos),
                'Brand': random.choice(marcas_equipos),
-               'Installation_Date': self.fake.date_between(start_date="-456d", end_date="today")
+               'Installation_Date': self.fake.date_between(start_date="-1000d", end_date="today").strftime("%Y-%m-%d")
                }
     
     def create_equipments(self, n: int, areas):
         equipments=[]
         for _ in range(n): equipments.append(self.create_equipment(areas))
         return equipments    
+    
+    def create_bills(self, n: int, date: datetime, company):
+        bills=[]
+        reading= 0
+        for i in range(n):
+            reading+= random.uniform(50, 300)
+            actual_date= date- timedelta(days=i)
+            bills.append({'Date':actual_date.strftime("%Y-%m-%d") , 'Company': company, 'Reading': reading})
+        return bills    
+
+
 
 

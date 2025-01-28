@@ -1,5 +1,6 @@
 from db.repos.AreaRepo import AreaRepo
 from domain.Area import Area
+from Configurations.CustomError import CustomError
 
 class IArea:
 
@@ -30,8 +31,8 @@ class IArea:
     def get_by_name(self,name: str, company: str):
         area= self.repo.get_by_company(name, company)
         if area:
-            return self.repo.to_Area(area).as_dict()
-        return None
+            return self.repo.to_Area(area)
+        raise CustomError('Object not found', 404)
     
     def convert(self, areas: list):
         list=[]

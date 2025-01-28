@@ -12,8 +12,8 @@ export default function billsPage() {
 
   const { showAlert, alertData } = useAlert();
   const [nextIdForm, setNextIdForm] = useState<number>(2);
-  const [formularios, setFormularios] = useState<{ id: number, Date: string, Bill: number, Brach: string }[]>([
-    { id: 1, Date: "", Bill: 0, Brach: "" },
+  const [formularios, setFormularios] = useState<{ id: number, Date: string, Bill: number, Company: string }[]>([
+    { id: 1, Date: "", Bill: 0, Company: "" },
   ]);
 
   const [branchesName, setBranchesName] = useState<{ name: string; id: number }[]>([]);
@@ -54,7 +54,7 @@ export default function billsPage() {
       const response = await submitBills(formularios);
       if (response.ok) {
         showAlert(false, "", 3000);
-        setFormularios([{ id: 1, Date: "", Bill: 0, Brach: "" }]); // Reiniciar formularios
+        setFormularios([{ id: 1, Date: "", Bill: 0, Company: "" }]); // Reiniciar formularios
       } else {
         const data = await response.json();
         showAlert(true, data.error, 5000);
@@ -69,7 +69,7 @@ export default function billsPage() {
   const addForm = () => {
     setFormularios((prev) => [
       ...prev,
-      { id: nextIdForm, Date: "", Bill: 0, Brach: "" },
+      { id: nextIdForm, Date: "", Bill: 0, Company: "" },
     ]);
     setNextIdForm(nextIdForm + 1);
   };
@@ -129,7 +129,7 @@ export default function billsPage() {
               <select
                 id={`branch-selector-${formulario.id}`} // ID único para cada selector
                 name="Brach"
-                value={formulario.Brach}
+                value={formulario.Company}
                 onChange={(e) => handleInputChange(e, formulario.id)} // Actualiza el campo del formulario específico
                 className="w-auto max-w-64 border border-gray-700 rounded-lg p-2 text-lg dark:bg-gray-800 dark:text-white"
               >

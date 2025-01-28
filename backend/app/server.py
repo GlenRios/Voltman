@@ -3,7 +3,7 @@ import importlib
 from functools import wraps
 from flask import Blueprint, Flask, jsonify, request, make_response
 from flask_cors import CORS
-from main import UC as uc, CC as cc, AC as ac, EC as ec
+from main import UC as uc, CC as cc, AC as ac, EC as ec, BC as bc
 from Configurations.CustomError import CustomError
 from Configurations import BASE_DIR
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
@@ -290,6 +290,22 @@ def protected(permission):
     if permission=='consults':
         return "ok", 200
     # return " ", (200 if uc.protected(role, permission) else 403)
+
+@app.route("/api/bill/", methods= ['POST'])
+def create_bill():
+    data= request.json
+    bc.post(data)
+    return jsonify({'message':'Operation Successfully'}), 200
+
+@app.route("/api/consult/companies/", methods=['GET'])
+def get_all_companies():
+    return cc.get_all(), 200
+
+@app.route('/api/consult/equipments/', methods=['GET'])
+def get_equipments_in_area():
+    data= request.json
+    id= ac.get_by_company(data['Company'], data['Name'])
+    return ac.get_equipments(id), 200
 
 
 app.run(port= 5050,debug=True)

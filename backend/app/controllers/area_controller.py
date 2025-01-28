@@ -22,5 +22,11 @@ class AreaController:
         areas= self.Icompany.get_areas(id)
         return self.Iarea.convert(areas)
     
+    def get_by_company(self, company: str, name: str):
+        return self.Iarea.get_by_name(name, company).id
+
+    def get_equipments(self, id: int):
+        return self.Iarea.get_equipments(id)
+    
     
     

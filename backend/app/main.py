@@ -1,11 +1,13 @@
 from Configurations.db_configuration import init_db, SessionLocal
 import os
+from datetime import datetime
 from tests.Tester import Tester
 from controllers import (
     user_controller as uc,
     company_controller as cc,
     area_controller as ac,
     equipment_controller as ec,
+    bill_controller as bc
 )
 
 # from tests.test_db import build_test_db
@@ -18,8 +20,8 @@ if not os.path.exists(path):
 
 tester= Tester()
 
-from db.repos import UserRepo, CompanyRepo, AreaRepo, EquipmentRepo, GroupRepo
-from Use_Cases.Interfaces import IUser, ICompany, IArea, IEquipment
+from db.repos import UserRepo, CompanyRepo, AreaRepo, EquipmentRepo, GroupRepo, BillRepo
+from Use_Cases.Interfaces import IUser, ICompany, IArea, IEquipment, IBill
 
 db= SessionLocal()
 
@@ -28,16 +30,19 @@ group_repo= GroupRepo.GroupRepo(db)
 user_repo= UserRepo.UserRepo(db, company_repo, group_repo)
 area_repo = AreaRepo.AreaRepo(db, company_repo)
 equipment_repo = EquipmentRepo.EquipmentRepo(db, area_repo)
+bill_repo= BillRepo.BillRepo(db, company_repo)
 
 Icompany= ICompany.ICompany(company_repo)
 Iuser= IUser.IUser(user_repo)
 Iarea = IArea.IArea(area_repo)
 Iequipment = IEquipment.IEquipment(equipment_repo)
+Ibill= IBill.IBill(bill_repo)
 
 UC= uc.UserController(Iuser, Icompany)
 CC= cc.CompanyController(Icompany)
 AC= ac.AreaController(Iarea, Icompany)
 EC= ec.EquipmentController(Iequipment, Iarea)
+BC= bc.BillController(Ibill)
 
 # ###########test############
 list_companies=[]
@@ -66,9 +71,18 @@ def create_equipments(n: int):
     for eq in equipments:
         EC.post(eq)
 
+def create_bills(n, company):
+    date= datetime.now()  
+    bills= tester.create_bills(n, date, company)    
+    bills.reverse() 
+    BC.post(bills)
+
+
 # create_companies(10)
-# create_users(50)
+# create_users(100)
 # create_areas(50)
-# create_equipments(200)
+# create_equipments(300)
+# for companie in list_companies:
+#     create_bills(1000, companie)
 
 
