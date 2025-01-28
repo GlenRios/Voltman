@@ -180,6 +180,7 @@ def get_branch(name):
     return jsonify(company), 200
 
 @app.route("/api/branch", methods=["POST",])
+@jwt_required(optional=False)
 def create_branch():
     data = request.json
     username = get_jwt_identity()
