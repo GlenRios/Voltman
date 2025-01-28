@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TotalConsumption from '@/src/components/consults/TotalConsumption';
 import MonthlyAverage from '@/src/components/consults/MonthlyAverage';
 import EfficiencyComparison from '@/src/components/consults/EfficiencyComparison';
@@ -7,6 +7,9 @@ import ButtonBack from '@/src/components/buttons/ButtonBack';
 import Logo from '@/src/components/logo';
 import EquipmentQuery from '@/src/components/consults/EquipmentsQuery';
 import { fetchBranchesNames } from '@/src/api/branchService';
+import { getToken } from '@/src/hooks/handleToken';
+import { useAlert } from "@/src/hooks/alertContxt";
+import Alert from "@/src/components/alerts/Alert";
 
 interface Query {
     id: number;
@@ -15,8 +18,34 @@ interface Query {
 
 export default function QueriesPage() {
 
-    const [branchesNames, setbranchesName] = useState([]);
+    const { showAlert, alertData } = useAlert();
+    const token = getToken();
+    const [CompaniesNames, setCompaniesNames] = useState<string[]>([]);
     const [queries, setQueries] = useState<Query[]>([]);
+
+    //Obtener nombres de las sucursales al abrir la pagina
+    useEffect(() => { fetchBranches(); }, []);
+    const fetchBranches = async () => {
+        try {
+            const response = await fetch("http://localhost:5050/api/consult/companies/", {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                showAlert(true, data.error, 5000)
+            }
+            const names: string[] = data.map((item: { Name: string;}) => item.Name)
+            // Elimina valores vacíos
+            setCompaniesNames(names);
+            console.log(names);
+        } catch (Error) {
+            console.error(Error)
+        }
+    };
 
     const handleAddQuery = () => {
         setQueries([...queries, { id: Date.now(), type: null }]);
@@ -37,7 +66,7 @@ export default function QueriesPage() {
     const renderQueryComponent = (type: string | null, id: number) => {
         switch (type) {
             case 'total':
-                return <TotalConsumption key={id} />;
+                return <TotalConsumption key={id} names={CompaniesNames}/>;
             case 'average':
                 return <MonthlyAverage key={id} />;
             case 'comparison':
@@ -50,7 +79,13 @@ export default function QueriesPage() {
 
     return (
         <div className="flex flex-col items-center justify-center fondo">
-
+            {alertData.isVisible && (
+                <Alert
+                    type={alertData.type}
+                    message={alertData.message}
+                    onClose={() => showAlert(false, "", 0)}
+                />
+            )}
             <div className="flex flex-col items-center justify-center">
                 <Logo height={200} width={200} />
                 <h1 className="text-2xl font-bold mb-4">Consultas de Consumo Energético</h1>
@@ -59,7 +94,6 @@ export default function QueriesPage() {
             <div>
                 <ButtonBack />
             </div>
-
             {queries.map((query) => (
                 <div key={query.id} className="mb-4 p-4 border rounded shadow">
                     <div className="flex justify-between items-center">
