@@ -54,12 +54,15 @@ import { getToken } from "../hooks/handleToken";
 
 export async function fetchBranchesNames(){
     try {
-        return await fetch("http://localhost:5050/api/consult/companies/", {
+		let response = await fetch("http://localhost:5050/api/consult/companies/", {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }
         });
+		response = await response.json();
+		response = response.map( branch => branch.Name);
+		return response;		
     } catch (error) {
         throw error;
     }
