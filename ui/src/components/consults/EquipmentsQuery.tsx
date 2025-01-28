@@ -1,68 +1,89 @@
 "use client";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import EquipmentTable, { EquipmentTableProp } from "./EquipmentTable";
-import { fetchBranchesNames } from "@/src/api/branchService";
+import { useAlert } from "@/src/hooks/alertContxt";
+import Alert from "@/src/components/alerts/Alert";
 
+const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
 
-const EquipmentQuery: React.FC = () => {
-
-
-    const [branchesNames, setbranchesNames] = useState<string[]>([]);
-
-    useEffect(() => { fetchUsers(); }, []);
-    const fetchUsers = async () => {
-        try {
-
-            const response = await fetchBranchesNames();
-            const data = await response.json();
-            if (!response.ok){
-                
-            }
-            setbranchesNames(data);
-        } catch (Error) {
-            console.error(Error)
-        }
-    };
-
-
-
-    const [formData, setFormData] = useState<EquipmentTableProp>({
-        branch: '',
-        area: ' ',
-    });
-
-    const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-        const { name, value } = e.target;
-
-    };
+    const { showAlert, alertData } = useAlert();
+    const [areas, setAreas] = useState<string[]>([]);
+    const [selectCompany, setSelectCompany] = useState<string>('')
+    const [selectArea, setSelectArea] = useState<string>('')
 
     const handleSubmit = () => {
 
     };
+    // useEffect(() => { 
+    //     await fetchAreasNames(); 
+    // }, [selectCompany]);
 
+    const fetchAreasNames = async () => {
+        try{
+            const response = await fetch(`http://localhost:5050/api/consult/areas/${selectCompany}/`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await response.json()
+            if(!response.ok){
+                showAlert(true, data.error, 5000);
+                return;
+            }
+            setAreas(data);
+        }
+        catch(error){
+            console.error(error);
+        }
+    }
 
-
+     
     return (
         <div className="p-4 border rounded shadow">
-            <h2 className="text-xl font-bold mb-4">Promedio Mensual</h2>
+            {alertData.isVisible && (
+                <Alert
+                    type={alertData.type}
+                    message={alertData.message}
+                    onClose={() => showAlert(false, "", 0)}
+                />
+            )}
+            <h2 className="text-xl font-bold mb-4">Equipments:</h2>
             <div className="grid grid-cols-1 gap-4">
                 <select
-                    name="branch"
-                    value={formData.branch}
-                    onChange={handleChange}
+                    name="company"
+                    value={selectCompany}
+                    onChange={(e) => setSelectCompany(e.target.value)}
                     className="p-2 border rounded"
                 >
-                    <option value="">Selecciona una sucursal</option>
-                    <option value="Branch1">Sucursal 1</option>
-                    <option value="Branch2">Sucursal 2</option>
+                    <option value="">Select a company</option>
+                    {names.map((name, index) => (
+                        <option className="text-black"
+                            key={index}
+                            value={name}
+                            onClick={() => { setSelectCompany(name) }}
+                        >
+                            {name}
+                        </option>
+                    ))}
                 </select>
-                <input
-                    type="text"
-                    name="years"
-                    placeholder="Años (ej: 2021, 2022, 2023)"
-                    onChange={handleChange}
+                <select
+                    name="Area"
+                    value={selectArea}
+                    onChange={(e) => setSelectArea(e.target.value)}
                     className="p-2 border rounded"
-                />
+                >
+                    <option value="">Select a Area</option>
+                    {areas.map((name, index) => (
+                        <option className="text-black"
+                            key={index}
+                            value={name}
+                            onClick={() => { setSelectArea(name) }}
+                        >
+                            {name}
+                        </option>
+                    ))}
+                </select>
                 <button
                     className="mt-2 p-2 bg-green-500 text-white rounded hover:bg-green-600"
                     onClick={handleSubmit}

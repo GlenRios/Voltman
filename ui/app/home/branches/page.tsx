@@ -873,7 +873,7 @@ export default function branchesPage() {
                 >
                     <option value="">Selecciona una sucursal</option>
                     {branchesName.map((branch, index) => (
-                        <option key={index} value={branch.name} onClick={() => getBranchInfo()}>
+                        <option key={index} value={branch.name} onClick={getBranchInfo}>
                             {branch.name}
                         </option>
                     ))}

@@ -8,6 +8,8 @@ import User from "@/src/models/User"
 import showNotification from '@/src/utilts/Notifications';
 import ButtonBack from '@/src/components/buttons/ButtonBack';
 import Logo from '@/src/components/logo';
+import { useAlert } from "@/src/hooks/alertContxt";
+import Alert from "@/src/components/alerts/Alert";
 
 /**
 For making branch a select
@@ -19,6 +21,8 @@ For making branch a select
 
 export default function Page() {
 
+    const { showAlert, alertData } = useAlert();
+    const token = getToken();
     const [users, setUsers] = useState<User[]>([]);
     const [Username, setName] = useState('');
     const [Company, setCompany] = useState('');
@@ -31,18 +35,31 @@ export default function Page() {
     const [id, setCurrentUserId] = useState<number | null>(null);
     const router = useRouter();
     const [searchTerm, setSearchTerm] = useState('');
-	
-	{/** **/}
-	const [branches,setBranches] = useState<string>([]);
-	useEffect(() => {
-		async function getBranches() {
-			setBranches( await fetchBranchesNames() );
-		}
-		getBranches(branches);
-	}
-	,[]);
-	{/** **/}
-	
+    const [branches, setBranches] = useState<string[]>([])
+
+    {/** **/ }
+    useEffect(() => { fetchBranches(); }, []);
+    const fetchBranches = async () => {
+        try {
+            const response = await fetch("http://localhost:5050/api/branch", {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                showAlert(true, data.error, 5000)
+            }
+            const names = data.map((item:any) => item.Name);
+            setBranches(names);
+        } catch (Error) {
+            console.error(Error)
+        }
+    };
+    {/** **/ }
+
     useEffect(() => { fetchUsers(); }, []);
     const fetchUsers = async () => {
         try {
@@ -270,15 +287,15 @@ export default function Page() {
                             <div className="mb-4">
                                 <label className="block text-gray-700 dark:text-white">Company</label>
                                 {/** Using a select **/}
-								<select
+                                <select
                                     value={Company}
                                     onChange={e => setCompany(e.target.value)}
                                     className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-black dark:bg-slate-200"
                                 >
-									<option value="">Select a company</option>
+                                    <option value="">Select a company</option>
                                     {branches.map((branch) => <option key={branch} value={branch}>{branch}</option>)}
-								</select>
-								{/** Using a select **/}
+                                </select>
+                                {/** Using a select **/}
                             </div>
                             <div className="mb-4">
                                 <label className="block text-gray-700 dark:text-white">User type</label>
