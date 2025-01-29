@@ -5,12 +5,13 @@ import { useRouter } from 'next/navigation';
 import { goRestrictedRoute } from '@/src/hooks/handleRouts';
 import Notification from '@/src/models/Notification';
 import Logo from '@/src/components/logo';
-
+import { useAlert } from "@/src/hooks/alertContxt";
+import Alert from "@/src/components/alerts/Alert";
 export default function Home() {
 
     //Variables
     const router = useRouter();
-
+    const { showAlert, alertData } = useAlert();
     const notificationsData: Notification[] = [
         { id: 1, title: 'Consumo Alto ', message: 'El consumo eléctrico superó el límite establecido.' },
         { id: 2, title: 'Mantenimiento', message: 'Programado mantenimiento para el próximo lunes.' },
@@ -32,7 +33,12 @@ export default function Home() {
             goRestrictedRoute(router, route);
         }
         catch (error) {
-            console.error(error);
+            if (error instanceof Error) {
+                showAlert(true, error.message, 5000);
+                return;
+            } else {
+                console.log("unknown error", error);
+            }
         }
     };
 
@@ -42,7 +48,13 @@ export default function Home() {
 
     return (
         <div className="flex h-screen flex-col lg:flex-row">
-
+            {alertData.isVisible && (
+                <Alert
+                    type={alertData.type}
+                    message={alertData.message}
+                    onClose={() => showAlert(false, "", 0)}
+                />
+            )}
             {/* Barra lateral */}
             {isOpen && <div className="flex flex-col w-full lg:w-auto bg-gray-800 text-white overflow-y-auto">
                 <div className='flex items-center justify-center border-2 border-gray-900 p-2 pl-0'>

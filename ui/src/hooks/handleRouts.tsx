@@ -21,9 +21,8 @@ export async function goRestrictedRoute(router: AppRouterInstance, route: string
             return;
         }
         else{
-            router.push("/");
+            throw new Error("You do not have access to that page");
         }
-        // throw new Error(`error accessing ${route}`);
     } catch (error) {
         throw error;
     }
