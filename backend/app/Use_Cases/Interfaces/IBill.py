@@ -38,6 +38,10 @@ class IBill:
             monthly_consumption[year_month].append(reading)
         return monthly_consumption    
 
+    def get_companies_limit_exceeded(self, month, year):
+        items= self.repo.get_limit_exceeded(month, year)
+        return self.repo.get_company_names(items)
+
 
     def calculate_average_monthly_consumption(self, company, start_date, end_date):
         bills= self.get_bills_in_range(start_date, end_date, company)

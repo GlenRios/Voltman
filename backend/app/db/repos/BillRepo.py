@@ -35,6 +35,13 @@ class BillRepo(BaseRepo):
                     bill.DailyConsumption,
                     bill.Cost)
 
+    def get_company_names(self, items: list[BillModel]):
+        companies=[]
+        for item in items:
+            name, overlimit= self.company_repo.get(item.CompanyID).Name, -item.OverLimit
+            companies.append((name,overlimit))
+        return companies    
+
     def prev_day(self, company, bill_date: date):
         # Obtener la lectura acumulada del día anterior
         previous_day = bill_date - timedelta(days=1)
@@ -44,6 +51,21 @@ class BillRepo(BaseRepo):
         ).first()
 
         return previous_day_bill
+    
+    def get_limit_exceeded(self, month: int, year: int):
+
+        bills= self.db.query(BillModel).filter(extract('month', BillModel.BillDate)==month, extract('year', BillModel.BillDate)==year, BillModel.OverLimit < 0 ).all()
+
+        latest_bills = {}
+
+        for bill in bills:
+            # Si no existe la clave o la fecha es más reciente, actualizaremos
+            if bill.CompanyID not in latest_bills or bill.BillDate > latest_bills[bill.CompanyID].BillDate:
+                latest_bills[bill.CompanyID] = bill
+
+        # Los objetos con las fechas máximas
+        filtered_bills = list(latest_bills.values())
+        return filtered_bills
     
     def to_model(self, values: dict)-> dict:
         company=self.company_repo.get_byName(values['Company'])

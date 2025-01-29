@@ -31,5 +31,20 @@ class BillController():
             monthly_average_consumptions= self.Ibill.calculate_average_monthly_consumption(company, start_date, end_date)
             for (year, month), average in monthly_average_consumptions.items():
                 answ.append({'Name': company, 'Date': f'{year}-{month}', 'Average': average})  
-        return answ                      
+        return answ    
+
+
+    def get_companies_limit_exceeded(self, date: str):
+        date= datetime.strptime(date, "%Y-%m-%d").date()
+        month= date.month
+        year= date.year
+        items= self.Ibill.get_companies_limit_exceeded(month, year)
+        answ= []
+        for name, overlimit in items:
+            answ.append({'Name': name, 'OverLimit': overlimit})
+        return answ    
+
+
+
+                 
                 

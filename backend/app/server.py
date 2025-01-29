@@ -328,5 +328,12 @@ def calculate_average_consume():
     answ= bc.calculate_monthly_average_consumption(data)
     return answ, 200
 
+@app.route('/api/consult/limitExceeded/<string:date>', methods=['GET'])
+def limitExceeded(date):
+    answ= bc.get_companies_limit_exceeded(date)
+    return jsonify(answ), 200
+
+
 app.run(port= 5050,debug=True)
+
 

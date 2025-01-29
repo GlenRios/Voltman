@@ -18,7 +18,7 @@ class Tester:
         return users
     
     def create_company(self):
-        return {'Limit': self.fake.pyfloat(min_value=2500.00, max_value=4000.00, right_digits=2),
+        return {'Limit': self.fake.pyfloat(min_value=4000.00, max_value= 6000.00, right_digits=2),
                 'Increase': 20,
                 'Extra_Percent': 15,
                 'Type': f'type{random.randint(1, 10) }',

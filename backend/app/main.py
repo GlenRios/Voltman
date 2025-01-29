@@ -1,6 +1,6 @@
 from Configurations.db_configuration import init_db, SessionLocal
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from tests.Tester import Tester
 from controllers import (
     user_controller as uc,
@@ -83,5 +83,6 @@ def create_bills(n, company):
 # create_equipments(100)
 # for company in list_companies:
 #     create_bills(100, company)
+
 
 
