@@ -5,9 +5,10 @@ from Configurations.db_configuration import Base
 class BillModel(Base):
     
     id= Column(Integer, primary_key=True, autoincrement= True)
-    BillDate = Column(DateTime, nullable= False)
+    BillDate = Column(Date, nullable= False)
     CompanyID = Column(Integer, ForeignKey('company_model.id'), nullable= False)
     Reading = Column(Float, nullable=False)
+    DailyConsumption= Column(Float, nullable= False)
     Cost = Column(Float, nullable=False)
     OverLimit = Column(Integer, default=0, nullable=False)
 

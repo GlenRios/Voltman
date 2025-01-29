@@ -1,15 +1,13 @@
-from datetime import datetime
+from datetime import date
 class Bill:
 
-    def __init__(self,id: int, date: datetime, company: str, reading: float, increase: int, extra_percent: int):
+    def __init__(self,id: int, date: date, company: str, reading: float, daily_consumption: float,  cost: float):
         self.id= id
         self.Date= date
         self.Company= company
         self.Reading= reading
-        self.cost= self.calculate_cost(increase, extra_percent)
+        self.DailyConsumption= daily_consumption
+        self.Cost= cost
 
     def as_dict(self)-> dict:
         return {key: value for key, value in vars(self).items()}
-
-    def calculate_cost(self, increase: int , extra_percet: int):
-        return self.Reading *(1+extra_percet) + increase

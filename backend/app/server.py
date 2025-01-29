@@ -267,7 +267,6 @@ def delete_equipment(id):
     return jsonify({'message':'Equipment deleted successfully'})
 
 
-
 USERS_PERMISSIONS=['SuperAdmin', 'Admin']
 BRANCHES_PERMISSIONS=['SuperAdmin', 'Admin', 'Manacher']
 BILLS_PERMISSIONS=['SuperAdmin', 'Manacher']
@@ -302,10 +301,30 @@ def create_bill():
 def get_all_companies():
     return cc.get_all(), 200
 
+app.route('/api/consult/areas/<string:Company>', methods=['GET'])
+def get_consult_areas(company):
+    id= cc.get(company)['id']
+    areas= ac.get_all(id)
+    return jsonify(areas), 200
+
+
 @app.route('/api/consult/equipments/<string:Company>/<string:Name>', methods=['GET'])
 def get_equipments_in_area(Company, Name):
     id= ac.get_by_company(Company, Name)
     return ac.get_equipments(id), 200
 
 
+@app.route('/api/consult/totalConsumption/', methods= ['POST',])
+def get_consume():
+    data= request.json
+    answ= bc.get_consume(data)
+    return jsonify(answ), 200
+
+@app.route('/api/consult/average_month/', methods=['POST'])
+def calculate_average_consume():
+    data= request.json
+    answ= bc.calculate_monthly_average_consumption(data)
+    return answ, 200
+
 app.run(port= 5050,debug=True)
+

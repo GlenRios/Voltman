@@ -1,6 +1,6 @@
 from Configurations.db_configuration import init_db, SessionLocal
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from tests.Tester import Tester
 from controllers import (
     user_controller as uc,
@@ -19,7 +19,7 @@ if not os.path.exists(path):
     
 
 tester= Tester()
-
+from db.models.Bill import BillModel
 from db.repos import UserRepo, CompanyRepo, AreaRepo, EquipmentRepo, GroupRepo, BillRepo
 from Use_Cases.Interfaces import IUser, ICompany, IArea, IEquipment, IBill
 
@@ -72,17 +72,16 @@ def create_equipments(n: int):
         EC.post(eq)
 
 def create_bills(n, company):
-    date= datetime.now()  
+    date= datetime.now().date()- timedelta(days=n)
     bills= tester.create_bills(n, date, company)    
-    bills.reverse() 
     BC.post(bills)
 
 
 # create_companies(10)
-# create_users(100)
-# create_areas(50)
-# create_equipments(300)
-# for companie in list_companies:
-#     create_bills(100, companie)
+# create_users(10)
+# create_areas(10)
+# create_equipments(10)
+# for company in list_companies:
+#     create_bills(10, company)
 
 
