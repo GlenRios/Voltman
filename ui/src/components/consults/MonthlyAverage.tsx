@@ -51,7 +51,7 @@ const MonthlyAverage: React.FC<{ names: string[] }> = ({ names }) => {
     };
 
     return (
-        <div className="p-4">
+        <div className="p-4 rounded shadow">
             {alertData.isVisible && (
                 <Alert
                     type={alertData.type}
@@ -59,15 +59,16 @@ const MonthlyAverage: React.FC<{ names: string[] }> = ({ names }) => {
                     onClose={() => showAlert(false, "", 0)}
                 />
             )}
-            <h1 className="text-2xl font-bold mb-4">Consulta Dinámica</h1>
+            <h1 className="tittle">Monthly Average</h1>
+            <label htmlFor="Companies" className="subtittle">Companies:</label>
             {selectors.map((selected, index) => (
                 <div key={index} className="mb-4">
                     <select
                         value={selected}
                         onChange={(e) => handleSelectorChange(index, e.target.value)}
-                        className="p-2 border rounded w-full"
+                        className="selector"
                     >
-                        <option value="">Selecciona una opción</option>
+                        <option value="">Select a Copmany</option>
                         {names.map((option) => (
                             <option key={option} value={option}>
                                 {option}
@@ -76,19 +77,21 @@ const MonthlyAverage: React.FC<{ names: string[] }> = ({ names }) => {
                     </select>
                 </div>
             ))}
-
-            <button onClick={addSelector} className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2">
-                New
+            <div className="flex flex-row gap-2">
+                <button onClick={addSelector} className="buttonBlue">
+                Add Company
             </button>
 
             <button
                 onClick={handleConsult}
                 disabled={isSubmitting}
-                className={`p-2 bg-green-500 text-white rounded hover:bg-green-600 ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                className={`buttonGreen ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
                     }`}
             >
                 {isSubmitting ? "Consultando..." : "Consult"}
             </button>
+            </div>
+            
         </div>
     );
 };

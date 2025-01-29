@@ -52,7 +52,7 @@ const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
     }
 
     return (
-        <div className="p-4 border rounded shadow">
+        <div className="p-4 rounded shadow">
             {alertData.isVisible && (
                 <Alert
                     type={alertData.type}
@@ -60,13 +60,14 @@ const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
                     onClose={() => showAlert(false, "", 0)}
                 />
             )}
-            <h2 className="text-xl font-bold mb-4">Equipments:</h2>
-            <div className="grid grid-cols-1 gap-4">
+            <h2 className="tittle">Consult Equipments:</h2>
+            <div className="grid grid-cols-1">
+                <label htmlFor="Company" className="subtittle">company:</label>
                 <select
                     name="company"
                     value={selectCompany}
                     onChange={(e) => setSelectCompany(e.target.value)}
-                    className="p-2 border rounded"
+                    className="selector"
                 >
                     <option value="">Select a company</option>
                     {names.map((name, index) => (
@@ -79,11 +80,12 @@ const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
                         </option>
                     ))}
                 </select>
+                <label htmlFor="Company" className="subtittle">area:</label>
                 <select
                     name="Area"
                     value={selectArea}
                     onChange={(e) => setSelectArea(e.target.value)}
-                    className="p-2 border rounded"
+                    className="selector"
                 >
                     <option value="">Select a Area</option>
                     {areas && areas.map((name, index) => (
@@ -97,7 +99,7 @@ const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
                     ))}
                 </select>
                 <button
-                    className="mt-2 p-2 bg-green-500 text-white rounded hover:bg-green-600"
+                    className="buttonGreen m-4 mb-0"
                     onClick={handleSubmit}
                 >
                     Consultar
@@ -105,9 +107,7 @@ const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
             </div>
             {loading &&
                 <div>
-                    <button onClick={() => SetLoading(false)}>
-                        X
-                    </button>
+                    <button onClick={() => SetLoading(false)} className="buttonRed m-4 mb-0">X</button>
                     <EquipmentTable branch={selectCompany} area={selectArea} />
                 </div>
             }

@@ -36,44 +36,44 @@ const EquipmentTable: React.FC<EquipmentTableProp> = ({ branch, area }) => {
 
     return (
         <div className="p-4">
-            <h2 className="text-2xl font-bold mb-4">Equuipments Table</h2>
+            <h2 className="subtittle text-xl">Equipments Info:</h2>
 
             {isLoading ? (
                 <p className="text-gray-500">Loading...</p>
             ) : (
                 <div className="overflow-x-auto">
-                    <table className="w-full table-auto border-collapse">
-                        <thead className="bg-gray-200 dark:bg-gray-700">
-                            <tr>
-                                <th className="p-2 border">Area</th>
-                                <th className="p-2 border">Brand</th>
-                                <th className="p-2 border">Model</th>
-                                <th className="p-2 border">Type</th>
-                                <th className="p-2 border">Nominal Capacity</th>
-                                <th className="p-2 border">Installation Date</th>
-                                <th className="p-2 border">Estimated Lifespan</th>
-                                <th className="p-2 border">Mantenance Status</th>
-                                <th className="p-2 border">Critical Energy System</th>
-                                <th className="p-2 border">Usage Frequency</th>
-                                <th className="p-2 border">Energy Efficiency</th>
-                                <th className="p-2 border">Average Daily Consumption</th>
+                    <table className="styleTable">
+                        <thead>
+                            <tr className="headRowTable">
+                                <th className="headColumn">Area</th>
+                                <th className="headColumn">Brand</th>
+                                <th className="headColumn">Model</th>
+                                <th className="headColumn">Type</th>
+                                <th className="headColumn">Nominal Capacity</th>
+                                <th className="headColumn">Installation Date</th>
+                                <th className="headColumn">Estimated Lifespan</th>
+                                <th className="headColumn">Mantenance Status</th>
+                                <th className="headColumn">Critical Energy System</th>
+                                <th className="headColumn">Usage Frequency</th>
+                                <th className="headColumn">Energy Efficiency</th>
+                                <th className="headColumn">Average Daily Consumption</th>
                             </tr>
                         </thead>
                         <tbody>
                             {data.map((item, index) => (
-                                <tr key={index} className="odd:bg-white even:bg-gray-100 dark:odd:bg-gray-800 dark:even:bg-gray-700">
-                                    <td className="p-2 border">{item.Area}</td>
-                                    <td className="p-2 border">{item.Brand}</td>
-                                    <td className="p-2 border">{item.Model}</td>
-                                    <td className="p-2 border">{item.Type}</td>
-                                    <td className="p-2 border">{item.Nominal_Capacity}</td>
-                                    <td className="p-2 border">{item.Installation_Date}</td>
-                                    <td className="p-2 border">{item.Estimated_Lifespan}</td>
-                                    <td className="p-2 border">{item.Maintenance_Status}</td>
-                                    <td className="p-2 border">{item.CriticalEnergySystem}</td>
-                                    <td className="p-2 border">{item.Usage_Frequency}</td>
-                                    <td className="p-2 border">{item.Energy_Efficiency}</td>
-                                    <td className="p-2 border">{item.Average_Daily_Consumption}</td>
+                                <tr key={index} className="rowTable">
+                                    <td className="rowData">{item.Area}</td>
+                                    <td className="rowData">{item.Brand}</td>
+                                    <td className="rowData">{item.Model}</td>
+                                    <td className="rowData">{item.Type}</td>
+                                    <td className="rowData">{item.Nominal_Capacity}</td>
+                                    <td className="rowData">{item.Installation_Date}</td>
+                                    <td className="rowData">{item.Estimated_Lifespan}</td>
+                                    <td className="rowData">{item.Maintenance_Status}</td>
+                                    <td className="rowData">{item.CriticalEnergySystem}</td>
+                                    <td className="rowData">{item.Usage_Frequency}</td>
+                                    <td className="rowData">{item.Energy_Efficiency}</td>
+                                    <td className="rowData">{item.Average_Daily_Consumption}</td>
                                 </tr>
                             ))}
                         </tbody>

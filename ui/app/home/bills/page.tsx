@@ -41,7 +41,7 @@ const DailyConsumptionPage: React.FC = () => {
       if (!response.ok) {
         showAlert(true, data.error, 5000)
       }
-      const names = data.map(item => item.Name)
+      const names = data.map((item: { Name: any; }) => item.Name)
       // Elimina valores vacíos
       setCompanyNames(names);
       // showAlert(false, data.message || "Operation was successful!", 3000)
@@ -106,29 +106,29 @@ const DailyConsumptionPage: React.FC = () => {
       )}
       <div className='flex justify-center items-center'>
         <Logo
-          width={50}
-          height={50}>
+          width={200}
+          height={200}>
         </Logo>
         <h2 className="text-4xl font-extrabold text-center text-black dark:text-white">
           Consumption records!
         </h2>
       </div>
-      <div className="flex flex-row items-center justify-center">
+      <div className="flex flex-row items-center justify-center gap-2">
         <ButtonBack />
         <button
           onClick={addForm}
-          className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 m-2 align-baseline"
+          className="buttonBlue"
         >
           Add
         </button>
       </div>
       {forms.map((form, index) => (
-        <div key={index} className="p-4 border rounded mb-4 shadow">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div key={index} className="card w-auto max-w-1/2 ">
+          <div className="flex flex-col lg:flex-row gap-4">
             <select
               value={form.Company}
               onChange={(e) => handleFormChange(index, 'Company', e.target.value)}
-              className="p-2 border rounded"
+              className="selector"
             >
               <option value="">Selecciona una empresa</option>
               {companyNames.map((name) => (
@@ -143,40 +143,42 @@ const DailyConsumptionPage: React.FC = () => {
               value={form.Reading}
               onChange={(e) => handleFormChange(index, 'Reading', Number(e.target.value))}
               placeholder="Reading"
-              className="p-2 border rounded"
+              className="styleInput"
             />
 
             <input
               type="date"
               value={form.Date}
               onChange={(e) => handleFormChange(index, 'Date', e.target.value)}
-              className="p-2 border rounded"
+              className="styleInput"
             />
           </div>
           <button
             onClick={() => removeForm(index)}
-            className="mt-2 p-2 bg-red-500 text-white rounded hover:bg-red-600"
+            className="buttonRed m-2"
           >
             Eliminar
           </button>
         </div>
       ))}
+      <div className='flex flex-row gap-2'>
+        <button
+          onClick={addForm}
+          className="buttonBlue"
+        >
+          Add
+        </button>
 
-      <button
-        onClick={addForm}
-        className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 mb-4"
-      >
-        Add
-      </button>
+        <button
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+          className={`buttonGreen ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+        >
+          {isSubmitting ? 'Registering...' : 'Register'}
+        </button>
+      </div>
 
-      <button
-        onClick={handleSubmit}
-        disabled={isSubmitting}
-        className={`p-2 bg-green-500 text-white rounded hover:bg-green-600 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
-      >
-        {isSubmitting ? 'Registering...' : 'Register'}
-      </button>
     </div>
   );
 };

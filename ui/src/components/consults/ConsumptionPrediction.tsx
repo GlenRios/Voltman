@@ -9,7 +9,7 @@ const ConsumptionPrediction: React.FC<{ names: string[] }> = ({ names }) => {
     const { showAlert, alertData } = useAlert();
     const [responseData, setResponseData] = useState(null);
     const [selectedName, setSelectName] = useState<string>('');
-    const [prediction, setPrediction] = useState(null);
+    const [prediction, setPrediction] = useState<number | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
 
     const handleSubmit = async () => {
@@ -38,7 +38,7 @@ const ConsumptionPrediction: React.FC<{ names: string[] }> = ({ names }) => {
     }
 
     return (
-        <div className="p-4 border rounded shadow">
+        <div className="p-4 rounded shadow flex flex-col item-center justify-center">
             {alertData.isVisible && (
                 <Alert
                     type={alertData.type}
@@ -46,13 +46,14 @@ const ConsumptionPrediction: React.FC<{ names: string[] }> = ({ names }) => {
                     onClose={() => showAlert(false, "", 0)}
                 />
             )}
-            <h2 className="text-xl font-bold mb-4">Predict consumption for the next quarter</h2>
-            <div className="grid grid-cols-1 gap-4">
+            <h2 className="tittle">Predict consumption for the next trimester:</h2>
+            <div className="grid grid-cols-1">
+                <label htmlFor="company" className='subtittle'>company:</label>
                 <select
                     name="Company"
                     value={selectedName}
                     onChange={(e) => { setSelectName(e.target.value) }}
-                    className="p-2 border rounded"
+                    className="selector"
                 >
                     <option value="">Selecciona una sucursal</option>
                     {names.map((name, index) => (
@@ -65,15 +66,15 @@ const ConsumptionPrediction: React.FC<{ names: string[] }> = ({ names }) => {
                     ))}
                 </select>
                 <button
-                    className="mt-2 p-2 bg-green-500 text-white rounded hover:bg-green-600"
+                    className="buttonGreen mt-4"
                     onClick={handleSubmit}
                 >
                     Consult
                 </button>
             </div>
-            {loading &&
+            {prediction &&
                 <div>
-                    <h2 className="text-xl font-bold mb-4">Response: {prediction}</h2>
+                    <h2 className="tittle">Response: {prediction}</h2>
                 </div>}
         </div>
     );

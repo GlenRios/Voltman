@@ -22,7 +22,7 @@ export default function QueriesPage() {
     const { showAlert, alertData } = useAlert();
     const token = getToken();
     const [CompaniesNames, setCompaniesNames] = useState<string[]>([]);
-    const [queries, setQueries] = useState<Query[]>([]);
+    const [queries, setQueries] = useState<Query[]>([{ id: Date.now(), type: null }]);
 
     //Obtener nombres de las sucursales al abrir la pagina
     useEffect(() => { fetchBranches(); }, []);
@@ -71,7 +71,7 @@ export default function QueriesPage() {
             case 'average':
                 return <MonthlyAverage key={id} names={CompaniesNames} />;
             case 'comparison':
-                return <EfficiencyComparison key={id} />;
+                return <EfficiencyComparison key={id} names={CompaniesNames}/>;
             case 'equipments':
                 return <EquipmentQuery key={id} names={CompaniesNames} />;
             case 'exceeded':
@@ -84,7 +84,7 @@ export default function QueriesPage() {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center fondo min-h-screen">
+        <div className="flex flex-col items-center min-h-screen p-2 relative fondo">
             {alertData.isVisible && (
                 <Alert
                     type={alertData.type}
@@ -92,45 +92,49 @@ export default function QueriesPage() {
                     onClose={() => showAlert(false, "", 0)}
                 />
             )}
-            <div className="flex flex-col items-center justify-center">
-                <Logo height={200} width={200} />
-                <h1 className="text-2xl font-bold mb-4">Consultas de Consumo Energético</h1>
+            <div className='flex justify-center items-center p-4 m-4'>
+                <Logo
+                    width={100}
+                    height={100}>
+                </Logo>
+                <h2 className="tittlePage">
+                    Energy Consumption Consultations
+                </h2>
             </div>
-
-            <div>
+            <div className='scale-90'>
                 <ButtonBack />
             </div>
             {queries.map((query) => (
-                <div key={query.id} className="mb-4 p-4 border rounded shadow">
-                    <div className="flex justify-between items-center">
+                <div key={query.id} className="card">
+                    <div className={`flex justify-between items-center ${query.type ? 'flex-col' : ''}`}>
                         {!query.type ? (
                             <select
-                                className="w-full p-2 border rounded"
+                                className="selector"
                                 onChange={(e) => handleSelectQuery(query.id, e.target.value)}
                             >
-                                <option value="">Selecciona una consulta</option>
-                                <option value="total">Consumo Total</option>
-                                <option value="average">Promedio Mensual</option>
-                                <option value="comparison">Comparación de Eficiencia</option>
-                                <option value="equipments">Mostrar equipos</option>
-                                <option value="exceeded">Identificar las sucursales</option>
-                                <option value="prediction">Predecir consumo</option>
+                                <option value="">Select a query</option>
+                                <option value="total">Total Consumption</option>
+                                <option value="average">Monthly Average</option>
+                                <option value="comparison">Efficiency Comparison</option>
+                                <option value="equipments">Show equipments</option>
+                                <option value="exceeded">Identify branches</option>
+                                <option value="prediction">Predict consumption</option>
                             </select>
                         ) : (
                             renderQueryComponent(query.type, query.id)
                         )}
                         <button
-                            className="ml-4 p-2 bg-red-500 text-white rounded hover:bg-red-600"
+                            className="buttonRed m-2"
                             onClick={() => handleRemoveQuery(query.id)}
                         >
-                            Eliminar
+                            Delete
                         </button>
                     </div>
                 </div>
             ))}
 
             <button
-                className="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="buttonBlue"
                 onClick={handleAddQuery}
             >
                 New

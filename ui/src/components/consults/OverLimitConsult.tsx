@@ -34,7 +34,7 @@ const OverLimitConsult: React.FC = () => {
     }
 
     return (
-        <div className="p-4 border rounded shadow">
+        <div className="p-4 rounded shadow">
             {alertData.isVisible && (
                 <Alert
                     type={alertData.type}
@@ -42,18 +42,19 @@ const OverLimitConsult: React.FC = () => {
                     onClose={() => showAlert(false, "", 0)}
                 />
             )}
-            <h2 className="text-xl font-bold mb-4">Identify branches that exceeded their monthly limit:</h2>
+            <h2 className="tittle">Identify branches that exceeded their monthly limit:</h2>
             <div className="grid grid-cols-1 gap-4">
+                <label htmlFor="Date" className="subtittle">date:</label>
                 <input
                     type="Date"
                     name="startDate"
                     value={date}
                     onChange={(e) => { setDate(e.target.value) }}
-                    className="p-2 border rounded"
+                    className="styleInput"
                     placeholder="Fecha de inicio"
                 />
                 <button
-                    className="mt-2 p-2 bg-green-500 text-white rounded hover:bg-green-600"
+                    className="buttonGreen m-2"
                     onClick={handleSubmit}
                 >
                     Consult

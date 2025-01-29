@@ -9,24 +9,24 @@ const ExceededTable: React.FC<{ Data: ExceededTableProp[] }> = ({ Data }) => {
 
     return (
         <div>
-            <table className="w-full table-fixed border-collapse border rounded-xl border-gray-300 dark:border-gray-700">
+            <table className="styleTable">
                 <thead>
-                    <tr className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300">
-                        <th className="border border-gray-300 dark:border-gray-900 p-2 text-left w-1/3">
+                    <tr className="headRowTable">
+                        <th className="headColumn">
                             Name
                         </th>
-                        <th className="border border-gray-300 dark:border-gray-900 p-2 text-left w-1/3">
+                        <th className="headColumn">
                             Over Limit
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     {Data.map(item => (
-                        <tr key={item.Name} className="odd:bg-gray-100 dark:odd:bg-gray-700">
-                            <td className="border text-gray-800 dark:text-gray-400 border-gray-300 dark:border-gray-900 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
+                        <tr key={item.Name} className="rowTable">
+                            <td className="rowData">
                                 {item.Name}
                             </td>
-                            <td className="border text-gray-800 dark:text-gray-400 border-gray-300 dark:border-gray-900 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
+                            <td className="rowData">
                                 {item.OverLimit}
                             </td>
                         </tr>

@@ -157,10 +157,10 @@ export default function Page() {
 
             <div className='flex justify-center items-center'>
                 <Logo
-                    width={50}
-                    height={50}>
+                    width={100}
+                    height={100}>
                 </Logo>
-                <h2 className="text-4xl font-extrabold text-center text-black dark:text-white">
+                <h2 className="tittlePage">
                     User management!
                 </h2>
             </div>
@@ -180,53 +180,52 @@ export default function Page() {
                     setType('');
                     setPassword('');
                 }}
-                className="mb-4 bg-blue-500 h-10 text-white px-4 py-2 rounded-xl hover:bg-blue-600"
+                className="buttonBlue"
             >
                 Add User
 
             </button>
 
-            <div className="max-w-md mb-6">
+            <div className="max-w-md mb-4 mt-6 ml-4">
                 <input
                     type="text"
                     placeholder="Search by name..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-300 dark:placeholder:text-black dark:text-black"
+                    className="styleInput"
                 />
             </div>
 
-            <div className="overflow-x-auto bg-slate-100 shadow-md rounded shadow-zinc-700 dark:shadow">
-                <table className="min-w-full border-3">
-                    <thead className="bg-gray-600 dark:bg-black text-white ">
-                        <tr>
-                            <th className="px-4 py-2 border-2 border-zinc-700">Name</th>
-                            <th className="px-4 py-2 border-2 border-zinc-700">Branch</th>
-                            <th className="px-4 py-2 border-2 border-zinc-700">Type</th>
-                            {/* <th className="px-4 py-2 border-2 border-zinc-700">Password</th> */}
-                            <th className="px-4 py-2 border-2 border-zinc-700">Actions</th>
+            <div className="card">
+                <table className="styleTable">
+                    <thead>
+                        <tr className='headRowTable'>
+                            <th className="headColumn">Name</th>
+                            <th className="headColumn">Branch</th>
+                            <th className="headColumn">Type</th>
+                            <th className="headColumn">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filteredUsers.length > 0 ? (
                             filteredUsers.map((user) => (
-                                <tr key={user.id} className="bg-slate-100 hover:bg-slate-300 dark:hover:bg-gray-400 text-zinc-700 dark:bg-gray-200">
-                                    <td className="px-4 py-2 border-2 border-zinc-700">{user.Username}</td>
-                                    <td className="px-4 py-2 border-2 border-zinc-700">{user.Company}</td>
-                                    <td className="px-4 py-2 border-2 border-zinc-700">{user.Type}</td>
-                                    {/* <td className="px-4 py-2 border-2 border-zinc-700">{user.Password}</td> */}
-                                    <td className="px-3 py-2 border-2 border-zinc-700 justify-center">
+                                <tr key={user.id} className="rowTable">
+                                    <td className="rowData">{user.Username}</td>
+                                    <td className="rowData">{user.Company}</td>
+                                    <td className="rowData">{user.Type}</td>
+                                    {/* <td className="rowData">{user.Password}</td> */}
+                                    <td className="flex  flex-col md:flex-row justify-center gap-1 w-auto">
                                         <button
                                             onClick={() => handleEditUser(user)}
-                                            className="text-blue-500 hover:underline"
+                                            className="buttonBlue"
                                         >
-                                            ✏️ Edit
+                                            ✏️
                                         </button>
                                         <button
                                             onClick={() => handleDeleteUser(user.id)}
-                                            className="text-red-500 hover:underline"
+                                            className="buttonRed"
                                         >
-                                            🗑️ Delete
+                                            🗑️
                                         </button>
                                     </td>
                                 </tr>
@@ -244,53 +243,52 @@ export default function Page() {
             </div>
 
             {showForm && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ">
-                    <div className="p-6 w-full max-w-md bg-white dark:bg-black shadow-2xl rounded-2xl overflow-hidden border-4 border-transparent dark:border-zinc-700">
-                        <h2 className="text-2xl font-semibold mb-4 ">
+                <div className="pop">
+                    <div className="card">
+                        <h2 className="tittle">
                             <Logo
                                 width={30}
                                 height={30}>
                             </Logo>
-                            {isEdit ? "Edit User" : "Add Usuer"}
+                            {isEdit ? "Edit User:" : "Add Usuer:"}
                         </h2>
                         <form onSubmit={handleSubmit}>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 dark:text-white">Name</label>
+                            <div className="mb-2">
+                                <label className="subtittle">Name:</label>
                                 <input
                                     type="text"
                                     value={Username}
                                     onChange={e => setName(e.target.value)}
-                                    className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-black dark:bg-slate-200"
+                                    className="styleInput"
                                 />
                             </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 dark:text-white">Password</label>
+                            <div className="mb-2">
+                                <label className="subtittle">Password</label>
                                 <input
                                     type="password"
                                     value={Password}
-                                    placeholder='insert the password'
                                     onChange={e => setPassword(e.target.value)}
-                                    className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-black dark:bg-slate-200 placeholder:text-gray-700"
+                                    className="styleInput"
                                 />
                             </div>
                             {isEdit ?
-                                <div className="mb-4">
-                                    <label className="block text-gray-700 dark:text-white">New Password</label>
+                                <div className="mb-2">
+                                    <label className="subtittle">New Password</label>
                                     <input
                                         type="password"
                                         value={NewPassword}
                                         placeholder="optional"
                                         onChange={e => setNewPassword(e.target.value)}
-                                        className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-black dark:bg-slate-200 placeholder:text-gray-700"
+                                        className="styleInput"
                                     />
                                 </div> : <></>}
                             <div className="mb-4">
-                                <label className="block text-gray-700 dark:text-white">Company</label>
+                                <label className="subtittle">Company</label>
                                 {/** Using a select **/}
                                 <select
                                     value={Company}
                                     onChange={e => setCompany(e.target.value)}
-                                    className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-black dark:bg-slate-200"
+                                    className="selector"
                                 >
                                     <option value="">Select a company</option>
                                     {branches.map((branch) => <option key={branch} value={branch}>{branch}</option>)}
@@ -298,11 +296,11 @@ export default function Page() {
                                 {/** Using a select **/}
                             </div>
                             <div className="mb-4">
-                                <label className="block text-gray-700 dark:text-white">User type</label>
+                                <label className="subtittle">User type</label>
                                 <select
                                     value={Type}
                                     onChange={e => setType(e.target.value)}
-                                    className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-black dark:bg-slate-300"
+                                    className="selector"
                                 >
                                     <option value="">Select a type</option>
                                     <option value="Analyst">Analyst</option>
@@ -314,13 +312,13 @@ export default function Page() {
                                 <button
                                     onClick={resetForm}
                                     type="button"
-                                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                                    className="buttonRed"
                                 >
                                     Cancelar
                                 </button>
                                 <button
                                     type="submit"
-                                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                                    className="buttonBlue"
                                 >
                                     Guardar
                                 </button>

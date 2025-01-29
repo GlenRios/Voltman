@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { getToken } from "../../hooks/handleToken";
 
-const FormComponent: React.FC = () => {
+const FormComponent: React.FC<{ show: any }> = ({ show }) => {
 
-  const token = getToken();  
+  const token = getToken();
   const [message, setMessage] = useState<string>("");
+  const [showForm, setShowForm] = useState<boolean>(true);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,144 +37,151 @@ const FormComponent: React.FC = () => {
       console.error("Error:", error);
     }
   };
+  const handleCancel = () => {
+    show(false);
+  };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-lg p-6 bg-white rounded-lg shadow-md"
-      >
-        <h2 className="mb-6 text-xl font-bold text-center text-gray-700">
-          Formulario
-        </h2>
+    <form
+      onSubmit={handleSubmit}
+      className="card"
+    >
+      <h2 className="tittle">
+        Formulario
+      </h2>
 
-        {/* Campo: Name */}
-        <div className="mb-4">
-          <label
-            htmlFor="name"
-            className="block mb-2 text-sm font-medium text-gray-600"
-          >
-            Name
-          </label>
-          <input
-            type="text"
-            id="Name"
-            name="Name"
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-
-        {/* Campo: Address */}
-        <div className="mb-4">
-          <label
-            htmlFor="address"
-            className="block mb-2 text-sm font-medium text-gray-600"
-          >
-            Address
-          </label>
-          <input
-            type="text"
-            id="Addr"
-            name="Addr"
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-
-        {/* Campo: Type */}
-        <div className="mb-4">
-          <label
-            htmlFor="type"
-            className="block mb-2 text-sm font-medium text-gray-600"
-          >
-            Type
-          </label>
-          <input
-            type="text"
-            id="Type"
-            name="Type"
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-
-        {/* Campo: Limit */}
-        <div className="mb-4">
-          <label
-            htmlFor="limit"
-            className="block mb-2 text-sm font-medium text-gray-600"
-          >
-            Limit
-          </label>
-          <input
-            type="number"
-            id="Limit"
-            name="Limit"
-            defaultValue={1000}
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-
-        {/* Campo: Extra Percent */}
-        <div className="mb-4">
-          <label
-            htmlFor="extraPercent"
-            className="block mb-2 text-sm font-medium text-gray-600"
-          >
-            Extra Percent
-          </label>
-          <input
-            type="number"
-            id="Extra_Percent"
-            name="Extra_Percent"
-            defaultValue={15}
-            step="0.01"
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-
-        {/* Campo: Increase */}
-        <div className="mb-6">
-          <label
-            htmlFor="increase"
-            className="block mb-2 text-sm font-medium text-gray-600"
-          >
-            Increase
-          </label>
-          <input
-            type="number"
-            id="Increase"
-            name="Increase"
-            defaultValue={20}
-            step="0.01"
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-
-        {/* Botón de Enviar */}
-        <button
-          type="submit"
-          className="w-full px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      {/* Campo: Name */}
+      <div className="mb-4">
+        <label
+          htmlFor="name"
+          className="subtittle"
         >
-          Submit
-        </button>
+          Name
+        </label>
+        <input
+          type="text"
+          id="Name"
+          name="Name"
+          className="styleInput"
+          required
+        />
+      </div>
 
-        {/* Mensaje de Respuesta */}
-        {message && (
-          <p
-            className={`mt-4 text-center text-sm ${
-              message.startsWith("Success") ? "text-green-600" : "text-red-600"
+      {/* Campo: Address */}
+      <div className="mb-4">
+        <label
+          htmlFor="address"
+          className="subtittle"
+        >
+          Address
+        </label>
+        <input
+          type="text"
+          id="Addr"
+          name="Addr"
+          className="styleInput"
+          required
+        />
+      </div>
+
+      {/* Campo: Type */}
+      <div className="mb-4">
+        <label
+          htmlFor="type"
+          className="subtittle"
+        >
+          Type
+        </label>
+        <input
+          type="text"
+          id="Type"
+          name="Type"
+          className="styleInput"
+          required
+        />
+      </div>
+
+      {/* Campo: Limit */}
+      <div className="mb-4">
+        <label
+          htmlFor="limit"
+          className="subtittle"
+        >
+          Limit
+        </label>
+        <input
+          type="number"
+          id="Limit"
+          name="Limit"
+          defaultValue={1000}
+          className="styleInput"
+          required
+        />
+      </div>
+
+      {/* Campo: Extra Percent */}
+      <div className="mb-4">
+        <label
+          htmlFor="extraPercent"
+          className="subtittle"
+        >
+          Extra Percent
+        </label>
+        <input
+          type="number"
+          id="Extra_Percent"
+          name="Extra_Percent"
+          defaultValue={15}
+          step="0.01"
+          className="styleInput"
+          required
+        />
+      </div>
+
+      {/* Campo: Increase */}
+      <div className="mb-6">
+        <label
+          htmlFor="increase"
+          className="subtittle"
+        >
+          Increase
+        </label>
+        <input
+          type="number"
+          id="Increase"
+          name="Increase"
+          defaultValue={20}
+          step="0.01"
+          className="styleInput"
+          required
+        />
+      </div>
+
+      {/* Botones */}
+      <button
+        type="submit"
+        className="buttonBlue"
+      >
+        Submit
+      </button>
+      <button
+        type="button"
+        onClick={handleCancel}
+        className="buttonGray"
+      >
+        Cancel
+      </button>
+
+      {/* Mensaje de Respuesta */}
+      {message && (
+        <p
+          className={`mt-4 text-center text-sm ${message.startsWith("Success") ? "text-green-600" : "text-red-600"
             }`}
-          >
-            {message}
-          </p>
-        )}
-      </form>
-    </div>
+        >
+          {message}
+        </p>
+      )}
+    </form>
   );
 };
 

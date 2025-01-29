@@ -18,7 +18,7 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
         Company: '',
     });
     const [selectedName, setSlelctedName] = useState<string>('')
-    
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -27,8 +27,7 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
 
     const handleSubmit = async () => {
         try {
-            if(!formData.Company || !formData.startDate || !formData.endDate)
-            {
+            if (!formData.Company || !formData.startDate || !formData.endDate) {
                 showAlert(true, "Please complete all fields", 5000)
                 return;
             }
@@ -52,7 +51,7 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
     }
 
     return (
-        <div className="p-4 border rounded shadow">
+        <div className="p-4 rounded shadow">
             {alertData.isVisible && (
                 <Alert
                     type={alertData.type}
@@ -60,31 +59,35 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
                     onClose={() => showAlert(false, "", 0)}
                 />
             )}
-            <h2 className="text-xl font-bold mb-4">Total Consumption Consult:</h2>
-            <div className="grid grid-cols-1 gap-4">
+            <h2 className="tittle">Total Consumption:</h2>
+
+            <div className="grid grid-cols">
+                <label htmlFor="startDate" className='subtittle'>start day:</label>
                 <input
                     type="date"
                     name="startDate"
                     value={formData.startDate}
                     onChange={handleChange}
-                    className="p-2 border rounded"
+                    className="styleInput"
                     placeholder="Fecha de inicio"
                 />
+                <label htmlFor="endDate" className='subtittle'>end day:</label>
                 <input
                     type="date"
                     name="endDate"
                     value={formData.endDate}
                     onChange={handleChange}
-                    className="p-2 border rounded"
+                    className="styleInput"
                     placeholder="Fecha de fin"
                 />
+                <label htmlFor="Company" className='subtittle'>company:</label>
                 <select
                     name="Company"
                     value={selectedName}
                     onChange={handleChange}
-                    className="p-2 border rounded"
+                    className="styleInput"
                 >
-                    <option value="">Selecciona una sucursal</option>
+                    <option value="">Select a Company</option>
                     {names.map((name, index) => (
                         <option className="text-black"
                             key={index}
@@ -96,7 +99,7 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
                     ))}
                 </select>
                 <button
-                    className="mt-2 p-2 bg-green-500 text-white rounded hover:bg-green-600"
+                    className="buttonGreen m-4 mb-0"
                     onClick={handleSubmit}
                 >
                     Consult
@@ -104,7 +107,7 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
             </div>
             {totalConsumption &&
                 <div>
-                    <h2 className="text-xl font-bold mb-4">Response: {totalConsumption}</h2>
+                    <h2 className="tittle">Response: {totalConsumption}</h2>
                 </div>}
         </div>
     );

@@ -569,18 +569,18 @@ export default function branchesPage() {
         };
 
         return (
-            <div className="w-auto mx-auto m-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-lg">
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
-                    {newEquipment.Area ? "Edit Equipment" : "Add Equipment"}
-                </h2>
-                <form className="space-y-4" onSubmit={handleCreate}>
+            <div className="card">
 
+                <form className="space-y-4 bg-transparent" onSubmit={handleCreate}>
+                    <h2 className="tittle">
+                        {newEquipment.Area ? "Edit Equipment" : "Add Equipment"}
+                    </h2>
                     <div className="flex flex-row gap-2">
                         <div className="flex flex-col gap-2">
                             <div>
                                 <label
                                     htmlFor="Area"
-                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    className="subtittle"
                                 >
                                     Area
                                 </label>
@@ -590,14 +590,14 @@ export default function branchesPage() {
                                     type="text"
                                     value={isAddForm ? newEquipment.Area : editFormDataEq.Area}
                                     onChange={handleChange}
-                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="styleInput"
                                     required
                                 />
                             </div>
                             <div>
                                 <label
                                     htmlFor="Brand"
-                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    className="subtittle"
                                 >
                                     Brand
                                 </label>
@@ -607,14 +607,14 @@ export default function branchesPage() {
                                     type="text"
                                     value={isAddForm ? newEquipment.Brand : editFormDataEq.Brand}
                                     onChange={handleChange}
-                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="styleInput"
                                     required
                                 />
                             </div>
                             <div>
                                 <label
                                     htmlFor="Model"
-                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    className="subtittle"
                                 >
                                     Model
                                 </label>
@@ -624,14 +624,14 @@ export default function branchesPage() {
                                     type="text"
                                     value={isAddForm ? newEquipment.Model : editFormDataEq.Model}
                                     onChange={handleChange}
-                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="styleInput"
                                     required
                                 />
                             </div>
                             <div>
                                 <label
                                     htmlFor="Type"
-                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    className="subtittle"
                                 >
                                     Type
                                 </label>
@@ -641,14 +641,14 @@ export default function branchesPage() {
                                     type="text"
                                     value={isAddForm ? newEquipment.Type : editFormDataEq.Type}
                                     onChange={handleChange}
-                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="styleInput"
                                     required
                                 />
                             </div>
                             <div>
                                 <label
                                     htmlFor="Nominal_Capacity"
-                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    className="subtittle"
                                 >
                                     Nominal Capacity
                                 </label>
@@ -658,14 +658,14 @@ export default function branchesPage() {
                                     type="number"
                                     value={isAddForm ? newEquipment.Nominal_Capacity : editFormDataEq.Nominal_Capacity}
                                     onChange={handleChange}
-                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="styleInput"
                                     required
                                 />
                             </div>
                             <div>
                                 <label
                                     htmlFor="Installation_Date"
-                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    className="subtittle"
                                 >
                                     Installation Date
                                 </label>
@@ -675,7 +675,7 @@ export default function branchesPage() {
                                     type="Date"
                                     value={isAddForm ? newEquipment.Installation_Date.split(" ")[0] : editFormDataEq.Installation_Date.split(" ")[0]}
                                     onChange={handleChange}
-                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="styleInput"
                                     required
                                 />
                             </div>
@@ -684,7 +684,7 @@ export default function branchesPage() {
                             <div>
                                 <label
                                     htmlFor="Estimated_Lifespan"
-                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    className="subtittle"
                                 >
                                     Estimated Lifespan (years)
                                 </label>
@@ -694,14 +694,14 @@ export default function branchesPage() {
                                     type="number"
                                     value={isAddForm ? newEquipment.Estimated_Lifespan : editFormDataEq.Estimated_Lifespan}
                                     onChange={handleChange}
-                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="styleInput"
                                     required
                                 />
                             </div>
                             <div>
                                 <label
                                     htmlFor="Maintenance_Status"
-                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    className="subtittle"
                                 >
                                     Mantenance Status
                                 </label>
@@ -711,14 +711,14 @@ export default function branchesPage() {
                                     type="text"
                                     value={isAddForm ? newEquipment.Maintenance_Status : editFormDataEq.Maintenance_Status}
                                     onChange={handleChange}
-                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="styleInput"
                                     required
                                 />
                             </div>
                             <div>
                                 <label
                                     htmlFor="CriticalEnergySystem"
-                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    className="subtittle"
                                 >
                                     Critical Energy System
                                 </label>
@@ -728,14 +728,14 @@ export default function branchesPage() {
                                     type="number"
                                     value={isAddForm ? newEquipment.CriticalEnergySystem : editFormDataEq.CriticalEnergySystem}
                                     onChange={handleChange}
-                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="styleInput"
                                     required
                                 />
                             </div>
                             <div>
                                 <label
                                     htmlFor="Usage_Frequency"
-                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    className="subtittle"
                                 >
                                     Usage Frequency
                                 </label>
@@ -745,14 +745,14 @@ export default function branchesPage() {
                                     type="text"
                                     value={isAddForm ? newEquipment.Usage_Frequency : editFormDataEq.Usage_Frequency}
                                     onChange={handleChange}
-                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="styleInput"
                                     required
                                 />
                             </div>
                             <div>
                                 <label
                                     htmlFor="Energy_Efficiency"
-                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    className="subtittle"
                                 >
                                     Energy Efficiency
                                 </label>
@@ -762,14 +762,14 @@ export default function branchesPage() {
                                     type="number"
                                     value={isAddForm ? newEquipment.Energy_Efficiency : editFormDataEq.Energy_Efficiency}
                                     onChange={handleChange}
-                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="styleInput"
                                     required
                                 />
                             </div>
                             <div>
                                 <label
                                     htmlFor="Average_Daily_Consumption"
-                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    className="subtittle"
                                 >
                                     Average Daily Consumption
                                 </label>
@@ -779,7 +779,7 @@ export default function branchesPage() {
                                     type="number"
                                     value={isAddForm ? newEquipment.Average_Daily_Consumption : editFormDataEq.Average_Daily_Consumption}
                                     onChange={handleChange}
-                                    className="w-full px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="styleInput"
                                     required
                                 />
                             </div>
@@ -788,14 +788,14 @@ export default function branchesPage() {
                     <div className="flex flex-row items-center justify-center text-center gap-2">
                         <button
                             type="submit"
-                            className="px-6 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
+                            className="buttonBlue"
                         >
                             Save
                         </button>
                         <button
                             type="button"
                             onClick={handleCancel}
-                            className="ml-4 px-6 py-2 text-gray-800 dark:text-white bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-200"
+                            className="buttonGray"
                         >
                             Cancel
                         </button>
@@ -806,7 +806,7 @@ export default function branchesPage() {
     };
 
     return (
-        <main className="min-h-screen p-8 relative fondo">
+        <main className="flex flex-col items-center min-h-screen p-2 relative fondo">
             {alertData.isVisible && (
                 <Alert
                     type={alertData.type}
@@ -814,24 +814,27 @@ export default function branchesPage() {
                     onClose={() => showAlert(false, "", 0)}
                 />
             )}
+            {showAddForm &&
+                    <div className="pop">
+                        <FormComponent show={addBranch} />
+                    </div>}
             {/* Encabezado de pagina*/}
             <div className='flex justify-center items-center p-4 m-4'>
                 <Logo
-                    width={50}
-                    height={50}>
+                    width={100}
+                    height={100}>
                 </Logo>
-                <h2 className="text-4xl font-extrabold text-center text-black dark:text-white">
+                <h2 className="tittlePage">
                     Branch management!
                 </h2>
             </div>
 
             {/* Botones */}
-            <div className="flex flex-col items-center justify-center p-4 m-4">
-                <div className="flex flex-crow items-center  justify-center gap-4 p-4">
-                    <div className="flex flex-row">
+            <div className="flex flex-col items-center justify-center p-2 scale-90">
+                <div className="flex flex-row items-center  justify-center gap-4 p-4">
+                    <div className="flex flex-row gap-2">
                         <button
-                            className="bg-white text-center w-48 rounded-2xl h-14 relative
-                       text-black text-xl font-semibold group scale-75"
+                            className="bg-white text-center w-48 rounded-2xl h-14 relativ text-black text-xl font-semibold group scale-95"
                             type="button"
                             onClick={() => goHome(router)}>
                             <div className="bg-green-400 rounded-xl h-12 w-1/4 flex items-center justify-center absolute left-1 top-[4px] group-hover:w-[184px] z-10 duration-500">
@@ -853,50 +856,56 @@ export default function branchesPage() {
                             </div>
                             <p className="translate-x-2">Go Back</p>
                         </button>
-                        {Boton("New", "green", addBranch)}
-                        {Boton("Delete", "red", deletedBranch)}
+                        <button
+                            onClick={addBranch}
+                            className="buttonGreen"
+                        >
+                            New
+                        </button>
+                        <button
+                            onClick={deletedBranch}
+                            className="buttonGray"
+                        >
+                            Delete
+                        </button>
                     </div>
                 </div>
-                {showAddForm &&
-                    <div className="flex flex-col w-1/4 h-auto m-2 item-center justify-center">
-                        <FormComponent />
-                    </div>}
-                <select
-                    id="branch-selector"
-                    value={selectedBranch ? selectedBranch : ""}
-                    onChange={handleSelectBranch}
-                    className="w-auto max-w-64 border border-gray-700 rounded-lg p-2 text-lg dark:bg-gray-800 dark:text-white"
-                >
-                    <option value="">Selecciona una sucursal</option>
-                    {branchesName.map((branch, index) => (
-                        <option key={index} value={branch.name} onClick={getBranchInfo}>
-                            {branch.name}
-                        </option>
-                    ))}
-                </select>
             </div>
+            <select
+                id="branch-selector"
+                value={selectedBranch ? selectedBranch : ""}
+                onChange={handleSelectBranch}
+                className="selector"
+            >
+                <option value="">Selecciona una sucursal</option>
+                {branchesName.map((branch, index) => (
+                    <option key={index} value={branch.name} onClick={getBranchInfo}>
+                        {branch.name}
+                    </option>
+                ))}
+            </select>
             {/* Brach management */}
             {selectedBranch &&
                 <div className="flex flex-col">
 
                     {/* Branch info */}
-                    <div className="flex flex-col lg:flex-row p-4 m-4">
+                    <div className="flex flex-col lg:flex-row item-center justify-center p-4 m-4">
 
                         {/* info */}
-                        <div className="card w-auto max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md m-4 ">
-                            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Branch info:</h2>
+                        <div className="w-auto max-w-md card">
+                            <h2 className="tittle">Branch info:</h2>
 
                             {/* Contenedor para los inputs en dos filas */}
                             <div className="grid grid-cols-2 gap-4">
                                 {/* Nombre */}
                                 <div>
-                                    <label className="block text-gray-700 dark:text-gray-300 mb-1" htmlFor="nombre">
+                                    <label className="subtittle" htmlFor="nombre">
                                         Name
                                     </label>
                                     <input
                                         id="nombre"
                                         type="text"
-                                        className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="styleInput"
                                         value={branchName}
                                         onChange={(e) => setBranchName(e.target.value)}
                                     />
@@ -904,13 +913,13 @@ export default function branchesPage() {
 
                                 {/* Dirección */}
                                 <div>
-                                    <label className="block text-gray-700 dark:text-gray-300 mb-1" htmlFor="direccion">
+                                    <label className="subtittle" htmlFor="direccion">
                                         Address
                                     </label>
                                     <input
                                         id="direccion"
                                         type="text"
-                                        className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="styleInput"
                                         value={branchAddress}
                                         onChange={(e) => setBranchAddress(e.target.value)}
                                     />
@@ -918,13 +927,13 @@ export default function branchesPage() {
 
                                 {/* Tipo */}
                                 <div>
-                                    <label className="block text-gray-700 dark:text-gray-300 mb-1" htmlFor="tipo">
+                                    <label className="subtittle" htmlFor="tipo">
                                         Type
                                     </label>
                                     <input
                                         id="tipo"
                                         type="text"
-                                        className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="styleInput"
                                         value={branchType}
                                         onChange={(e) => setBranchType(e.target.value)}
                                     />
@@ -932,13 +941,13 @@ export default function branchesPage() {
 
                                 {/* Límite */}
                                 <div>
-                                    <label className="block text-gray-700 dark:text-gray-300 mb-1" htmlFor="limite">
+                                    <label className="subtittle" htmlFor="limite">
                                         Limit
                                     </label>
                                     <input
                                         id="limite"
                                         type="number"
-                                        className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="styleInput"
                                         value={branchLimit}
                                         onChange={(e) => setBranchLimit(e.target.value)}
                                     />
@@ -949,13 +958,13 @@ export default function branchesPage() {
                             <div className="flex justify-end space-x-2 mt-4">
                                 <button
                                     onClick={restInfoBranch}
-                                    className="px-4 py-2 text-gray-800 dark:text-white bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-200"
+                                    className="buttonGray"
                                 >
                                     Restart
                                 </button>
                                 <button
                                     onClick={() => editInfoBranch()}
-                                    className="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
+                                    className="buttonBlue"
                                 >
                                     Save
                                 </button>
@@ -963,16 +972,16 @@ export default function branchesPage() {
                         </div>
 
                         {/* Propiedades de acceso restringido */}
-                        <div className="card w-auto max-w-md p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md m-4 h-auto>">
+                        <div className="w-auto max-w-md card h-auto">
                             {/* Aumento */}
                             <div className="mb-4">
-                                <label className="block text-gray-700 dark:text-gray-300 mb-1" htmlFor="aumento">
+                                <label className="subtittle" htmlFor="aumento">
                                     Increase
                                 </label>
                                 <input
                                     id="aumento"
                                     type="number"
-                                    className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="styleInput"
                                     value={branchIncrease}
                                     onChange={(e) => setBranchIncrease(e.target.value)}
                                 />
@@ -980,14 +989,14 @@ export default function branchesPage() {
 
                             {/* % Extra */}
                             <div className="mb-4">
-                                <label className="block text-gray-700 dark:text-gray-300 mb-1" htmlFor="extra">
+                                <label className="subtittle" htmlFor="extra">
                                     Extra Percent
                                 </label>
                                 <input
                                     id="extra"
                                     type="number"
                                     step="0.01"
-                                    className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="styleInput"
                                     value={branchPercent}
                                     onChange={(e) => setBranchPercent(e.target.value)}
                                 />
@@ -997,13 +1006,13 @@ export default function branchesPage() {
                             <div className="flex justify-end space-x-2">
                                 <button
                                     onClick={restRestrictInfoBranch}
-                                    className="px-4 py-2 text-gray-800 dark:text-white bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-200"
+                                    className="buttonGray"
                                 >
                                     Restart
                                 </button>
                                 <button
                                     onClick={editRestInfoBranch}
-                                    className="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
+                                    className="buttonBlue"
                                 >
                                     Save
                                 </button>
@@ -1011,38 +1020,37 @@ export default function branchesPage() {
                         </div>
                     </div>
 
-
                     {/* Areas information */}
                     <div className="m-4">
                         <button
                             onClick={() => fetchAreas()}
-                            className="px-4 py-2  text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
+                            className="buttonBlue"
                         >
                             {showAreas ? "Hide Areas" : "Show Areas"}
                         </button>
                     </div>
                     {showAreas &&
-                        <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
-                            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Áreas</h2>
+                        <div className="card">
+                            <h2 className="tittle">Áreas</h2>
                             {/* Barra de busqueda de areas */}
                             <input
                                 type="text"
                                 placeholder="Search by name..."
                                 value={searchQuery}
                                 onChange={handleSearchChange}
-                                className="w-full px-3 py-2 mb-4 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="styleInput m-2"
                             />
-                            <div className="overflow-y-auto max-h-64 rounded-xl">
-                                <table className="w-full table-fixed border-collapse border rounded-xl border-gray-300 dark:border-gray-700">
+                            <div className="containerTable">
+                                <table className="styleTable">
                                     <thead>
-                                        <tr className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300">
-                                            <th className="border border-gray-300 dark:border-gray-900 p-2 text-left w-1/3">
+                                        <tr className="headRowTable">
+                                            <th className="headColumn">
                                                 Name
                                             </th>
-                                            <th className="border border-gray-300 dark:border-gray-900 p-2 text-left w-1/3">
+                                            <th className="headColumn">
                                                 Responsible
                                             </th>
-                                            <th className="border border-gray-300 dark:border-gray-900 p-2 text-center w-1/3">
+                                            <th className="headColumn">
                                                 Actions
                                             </th>
                                         </tr>
@@ -1050,36 +1058,36 @@ export default function branchesPage() {
                                     <tbody>
                                         {isAdding && (
                                             <tr>
-                                                <td className="border border-gray-300 dark:border-gray-700 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
+                                                <td className="rowData m-1">
                                                     <input
                                                         id="Name"
                                                         type="text"
                                                         placeholder="Name"
-                                                        className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        className="styleInput"
                                                         value={newArea.Name}
                                                         onChange={handleNewAreaChange}
                                                     />
                                                 </td>
-                                                <td className="border border-gray-300 dark:border-gray-700 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
+                                                <td className="rowData m-1">
                                                     <input
                                                         id="Responsible"
                                                         type="text"
                                                         placeholder="Responsible"
-                                                        className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        className="styleInput"
                                                         value={newArea.Responsible}
                                                         onChange={handleNewAreaChange}
                                                     />
                                                 </td>
-                                                <td className="border border-gray-300 dark:border-gray-700 p-2 text-center m-1">
+                                                <td className="rowData text-center">
                                                     <button
                                                         onClick={handleAddArea}
-                                                        className="px-4 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600 transition duration-200 mr-2"
+                                                        className="buttonGreen"
                                                     >
                                                         Add
                                                     </button>
                                                     <button
                                                         onClick={handleCancelAdd}
-                                                        className="px-4 py-2 text-gray-800 dark:text-white bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-200"
+                                                        className="buttonGray"
                                                     >
                                                         Cancel
                                                     </button>
@@ -1087,39 +1095,39 @@ export default function branchesPage() {
                                             </tr>
                                         )}
                                         {filteredAreas.map((area) => (
-                                            <tr key={area.id} className="odd:bg-gray-100 dark:odd:bg-gray-700">
+                                            <tr key={area.id} className="rowTable">
 
 
                                                 {editingId === area.id ? (
                                                     <>
-                                                        <td className="border border-gray-300 dark:border-gray-700 p-2 overflow-hidden max-w-xs whitespace-nowrap">
+                                                        <td className="rowData">
                                                             <input
                                                                 id="Name"
                                                                 type="text"
-                                                                className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                                className="styleInput"
                                                                 value={editFormData.Name}
                                                                 onChange={handleEditChangeArea}
                                                             />
                                                         </td>
-                                                        <td className="border border-gray-300 dark:border-gray-700 p-2 overflow-hidden max-w-xs whitespace-nowrap">
+                                                        <td className="rowData">
                                                             <input
                                                                 id="Responsible"
                                                                 type="text"
-                                                                className="w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                                className="styleInput"
                                                                 value={editFormData.Responsible}
                                                                 onChange={handleEditChangeArea}
                                                             />
                                                         </td>
-                                                        <td className="border border-gray-300 dark:border-gray-700 p-2 text-center">
+                                                        <td className="rowData text-center">
                                                             <button
                                                                 onClick={handleSaveClick}
-                                                                className="px-4 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600 transition duration-200 mr-2"
+                                                                className="buttonGreen mr-2"
                                                             >
                                                                 Save
                                                             </button>
                                                             <button
                                                                 onClick={handleCancelClick}
-                                                                className="px-4 py-2 text-gray-800 dark:text-white bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-200"
+                                                                className="buttonGray"
                                                             >
                                                                 Cance
                                                             </button>
@@ -1127,22 +1135,22 @@ export default function branchesPage() {
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <td className="border text-gray-800 dark:text-gray-400 border-gray-300 dark:border-gray-900 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
+                                                        <td className="rowData">
                                                             {area.Name}
                                                         </td>
-                                                        <td className="border text-gray-800 dark:text-gray-400 border-gray-300 dark:border-gray-900 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
+                                                        <td className="rowData">
                                                             {area.Responsible}
                                                         </td>
-                                                        <td className="border text-gray-800 dark:text-gray-400 border-gray-300 dark:border-gray-900 p-2 text-center m-1">
+                                                        <td className="rowData text-center">
                                                             <button
                                                                 onClick={() => handleEditClick(area)}
-                                                                className="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200 mr-2"
+                                                                className="buttonBlue mr-2"
                                                             >
                                                                 Edit
                                                             </button>
                                                             <button
                                                                 onClick={() => handleDeleteClick(area.id)}
-                                                                className="px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600 transition duration-200"
+                                                                className="buttonRed"
                                                             >
                                                                 Delete
                                                             </button>
@@ -1157,7 +1165,7 @@ export default function branchesPage() {
                             {!isAdding && (
                                 <button
                                     onClick={() => setIsAdding(true)}
-                                    className="mt-4 px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
+                                    className="mt-4 buttonBlue"
                                 >
                                     Add Area
                                 </button>
@@ -1169,7 +1177,7 @@ export default function branchesPage() {
                     <div className="m-4">
                         <button
                             onClick={() => fetchEquipments()}
-                            className="px-4 py-2  text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
+                            className="buttonBlue"
                         >
                             {showEquipments ? "Hide Equipments" : "Show Equipments"}
                         </button>
@@ -1177,62 +1185,62 @@ export default function branchesPage() {
 
                     {showEquipments &&
 
-                        <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
-                            <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Equipments</h2>
+                        <div className="card">
+                            <h2 className="tittle">Equipments</h2>
                             {/* Barra de busqueda de areas */}
                             <input
                                 type="text"
                                 placeholder="Search by Area..."
                                 value={searchQueryEq}
                                 onChange={handleSearchChangeEq}
-                                className="w-full px-3 py-2 mb-4 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="styleInput m-2"
                             />
                             <div>
                                 <div className="flex flex-col items-center justify-center">
-                                    <div className="overflow-y-auto max-h-64 rounded-xl">
-                                        <table className="w-full table-fixed border-collapse border rounded-xl border-gray-300 dark:border-gray-700">
+                                    <div className="containerTable">
+                                        <table className="styleTable">
                                             <thead>
-                                                <tr className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300">
-                                                    <th className="border border-gray-300 dark:border-gray-900 p-2 text-left w-1/3">
+                                                <tr className="headRowTable">
+                                                    <th className="headColumn">
                                                         Area
                                                     </th>
-                                                    <th className="border border-gray-300 dark:border-gray-900 p-2 text-left w-1/3">
+                                                    <th className="headColumn">
                                                         Type
                                                     </th>
-                                                    <th className="border border-gray-300 dark:border-gray-900 p-2 text-center w-1/3">
+                                                    <th className="headColumn">
                                                         Model
                                                     </th>
-                                                    <th className="border border-gray-300 dark:border-gray-900 p-2 text-center w-1/3">
-                                                        Acciones
+                                                    <th className="headColumn">
+                                                        Actions
                                                     </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {filteredEquipments.map((item) => (
-                                                    <tr key={item.id} className="odd:bg-gray-100 dark:odd:bg-gray-700">
+                                                    <tr key={item.id} className="rowTable">
 
 
-                                                        <td className="border text-gray-800 dark:text-gray-400 border-gray-300 dark:border-gray-900 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
+                                                        <td className="rowData">
                                                             {item.Area}
                                                         </td>
-                                                        <td className="border text-gray-800 dark:text-gray-400 border-gray-300 dark:border-gray-900 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
+                                                        <td className="rowData">
                                                             {item.Type}
                                                         </td>
-                                                        <td className="border text-gray-800 dark:text-gray-400 border-gray-300 dark:border-gray-900 p-2 text-center m-1">
+                                                        <td className="rowData">
                                                             {item.Model}
                                                         </td>
-                                                        <td className="border text-gray-800 dark:text-gray-400 border-gray-300 dark:border-gray-900 p-2 text-center m-1">
+                                                        <td className="rowData">
                                                             <button
                                                                 onClick={() => handleEditClickEq(item)}
-                                                                className="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200 mr-2"
+                                                                className="buttonBlue mr-2"
                                                             >
-                                                                Editar
+                                                                Edit
                                                             </button>
                                                             <button
                                                                 onClick={() => handleDeleteClickEq(item.id)}
-                                                                className="px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600 transition duration-200"
+                                                                className="buttonRed"
                                                             >
-                                                                Eliminar
+                                                                Delete
                                                             </button>
                                                         </td>
 
@@ -1244,7 +1252,7 @@ export default function branchesPage() {
                                     {!isAddingEq && (
                                         <button
                                             onClick={() => setIsAddingEq(true)}
-                                            className="mt-4 px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
+                                            className="mt-4 buttonBlue"
                                         >
                                             New Equipment
                                         </button>
@@ -1256,12 +1264,12 @@ export default function branchesPage() {
                     }
                     <div className="flex flex-col lg:flex-row">
                         {isAddingEq &&
-                            <div className="overflow-y-auto max-h-screen fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                            <div className="pop">
                                 {EquipmentForm(handleAddEquipment, handleCancelAddEq, true)}
                             </div>
                         }
                         {editingIdEq &&
-                            <div className="overflow-y-auto max-h-screen fixted inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                            <div className="pop">
                                 {EquipmentForm(handleSaveClickEq, handleCancelClickEq, false)}
                             </div>
                         }
