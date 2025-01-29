@@ -27,6 +27,11 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
 
     const handleSubmit = async () => {
         try {
+            if(!formData.Company || !formData.startDate || !formData.endDate)
+            {
+                showAlert(true, "Please complete all fields", 5000)
+                return;
+            }
             const response = await fetch("http://localhost:5050/api/consult/totalConsumption/", {
                 method: 'POST',
                 headers: {

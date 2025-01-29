@@ -9,7 +9,7 @@ const ConsumptionPrediction: React.FC<{ names: string[] }> = ({ names }) => {
     const { showAlert, alertData } = useAlert();
     const [responseData, setResponseData] = useState(null);
     const [selectedName, setSelectName] = useState<string>('');
-    const [prediction, setPrediction] = useState(0);
+    const [prediction, setPrediction] = useState(null);
     const [loading, setLoading] = useState<boolean>(false);
 
     const handleSubmit = async () => {
@@ -28,6 +28,7 @@ const ConsumptionPrediction: React.FC<{ names: string[] }> = ({ names }) => {
             const data = await response.json();
             if (!response.ok) {
                 showAlert(true, data.error, 5000)
+                return;
             }
             setPrediction(data.Prediction);
             setResponseData(data.Data);

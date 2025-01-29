@@ -78,7 +78,9 @@ class BillRepo(BaseRepo):
             if previous_day_bill.Reading> values['Reading']:
                 raise CustomError('Reading cannot be less than the last reading', 400)
             daily_consumption-= previous_day_bill.Reading
-             
+        elif self.db.query(BillModel).filter(BillModel.CompanyID== company.id).first():
+            raise CustomError('Invalid date, this error may be due to the fact that you did not insert a record from the previous day, check that you have done so', 400)
+                
         prev_overlimit= previous_day_bill.OverLimit if (previous_day_bill and previous_day_bill.BillDate.month== values['Date'].month) else company.Limit    
 
         overlimit= prev_overlimit- daily_consumption

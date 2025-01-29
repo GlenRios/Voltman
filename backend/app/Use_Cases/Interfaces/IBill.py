@@ -49,7 +49,7 @@ class IBill:
         monthly_averages = {}
         
         for (year, month), readings in monthly_consumption.items():
-            average_consumption = sum(readings) / len(readings)  # Calcular promedio
+            average_consumption = sum(readings) / max(1,len(readings)) # Calcular promedio
             monthly_averages[(year, month)] = average_consumption
 
         return monthly_averages
@@ -76,7 +76,7 @@ class IBill:
                 del current_group[0]
 
 
-        return total/len(group_sums) , group_sums     
+        return total/max(len(group_sums),1) , group_sums     
 
 
 

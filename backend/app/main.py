@@ -78,11 +78,11 @@ def create_bills(n, company):
 
 
 # create_companies(10)
-# create_users(200)
+# create_users(300)
 # create_areas(100)
-# create_equipments(100)
+# create_equipments(300)
 # for company in list_companies:
-#     create_bills(100, company)
+#     create_bills(1500, company)
 
 
 

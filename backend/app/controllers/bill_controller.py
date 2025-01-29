@@ -1,5 +1,6 @@
 from Use_Cases.Interfaces.IBill import IBill
 from datetime import datetime, timedelta, date
+from Configurations.CustomError import CustomError
 
 class BillController():
 
@@ -9,12 +10,18 @@ class BillController():
     def post(self, values: list):
         for val in values:
             val['Date']= datetime.strptime(val['Date'], "%Y-%m-%d").date()
+            if val['Date']> datetime.now().date():
+                raise CustomError("Invalid date, it is bigger than today's date", 400)
             self.Ibill.create(val)
         return True    
     
     def get_consume(self, values: dict):
         start_date= datetime.strptime(values['startDate'], '%Y-%m-%d').date()
         end_date= datetime.strptime(values['endDate'], "%Y-%m-%d").date()
+        if start_date>end_date:
+            raise CustomError("Invalid imput, EndDate cant be less than StartDate", 400)
+        elif end_date > datetime.now().date():
+            raise CustomError("Invalid date, it is bigger than today's date", 400)       
         company= values['Company']
         total, bills= self.Ibill.calculate_consume(start_date, end_date, company)
         answ={}
@@ -36,6 +43,8 @@ class BillController():
 
     def get_companies_limit_exceeded(self, date: str):
         date= datetime.strptime(date, "%Y-%m-%d").date()
+        if date > datetime.now().date():
+            raise CustomError("Invalid date, it is bigger than today's date", 400)
         month= date.month
         year= date.year
         items= self.Ibill.get_companies_limit_exceeded(month, year)
@@ -48,7 +57,7 @@ class BillController():
         end_date= datetime.now().date()
         start_date= end_date- timedelta(days= 5*365)
         pred, data= self.Ibill.predict_consume(company, start_date, end_date)
-        answ= {'Predition': pred, 'Data': data}
+        answ= {'Prediction': pred, 'Data': data}
         return answ
 
 
