@@ -1212,16 +1212,16 @@ export default function branchesPage() {
                                                     <tr key={item.id} className="odd:bg-gray-100 dark:odd:bg-gray-700">
 
 
-                                                        <td className="border text-gray-800 dark:text-gray-400 border-gray-900 dark:border-gray-900p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
+                                                        <td className="border text-gray-800 dark:text-gray-400 border-gray-300 dark:border-gray-900 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
                                                             {item.Area}
                                                         </td>
-                                                        <td className="border text-gray-800 dark:text-gray-400 border-gray-900 dark:border-gray-900p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
+                                                        <td className="border text-gray-800 dark:text-gray-400 border-gray-300 dark:border-gray-900 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1">
                                                             {item.Type}
                                                         </td>
-                                                        <td className="border text-gray-800 dark:text-gray-400 border-gray-900 dark:border-gray-900p-2 text-center m-1">
+                                                        <td className="border text-gray-800 dark:text-gray-400 border-gray-300 dark:border-gray-900 p-2 text-center m-1">
                                                             {item.Model}
                                                         </td>
-                                                        <td className="border text-gray-800 dark:text-gray-400 border-gray-900 dark:border-gray-900p-2 text-center m-1">
+                                                        <td className="border text-gray-800 dark:text-gray-400 border-gray-300 dark:border-gray-900 p-2 text-center m-1">
                                                             <button
                                                                 onClick={() => handleEditClickEq(item)}
                                                                 className="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200 mr-2"

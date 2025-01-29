@@ -2,13 +2,12 @@
 import { useAlert } from "@/src/hooks/alertContxt";
 import { useState } from "react";
 import Alert from "../alerts/Alert";
+import ExceededTable, { ExceededTableProp } from "./ExceededTable";
 
-
-
-const OverLimitConsult: React.FC<{ names: string[] }> = ({ names }) => {
+const OverLimitConsult: React.FC = () => {
 
     const { showAlert, alertData } = useAlert();
-    const [responseData, setResponseData] = useState([])
+    const [responseData, setResponseData] = useState<ExceededTableProp[] | null>(null)
     const [date, setDate] = useState<string>('');
 
     const handleSubmit = async () => {
@@ -27,7 +26,7 @@ const OverLimitConsult: React.FC<{ names: string[] }> = ({ names }) => {
             if (!response.ok) {
                 showAlert(true, data.error, 5000)
             }
-            setResponseData(data.Data);
+            setResponseData(data);
 
         } catch (Error) {
             console.error(Error)
@@ -53,23 +52,6 @@ const OverLimitConsult: React.FC<{ names: string[] }> = ({ names }) => {
                     className="p-2 border rounded"
                     placeholder="Fecha de inicio"
                 />
-                {/* <select
-                    name="company"
-                    value={selectedName}
-                    onChange={(e) => { setSelctedName(e.target.value) }}
-                    className="p-2 border rounded"
-                >
-                    <option value="">Selecciona una sucursal</option>
-                    {names.map((name, index) => (
-                        <option className="text-black"
-                            key={index}
-                            value={name}
-                            onClick={() => { setSelctedName(name) }}
-                        >
-                            {name}
-                        </option>
-                    ))}
-                </select> */}
                 <button
                     className="mt-2 p-2 bg-green-500 text-white rounded hover:bg-green-600"
                     onClick={handleSubmit}
@@ -77,6 +59,7 @@ const OverLimitConsult: React.FC<{ names: string[] }> = ({ names }) => {
                     Consult
                 </button>
             </div>
+            {responseData && <ExceededTable Data={responseData}/>}
         </div>
     );
 }

@@ -10,6 +10,7 @@ import { getToken } from '@/src/hooks/handleToken';
 import { useAlert } from "@/src/hooks/alertContxt";
 import Alert from "@/src/components/alerts/Alert";
 import OverLimitConsult from '@/src/components/consults/OverLimitConsult';
+import ConsumptionPrediction from '@/src/components/consults/ConsumptionPrediction';
 
 interface Query {
     id: number;
@@ -68,13 +69,15 @@ export default function QueriesPage() {
             case 'total':
                 return <TotalConsumption key={id} names={CompaniesNames} />;
             case 'average':
-                return <MonthlyAverage key={id} />;
+                return <MonthlyAverage key={id} names={CompaniesNames} />;
             case 'comparison':
                 return <EfficiencyComparison key={id} />;
             case 'equipments':
                 return <EquipmentQuery key={id} names={CompaniesNames} />;
             case 'exceeded':
-                return <OverLimitConsult key={id} names={CompaniesNames} />
+                return <OverLimitConsult key={id} />;
+            case 'prediction':
+                return <ConsumptionPrediction key={id} names={CompaniesNames} />;
             default:
                 return null;
         }
@@ -111,6 +114,7 @@ export default function QueriesPage() {
                                 <option value="comparison">Comparación de Eficiencia</option>
                                 <option value="equipments">Mostrar equipos</option>
                                 <option value="exceeded">Identificar las sucursales</option>
+                                <option value="prediction">Predecir consumo</option>
                             </select>
                         ) : (
                             renderQueryComponent(query.type, query.id)
