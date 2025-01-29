@@ -584,15 +584,19 @@ export default function branchesPage() {
                                 >
                                     Area
                                 </label>
-                                <input
+								{/** Cambios **/}
+                                <select
                                     id="Area"
                                     name="Area"
-                                    type="text"
                                     value={isAddForm ? newEquipment.Area : editFormDataEq.Area}
                                     onChange={handleChange}
                                     className="styleInput"
                                     required
-                                />
+                                >
+									<option value=""> Selecciona un area </option>
+									{areas.map((area) => <option key={area.Name} value={area.Name}>{area.Name}</option>)}
+								</select>
+								{/**  **/}
                             </div>
                             <div>
                                 <label
