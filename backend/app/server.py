@@ -301,7 +301,7 @@ def create_bill():
 def get_all_companies():
     return cc.get_all(), 200
 
-app.route('/api/consult/areas/<string:Company>', methods=['GET'])
+@app.route('/api/consult/areas/<string:company>', methods=['GET'])
 def get_consult_areas(company):
     id= cc.get(company)['id']
     areas= ac.get_all(id)
@@ -311,13 +311,15 @@ def get_consult_areas(company):
 @app.route('/api/consult/equipments/<string:Company>/<string:Name>', methods=['GET'])
 def get_equipments_in_area(Company, Name):
     id= ac.get_by_company(Company, Name)
-    return ac.get_equipments(id), 200
+    equips= ec.get_equipments_in_area(id)
+    return jsonify(equips) , 200
 
 
 @app.route('/api/consult/totalConsumption/', methods= ['POST',])
 def get_consume():
     data= request.json
     answ= bc.get_consume(data)
+    print(answ)
     return jsonify(answ), 200
 
 @app.route('/api/consult/average_month/', methods=['POST'])

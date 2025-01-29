@@ -1,2 +1,0 @@
-import EquipmentTable from "./EquipmentTable";
-

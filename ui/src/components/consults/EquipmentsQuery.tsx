@@ -7,38 +7,50 @@ import Alert from "@/src/components/alerts/Alert";
 const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
 
     const { showAlert, alertData } = useAlert();
-    const [areas, setAreas] = useState<string[]>([]);
+    const [areas, setAreas] = useState<string[] | null>(null);
     const [selectCompany, setSelectCompany] = useState<string>('')
     const [selectArea, setSelectArea] = useState<string>('')
+    const [loading, SetLoading] = useState<boolean>(false)
 
-    const handleSubmit = () => {
-
+    const handleSubmit = async () => {
+        try {
+            if (!selectCompany || !selectArea) {
+                showAlert(true, "Please complete all fields", 1000)
+                return;
+            }
+            SetLoading(true);
+        }
+        catch (error) {
+            console.error(error);
+        }
     };
-    // useEffect(() => { 
-    //     await fetchAreasNames(); 
-    // }, [selectCompany]);
 
+    useEffect(() => { getAreas(); }, [selectCompany])
     const fetchAreasNames = async () => {
-        try{
-            const response = await fetch(`http://localhost:5050/api/consult/areas/${selectCompany}/`, {
+        try {
+            if (!selectCompany) return;
+            const response = await fetch(`http://localhost:5050/api/consult/areas/${selectCompany}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
             const data = await response.json()
-            if(!response.ok){
+            if (!response.ok) {
                 showAlert(true, data.error, 5000);
                 return;
             }
-            setAreas(data);
+            const names = data.map((item: { Name: any; }) => (item.Name))
+            setAreas(names);
         }
-        catch(error){
+        catch (error) {
             console.error(error);
         }
     }
+    const getAreas = () => {
+        fetchAreasNames();
+    }
 
-     
     return (
         <div className="p-4 border rounded shadow">
             {alertData.isVisible && (
@@ -74,7 +86,7 @@ const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
                     className="p-2 border rounded"
                 >
                     <option value="">Select a Area</option>
-                    {areas.map((name, index) => (
+                    {areas && areas.map((name, index) => (
                         <option className="text-black"
                             key={index}
                             value={name}
@@ -91,6 +103,14 @@ const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
                     Consultar
                 </button>
             </div>
+            {loading &&
+                <div>
+                    <button onClick={() => SetLoading(false)}>
+                        X
+                    </button>
+                    <EquipmentTable branch={selectCompany} area={selectArea} />
+                </div>
+            }
         </div>
     );
 }

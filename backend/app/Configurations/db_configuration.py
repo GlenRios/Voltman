@@ -6,7 +6,7 @@ from sqlalchemy import Table, Column, Integer, ForeignKey
 
 DATABASE_URL = "sqlite:///app/tests/test.db" 
 TEST_DB_URL = "sqlite:///app/tests/unit_test.db"
-engine = create_engine(DATABASE_URL, echo=True)  # `echo=True` muestra las consultas SQL
+engine = create_engine(DATABASE_URL, echo=False)  # `echo=True` muestra las consultas SQL
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 

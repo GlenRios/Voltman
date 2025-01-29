@@ -18,7 +18,7 @@ class BillRepo(BaseRepo):
         idCompany= self.company_repo.get_byName(company).id
         start_consumption= self.db.query(BillModel.Reading).filter(BillModel.BillDate==start_date , BillModel.CompanyID== idCompany).first()
         end_consumption=self.db.query(BillModel.Reading).filter(BillModel.BillDate==end_date, BillModel.CompanyID== idCompany).first()
-        return end_consumption.Reading -(start_consumption.Reading if start_consumption else 0)
+        return (end_consumption.Reading if end_consumption else 0) -(start_consumption.Reading if start_consumption else 0)
     
     def get_in_date_range(self, company:str, start_date: date, end_date: date):
         idCompany= self.company_repo.get_byName(company).id

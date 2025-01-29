@@ -9,6 +9,7 @@ import EquipmentQuery from '@/src/components/consults/EquipmentsQuery';
 import { getToken } from '@/src/hooks/handleToken';
 import { useAlert } from "@/src/hooks/alertContxt";
 import Alert from "@/src/components/alerts/Alert";
+import OverLimitConsult from '@/src/components/consults/OverLimitConsult';
 
 interface Query {
     id: number;
@@ -37,7 +38,7 @@ export default function QueriesPage() {
             if (!response.ok) {
                 showAlert(true, data.error, 5000)
             }
-            const names: string[] = data.map((item: { Name: string;}) => item.Name)
+            const names: string[] = data.map((item: { Name: string; }) => item.Name)
             // Elimina valores vacíos
             setCompaniesNames(names);
             console.log(names);
@@ -65,13 +66,15 @@ export default function QueriesPage() {
     const renderQueryComponent = (type: string | null, id: number) => {
         switch (type) {
             case 'total':
-                return <TotalConsumption key={id} names={CompaniesNames}/>;
+                return <TotalConsumption key={id} names={CompaniesNames} />;
             case 'average':
                 return <MonthlyAverage key={id} />;
             case 'comparison':
                 return <EfficiencyComparison key={id} />;
-            case 'equipments': 
-                return<EquipmentQuery key={id} names={CompaniesNames}/>;
+            case 'equipments':
+                return <EquipmentQuery key={id} names={CompaniesNames} />;
+            case 'exceeded':
+                return <OverLimitConsult key={id} names={CompaniesNames} />
             default:
                 return null;
         }

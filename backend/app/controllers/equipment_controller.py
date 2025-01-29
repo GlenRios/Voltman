@@ -34,7 +34,12 @@ class EquipmentController:
             eq= self.Iarea.get_equipments(area['id'])
             eq= self.Iequipment.convert(eq)
             equipments.extend(eq)
-        return equipments    
+        return equipments  
+
+    def get_equipments_in_area(self, area: int) :
+        eq= self.Iarea.get_equipments(area)
+        eq= self.Iequipment.convert(eq)
+        return eq    
         
 
         

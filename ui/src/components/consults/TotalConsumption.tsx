@@ -58,7 +58,7 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
             <h2 className="text-xl font-bold mb-4">Total Consumption Consult:</h2>
             <div className="grid grid-cols-1 gap-4">
                 <input
-                    type="Date"
+                    type="date"
                     name="startDate"
                     value={formData.startDate}
                     onChange={handleChange}
@@ -74,7 +74,7 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
                     placeholder="Fecha de fin"
                 />
                 <select
-                    name="company"
+                    name="Company"
                     value={selectedName}
                     onChange={handleChange}
                     className="p-2 border rounded"
