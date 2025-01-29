@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useAlert } from "@/src/hooks/alertContxt";
 import Alert from "@/src/components/alerts/Alert";
+import { LineChart } from '../charts/LineChart';
 interface TotalConsumptionProps {
     startDate: string;
     endDate: string;
@@ -42,7 +43,7 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
             if (!response.ok) {
                 showAlert(true, data.error, 5000)
             }
-            setTotalConsumption(data.Total);
+            setTotalConsumption(Math.abs(data.Total));
             setResponseData(data.Data);
 
         } catch (Error) {
@@ -107,7 +108,14 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
             </div>
             {totalConsumption &&
                 <div>
-                    <h2 className="tittle">Response: {totalConsumption}</h2>
+
+                    <div className='my-4'>
+                        <h2 className="tittle" >
+                            Total Consumption: {totalConsumption} kw
+                        </h2>
+                        <LineChart data={responseData} index={'Date'} categories={["Value"]}  />
+                    </div>
+
                 </div>}
         </div>
     );

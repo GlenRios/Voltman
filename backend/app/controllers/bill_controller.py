@@ -33,12 +33,20 @@ class BillController():
     def calculate_monthly_average_consumption(self, companies):
         end_date= datetime.now().date()
         start_date= end_date- timedelta(days= 3*365)
-        answ=[]
+        from collections import defaultdict
+        answ= defaultdict(list)
         for company in companies:
             monthly_average_consumptions= self.Ibill.calculate_average_monthly_consumption(company, start_date, end_date)
             for (year, month), average in monthly_average_consumptions.items():
-                answ.append({'Name': company, 'Date': f'{year}-{month}', 'Average': average})  
-        return answ    
+                answ[f'{year}-{month}'].append((company, average))
+        
+        response= []
+        for key, values in answ.items():
+            res={'Date': key}
+            for company, average in values:
+                res[company]= average
+            response.append(res)    
+        return response   
 
 
     def get_companies_limit_exceeded(self, date: str):

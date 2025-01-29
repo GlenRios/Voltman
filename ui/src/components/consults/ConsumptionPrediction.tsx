@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useAlert } from "@/src/hooks/alertContxt";
 import Alert from "@/src/components/alerts/Alert";
+import { LineChart } from "@/src/components/charts/LineChart";
 
 
 const ConsumptionPrediction: React.FC<{ names: string[] }> = ({ names }) => {
@@ -75,6 +76,9 @@ const ConsumptionPrediction: React.FC<{ names: string[] }> = ({ names }) => {
             {prediction &&
                 <div>
                     <h2 className="tittle">Response: {prediction}</h2>
+                    <div>
+                        <LineChart data={responseData} index={'Date'} categories={["Consume"]}  />
+                    </div>
                 </div>}
         </div>
     );

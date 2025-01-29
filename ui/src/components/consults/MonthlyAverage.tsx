@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useAlert } from "@/src/hooks/alertContxt";
 import Alert from "@/src/components/alerts/Alert";
+import { LineChart } from "@/src/components/charts/LineChart";
 
 interface respType {
     Name: string;
@@ -13,7 +14,7 @@ const MonthlyAverage: React.FC<{ names: string[] }> = ({ names }) => {
 
     const { showAlert, alertData } = useAlert();
     const [selectors, setSelectors] = useState<string[]>([""]);
-    const [responseData, setREsponseData] = useState<respType[]>([]);
+    const [responseData, setREsponseData] = useState<respType[]|null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Manejar cambio en un selector
@@ -43,6 +44,7 @@ const MonthlyAverage: React.FC<{ names: string[] }> = ({ names }) => {
                 showAlert(true, data.error, 5000);
                 return;
             }
+            setREsponseData(data);
         } catch (error) {
             console.error(error);
         } finally {
@@ -88,10 +90,15 @@ const MonthlyAverage: React.FC<{ names: string[] }> = ({ names }) => {
                 className={`buttonGreen ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
                     }`}
             >
-                {isSubmitting ? "Consultando..." : "Consult"}
+                Consult  
             </button>
             </div>
-            
+            {responseData  && 
+                    <div>
+                        <LineChart data={responseData} index={'Date'} categories={selectors}  />
+                        
+                    </div>    
+                }
         </div>
     );
 };
