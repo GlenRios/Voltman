@@ -53,6 +53,33 @@ class IBill:
             monthly_averages[(year, month)] = average_consumption
 
         return monthly_averages
+    
+    def predict_consume(self, company, start_date, end_date):
+        bills= self.get_bills_in_range(start_date, end_date, company)
+        monthly_consumption= self.get_monthly_consumption(bills)
+
+        for (year, month), readings in monthly_consumption.items():
+            var= sum(readings)
+            monthly_consumption[(year, month)]= var
+
+        group_sums = []
+        current_group = []
+        total=0
+        
+        for (year, month), consumption in monthly_consumption.items():
+            current_group.append(consumption)          
+            # Cada 3 meses, calcular la suma
+            if len(current_group) == 3:
+                suma= sum(current_group)
+                total+=suma
+                group_sums.append({'Date': f'{year}-{month}', 'Consume':suma})
+                del current_group[0]
+
+
+        return total/len(group_sums) , group_sums     
+
+
+
 
 
 

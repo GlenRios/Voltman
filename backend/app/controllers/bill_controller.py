@@ -19,7 +19,7 @@ class BillController():
         total, bills= self.Ibill.calculate_consume(start_date, end_date, company)
         answ={}
         answ['Total']=total
-        answ['Values']= [{"Date": bill.Date, "Value": bill.DailyConsumption} for bill in bills]
+        answ['Data']= [{"Date": bill.Date, "Value": bill.DailyConsumption} for bill in bills]
         return answ
 
 
@@ -43,6 +43,14 @@ class BillController():
         for name, overlimit in items:
             answ.append({'Name': name, 'OverLimit': overlimit})
         return answ    
+    
+    def predict_consume(self, company):
+        end_date= datetime.now().date()
+        start_date= end_date- timedelta(days= 5*365)
+        pred, data= self.Ibill.predict_consume(company, start_date, end_date)
+        answ= {'Predition': pred, 'Data': data}
+        return answ
+
 
 
 

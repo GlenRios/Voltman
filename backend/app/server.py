@@ -322,7 +322,7 @@ def get_consume():
     print(answ)
     return jsonify(answ), 200
 
-@app.route('/api/consult/average_month/', methods=['POST'])
+@app.route('/api/consult/averageMonthly/', methods=['POST'])
 def calculate_average_consume():
     data= request.json
     answ= bc.calculate_monthly_average_consumption(data)
@@ -333,6 +333,11 @@ def limitExceeded(date):
     answ= bc.get_companies_limit_exceeded(date)
     return jsonify(answ), 200
 
+
+@app.route('/api/consult/prediction/<string:company>', methods=['GET'])
+def predict(company):
+    answ= bc.predict_consume(company)
+    return jsonify(answ), 200
 
 app.run(port= 5050,debug=True)
 
