@@ -2,16 +2,16 @@
 
 import ButtonBack from '@/src/components/buttons/ButtonBack';
 import Logo from "@/src/components/logo";
-import { fetchBranchesNames } from "@/src/api/branchService";
 import { useAlert } from "@/src/hooks/alertContxt";
 import Alert from "@/src/components/alerts/Alert";
+import Option from "@/src/components/alerts/Option";
 
 import React, { useState, useEffect } from 'react';
 import { getToken } from "@/src/hooks/handleToken";
 
 interface ConsumptionForm {
   Company: string;
-  Reading: number;
+  Reading: number | string;
   Date: string;
 }
 
@@ -20,10 +20,11 @@ const DailyConsumptionPage: React.FC = () => {
   const token = getToken();
   const { showAlert, alertData } = useAlert();
   const [forms, setForms] = useState<ConsumptionForm[]>([
-    { Company: '', Reading: 0, Date: '' },
+    { Company: '', Reading: '', Date: '' },
   ]);
   const [companyNames, setCompanyNames] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showOption, setShowOption] = useState<boolean>(false);
 
 
   //Obtener nombres de las sucursales al abrir la pagina
@@ -40,17 +41,16 @@ const DailyConsumptionPage: React.FC = () => {
       const data = await response.json();
       if (!response.ok) {
         showAlert(true, data.error, 5000)
+        return;
       }
       const names = data.map((item: { Name: any; }) => item.Name)
-      // Elimina valores vacíos
       setCompanyNames(names);
-      // showAlert(false, data.message || "Operation was successful!", 3000)
 
-    } catch (Error) {
-      console.error(Error)
+    } catch (error: any) {
+      showAlert(true, error.message, 5000);
     }
   };
-
+  // Manejar cambios en los formularios
   const handleFormChange = (
     index: number,
     field: keyof ConsumptionForm,
@@ -60,16 +60,16 @@ const DailyConsumptionPage: React.FC = () => {
     updatedForms[index][field] = value;
     setForms(updatedForms);
   };
-
+  // Agregar un formulario
   const addForm = () => {
     setForms([...forms, { Company: '', Reading: 0, Date: '' }]);
   };
-
+  // Eliminar un formulario
   const removeForm = (index: number) => {
     const updatedForms = forms.filter((_, i) => i !== index);
     setForms(updatedForms);
   };
-
+  // Registrar todos los datos de los formularios
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
@@ -83,21 +83,20 @@ const DailyConsumptionPage: React.FC = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        setForms([{ Company: '', Reading: 0, Date: '' }]);
+        setForms([{ Company: '', Reading: '', Date: '' }]);
         showAlert(false, data.message || "successful registration", 3000);
       } else {
-
         showAlert(true, `Error ${response.status}: ${data.error || 'No se pudo registrar el consumo'}`, 5000);
       }
-    } catch (error) {
-      showAlert(true, "Error: NetworkError when attempting to fetch resource.", 5000);
+    } catch (error: any) {
+      showAlert(true, error.message || "Error: NetworkError when attempting to fetch resource.", 5000);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="p-4 h-screen fondo bg-cover">
+    <div className="p-4 min-h-screen fondo">
       {alertData.isVisible && (
         <Alert
           type={alertData.type}
@@ -105,6 +104,16 @@ const DailyConsumptionPage: React.FC = () => {
           onClose={() => showAlert(false, "", 0)}
         />
       )}
+      {
+        showOption &&
+        <Option
+          message={'Are you sure you want to register those consumptions?'}
+          onAcept={() => {
+            setShowOption(false);
+            handleSubmit();
+          }}
+          onCancel={() => setShowOption(false)} />
+      }
       <div className='flex justify-center items-center'>
         <Logo
           width={200}
@@ -131,7 +140,7 @@ const DailyConsumptionPage: React.FC = () => {
               onChange={(e) => handleFormChange(index, 'Company', e.target.value)}
               className="selector"
             >
-              <option value="">Selecciona una empresa</option>
+              <option value="">Select a branch</option>
               {companyNames.map((name) => (
                 <option key={name} value={name}>
                   {name}
@@ -158,7 +167,7 @@ const DailyConsumptionPage: React.FC = () => {
             onClick={() => removeForm(index)}
             className="buttonRed m-2"
           >
-            Eliminar
+            Delete
           </button>
         </div>
       ))}
@@ -171,7 +180,7 @@ const DailyConsumptionPage: React.FC = () => {
         </button>
 
         <button
-          onClick={handleSubmit}
+          onClick={() => setShowOption(true)}
           disabled={isSubmitting}
           className={`buttonGreen ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
             }`}

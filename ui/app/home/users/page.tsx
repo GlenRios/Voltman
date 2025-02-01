@@ -5,19 +5,11 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 import { getToken } from '@/src/hooks/handleToken';
 import User from "@/src/models/User"
-import showNotification from '@/src/utilts/Notifications';
 import ButtonBack from '@/src/components/buttons/ButtonBack';
 import Logo from '@/src/components/logo';
 import { useAlert } from "@/src/hooks/alertContxt";
 import Alert from "@/src/components/alerts/Alert";
-
-/**
-For making branch a select
-**/
-import { fetchBranchesNames } from '@/src/api/branchService';
-/**
-For making branch a select
-**/
+import Option from "@/src/components/alerts/Option"
 
 export default function Page() {
 
@@ -33,11 +25,11 @@ export default function Page() {
     const [showForm, setShowForm] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [id, setCurrentUserId] = useState<number | null>(null);
-    const router = useRouter();
     const [searchTerm, setSearchTerm] = useState('');
     const [branches, setBranches] = useState<string[]>([])
-
-    {/** **/ }
+    const [showOption, setShowOption] = useState<boolean>(false);
+    const [idSelect, setIdSelect] = useState(0);
+    // obtener los nombres de las sucursales a las que el usuario tiene acceso
     useEffect(() => { fetchBranches(); }, []);
     const fetchBranches = async () => {
         try {
@@ -51,19 +43,18 @@ export default function Page() {
             const data = await response.json();
             if (!response.ok) {
                 showAlert(true, data.error, 5000)
+                return;
             }
-            const names = data.map((item:any) => item.Name);
+            const names = data.map((item: any) => item.Name);
             setBranches(names);
-        } catch (Error) {
-            console.error(Error)
+        } catch (error: any) {
+            showAlert(true, error.message, 5000);
         }
     };
-    {/** **/ }
-
+    // obtener la lista de ususarios de la sucursal seleccionada
     useEffect(() => { fetchUsers(); }, []);
     const fetchUsers = async () => {
         try {
-            const token = getToken();
             const response = await fetch("http://localhost:5050/api/user/", {
                 method: 'GET',
                 headers: {
@@ -72,19 +63,21 @@ export default function Page() {
                 }
             });
             const data = await response.json();
-            if (!response.ok) throw new Error(data.error);
-
-            // console.log('Usuarios cargados:', data);
+            if (!response.ok) {
+                showAlert(true, data.error, 5000);
+                return;
+            }
             setUsers(data);
-        } catch (Error) {
-            console.error(Error)
+        } catch (error: any) {
+            showAlert(true, error.message, 5000);
         }
     };
 
+    // Peticion de Agregar o Editar usuarios
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!Username || !Company || !Type || !Password) {
-            showNotification('Please complete all fields.', setNotification);
+            showAlert(true, 'Please complete all fields.', 3000);
             return;
         }
         try {
@@ -100,41 +93,47 @@ export default function Page() {
             }
             );
             const user = await response.json();
-            if (!response.ok) throw new Error(user.error);
-            // throw new Error(`Error al guardar usuario: ${response.statusText} (Código: ${response.status})`);
+            if (!response.ok) {
+                showAlert(true, user.error, 5000)
+                return;
+            }
             else {
                 if (isEdit) {
                     setUsers(users.map((u) => (u.id === id ? user : u)));
                 } else {
                     setUsers([...users, user]);
                 }
-                showNotification(isEdit ? 'User successfully updated.' : 'User successfully added.', setNotification);
+                showAlert(false, isEdit ? 'User successfully updated.' : 'User successfully added.', 3000);
                 resetForm();
             }
-        } catch (Error) {
-            console.error(Error)
+        } catch (error: any) {
+            showAlert(true, error.message, 5000);
         }
     };
+    // Eliminar Ususario
     const handleDeleteUser = async (id: number) => {
-        const confirmed = window.confirm('Are you sure you want to delete the user?');
-        if (confirmed) {
-            try {
-                const response = await fetch(`http://127.0.0.1:5050/api/user/${id}/`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    },
-                });
-                if (!response.ok) throw new Error('Error deleting user');
-                setUsers(users.filter((user) => user.id !== id));
-                showNotification('User successfully deleted.', setNotification);
-            } catch (Error) {
-                console.error(Error)
+
+        try {
+            const response = await fetch(`http://127.0.0.1:5050/api/user/${id}/`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                showAlert(true, data.error, 5000);
+                return;
             }
+            setUsers(users.filter((user) => user.id !== id));
+            showAlert(false, 'User successfully deleted.', 2000);
+        } catch (error: any) {
+            showAlert(true, error.message, 5000);
         }
     };
 
+    // mostrar formulario de editar con los datos de usuario
     const handleEditUser = (user: User) => {
         setName(user.Username);
         setCompany(user.Company);
@@ -146,6 +145,7 @@ export default function Page() {
         setShowForm(true);
     };
 
+    // borrar los datos del formulario y ocultarlo
     const resetForm = () => {
         setName('');
         setCompany('');
@@ -157,12 +157,26 @@ export default function Page() {
         setShowForm(false);
     };
 
-    const filteredUsers = users.filter((user) =>
+    const filteredUsers = users ? users.filter((user) =>
         user.Username.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    ) : [];
 
     return (
         <div className="min-h-screen p-8 relative fondo ">
+            {alertData.isVisible && (
+                <Alert
+                    type={alertData.type}
+                    message={alertData.message}
+                    onClose={() => showAlert(false, "", 0)}
+                />
+            )}
+            {showOption &&
+                <Option
+                    message={'Are you sure you want to delete the user?'}
+                    onAcept={() => {setShowOption(false);
+                        handleDeleteUser(idSelect)}} 
+                    onCancel={() => setShowOption(false)}
+                />}
 
             <div className='flex justify-center items-center'>
                 <Logo
@@ -231,7 +245,9 @@ export default function Page() {
                                             ✏️
                                         </button>
                                         <button
-                                            onClick={() => handleDeleteUser(user.id)}
+                                            onClick={() => {
+                                                setIdSelect(user.id)
+                                                setShowOption(true)}}
                                             className="buttonRed"
                                         >
                                             🗑️
@@ -242,7 +258,7 @@ export default function Page() {
                         ) : (
                             <tr>
                                 <td colSpan={4} className="px-4 py-4 text-center text-gray-500">
-                                    No se encontraron usuarios.
+                                    Users not found.
                                 </td>
                             </tr>
                         )
@@ -262,6 +278,13 @@ export default function Page() {
                             {isEdit ? "Edit User:" : "Add Usuer:"}
                         </h2>
                         <form onSubmit={handleSubmit}>
+                            {alertData.isVisible && (
+                                <Alert
+                                    type={alertData.type}
+                                    message={alertData.message}
+                                    onClose={() => showAlert(false, "", 0)}
+                                />
+                            )}
                             <div className="mb-2">
                                 <label className="subtittle">Name:</label>
                                 <input
@@ -323,13 +346,13 @@ export default function Page() {
                                     type="button"
                                     className="buttonRed"
                                 >
-                                    Cancelar
+                                    Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     className="buttonBlue"
                                 >
-                                    Guardar
+                                    {isEdit ? "Edit" : "Add"}
                                 </button>
                             </div>
                         </form>

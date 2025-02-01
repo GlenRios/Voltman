@@ -7,45 +7,49 @@ import Notification from '@/src/models/Notification';
 import Logo from '@/src/components/logo';
 import { useAlert } from "@/src/hooks/alertContxt";
 import Alert from "@/src/components/alerts/Alert";
+
 export default function Home() {
 
     //Variables
     const router = useRouter();
     const { showAlert, alertData } = useAlert();
     const notificationsData: Notification[] = [
-        { id: 1, title: 'Consumo Alto ', message: 'El consumo eléctrico superó el límite establecido.' },
-        { id: 2, title: 'Mantenimiento', message: 'Programado mantenimiento para el próximo lunes.' },
-        { id: 3, title: 'Nuevo Usuario', message: 'Se ha registrado un nuevo usuario en el sistema.' },
-    ];
+        { id: 1, title: 'Consumo Alto ', message: 'El consumo eléctrico superó el límite establecido.' },];
     const [isOpen, setIsOpen] = useState(false);
     const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
+    const buttons = [{ name: 'Consult', route: 'consults' },
+        { name: 'Register', route: 'bills' },
+        { name: 'Users', route: 'users' },
+        { name: 'Branches', route: 'branches' },
+        { name: 'Log out', route: 'log_out' }
+    ];
 
+    // Abrir una notificacion
     const openNotification = (notification: Notification) => {
         setSelectedNotification(notification);
     };
-
+    // Cerrar una notificacion
     const closeModal = () => {
         setSelectedNotification(null);
     };
-
-    const goRoute = async (route: string) => {
-        try {
-            goRestrictedRoute(router, route);
-        }
-        catch (error) {
-            if (error instanceof Error) {
-                showAlert(true, error.message, 5000);
-                return;
-            } else {
-                console.log("unknown error", error);
-            }
-        }
-    };
-
+    // Eliminar una notificacion
     function handleDeleteNotification(id: number): void {
         throw new Error('Function not implemented.');
     }
-
+    // Abrir una pagina
+    const goRoute = async (route: string) => {
+        try {
+            if (await goRestrictedRoute(router, route)) {
+                return;
+            }
+            showAlert(true, "You do not have access to that page", 3500);
+            return;
+        }
+        catch (error: any) {
+            showAlert(true, error.message, 5000);
+        }
+    };
+    
     return (
         <div className="flex h-screen flex-col lg:flex-row">
             {alertData.isVisible && (
@@ -94,10 +98,8 @@ export default function Home() {
                     </span>
                 </button>
                 {/* Parte superior */}
-                <div className="flex items-center justify-center flex-col h-5/6 
-                                bg-[url('http://localhost:3000/images/claro.jpg')] 
-                                dark:bg-[url('http://localhost:3000/images/oscuro2.jpg')] 
-                                bg-cover shadow-md dark:shadow-2xl shadow-white">
+                <div className="flex items-center justify-center flex-col h-5/6 bg-[url('http://localhost:3000/images/claro.jpg')] 
+//                              dark:bg-[url('http://localhost:3000/images/oscuro2.jpg')] bg-cover shadow-md dark:shadow-2xl shadow-white">
                     <Logo
                         width={200}
                         height={200}>
@@ -117,11 +119,7 @@ export default function Home() {
 
                 {/* Parte inferior */}
                 <div className="flex justify-around items-center bg-transparent p-10 text-white">
-                    {[{ name: 'Consult', route: 'consults' },
-                    { name: 'Register', route: 'bills' },
-                    { name: 'Users', route: 'users' },
-                    { name: 'Branches', route: 'branches' },
-                    { name: 'Log out', route: 'log_out' }].map((item, index) => (
+                    {buttons.map((item, index) => (
                         <button
                             key={index}
                             onClick={() => goRoute(item.route)}

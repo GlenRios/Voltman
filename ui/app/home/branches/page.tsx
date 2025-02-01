@@ -42,7 +42,7 @@ export default function branchesPage() {
     const [selectedBranch, setSelectedBranch] = useState<string | null>(null);
     // maneja el cambio en la sucursal seleccionada
     const handleSelectBranch = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-        getBranchInfo();
+        getBranchInfo(event);
     };
     // valores de los inputs:
     const [branchName, setBranchName] = useState<string>('');
@@ -68,27 +68,26 @@ export default function branchesPage() {
             const data = await response.json();
             if (!response.ok) {
                 showAlert(true, data.error, 5000)
+                return;
             }
             const names = data.map((item: { id: number; Name: string; }) => ({
-                id: item.id ?? null,       // Si falta, asigna null
-                name: item.Name ?? "N/A"   // Si falta, asigna "N/A"
-            }))// Elimina valores vacíos
+                id: item.id ?? null,
+                name: item.Name ?? "N/A"
+            }))
             setBranchesName(names);
-            // showAlert(false, data.message || "Operation was successful!", 3000)
-
-        } catch (Error) {
-            console.error(Error)
+        } catch (error: any) {
+            showAlert(true, error.message, 5000);
         }
     };
     // Obtener los datos de la sucursal seleccionada
-    const getBranchInfo = async () => {
+    const getBranchInfo = async (event: React.ChangeEvent<HTMLSelectElement>) => {
         try {
             let branch = event.target.value;
             setSelectedBranch(branch);
 
             if (!event.target.value) {
-                return;
                 showAlert(true, "Select a Branch", 5000);
+                return;
             }
             const response = await fetch(`http://localhost:5050/api/branch/info/${branch}/`, {
                 method: 'GET',
@@ -100,6 +99,7 @@ export default function branchesPage() {
             const data = await response.json();
             if (!response.ok) {
                 showAlert(true, data.error, 5000);
+                return;
             }
             const info = {
                 id: data.id,
@@ -118,8 +118,8 @@ export default function branchesPage() {
             setBranchPercent(info.porciento);
             setBranchIncrease(info.aumento);
 
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            showAlert(true, error.message, 5000);
         }
     }
     // Eliminar la sucursal seleccionada
@@ -138,12 +138,13 @@ export default function branchesPage() {
             const data = await response.json();
             if (!response.ok) {
                 showAlert(true, data.error, 5000);
+                return;
             }
             else {
                 showAlert(false, "Operation was successful!", 3000);
             }
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            showAlert(true, error.message, 5000);
         }
     }
     // Editar la informacion basica de una Sucursal
@@ -158,7 +159,8 @@ export default function branchesPage() {
             const response = await fetch(`http://localhost:5050/api/branch/${branchInfo.id}/`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(
                     { Name: branchName, Addr: branchAddress, Type: branchType, Limit: branchLimit }
@@ -167,6 +169,7 @@ export default function branchesPage() {
             const data = await response.json();
             if (!response.ok) {
                 showAlert(true, data.error, 5000);
+                return;
             }
             setBranchInfo({
                 id: branchInfo.id,
@@ -178,8 +181,8 @@ export default function branchesPage() {
                 porciento: branchPercent,
             });
             showAlert(false, "Operation was successful!", 3000);
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            showAlert(true, error.message, 5000);
         }
     }
     // Editar la informcaion que solo el administrador puede cambiar
@@ -201,8 +204,8 @@ export default function branchesPage() {
                 return;
             }
             showAlert(false, "Operation was successful!", 3000)
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            showAlert(true, error.message, 5000);
         }
     }
     // Volver a poner los datos reales de la sucursal en los inputs (para los datos basicos)
@@ -256,6 +259,7 @@ export default function branchesPage() {
                     if (!response.ok) {
                         const data = await response.json();
                         showAlert(true, data.error, 5000);
+                        return;
                     }
                     const data: Area[] = await response.json();
                     setAreas(data);
@@ -263,8 +267,8 @@ export default function branchesPage() {
                 }
                 setShowAreas(!showAreas);
             }
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            showAlert(true, error.message, 5000);
         }
     }
     // Agrega una nueva área
@@ -283,6 +287,7 @@ export default function branchesPage() {
             const data = await response.json();
             if (!response.ok) {
                 showAlert(true, data.error, 5000);
+                return;
             }
             else {
                 setAreas((prev) => [...prev, data]);
@@ -290,8 +295,8 @@ export default function branchesPage() {
                 setIsAdding(false);
                 showAlert(false, "Operation was successful!", 3000);
             }
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            showAlert(true, error.message, 5000);
         }
     };
     // Cancela la adición de una nueva área
@@ -336,6 +341,7 @@ export default function branchesPage() {
             const data = await response.json();
             if (!response.ok) {
                 showAlert(true, data.error, 5000);
+                return;
             }
             else {
                 setAreas((prev) =>
@@ -348,8 +354,8 @@ export default function branchesPage() {
                 setEditingId(null);
                 showAlert(false, "Operation was successful!", 3000);
             }
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            showAlert(true, error.message, 5000);
         }
     };
     // Cancela la edición 
@@ -376,8 +382,8 @@ export default function branchesPage() {
             setAreas((prev) => prev.filter((area) => area.id !== id));
             showAlert(false, "Operation was successful!", 3000);
         }
-        catch (error) {
-            console.error(error)
+        catch (error: any) {
+            showAlert(true, error.message, 5000);
         }
     };
     // Maneja el filtro por búsqueda
@@ -437,6 +443,7 @@ export default function branchesPage() {
                     if (!response.ok) {
                         const data = await response.json();
                         showAlert(true, data.error, 5000);
+                        return;
                     }
                     const data: Equipment[] = await response.json();
                     setEquipments(data);
@@ -444,8 +451,8 @@ export default function branchesPage() {
                 }
                 setShowEquipments(!showEquipments);
             }
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            showAlert(true, error.message, 5000);
         }
     }
     // Agrega un nuevo Equipo
@@ -464,6 +471,7 @@ export default function branchesPage() {
             const data = await response.json();
             if (!response.ok) {
                 showAlert(true, data.error, 5000);
+                return;
             }
             else {
                 setEquipments((prev) => [...prev, data]);
@@ -471,8 +479,8 @@ export default function branchesPage() {
                 setIsAddingEq(false);
                 showAlert(false, "Operation was successful!", 3000);
             }
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            showAlert(true, error.message, 5000);
         }
     };
     // Cancela la creacion de un equipo
@@ -501,6 +509,7 @@ export default function branchesPage() {
             const data = await response.json();
             if (!response.ok) {
                 showAlert(true, data.error, 5000);
+                return;
             }
             else {
                 setEquipments((prev) =>
@@ -513,8 +522,8 @@ export default function branchesPage() {
                 setEditingId(null);
                 showAlert(false, "Operation was successful!", 3000);
             }
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            showAlert(true, error.message, 5000);
         }
     };
     // Cancela la edición 
@@ -536,11 +545,12 @@ export default function branchesPage() {
             if (!response.ok) {
                 const data = await response.json();
                 showAlert(true, data.error, 5000);
+                return;
             }
             setEquipments((prev) => prev.filter((equipment) => equipment.id !== id));
             showAlert(false, "Operation was successful!", 3000);
-        } catch (error) {
-            console.log(error)
+        } catch (error: any) {
+            showAlert(true, error.message, 5000);
         }
     };
     // Maneja el filtro por búsqueda de los Equipos
@@ -588,7 +598,7 @@ export default function branchesPage() {
                                 >
                                     Area
                                 </label>
-								{/** Cambios **/}
+                                {/** Cambios **/}
                                 <select
                                     id="Area"
                                     name="Area"
@@ -597,10 +607,10 @@ export default function branchesPage() {
                                     className="styleInput"
                                     required
                                 >
-									<option value=""> Selecciona un area </option>
-									{areas.map((area) => <option key={area.Name} value={area.Name}>{area.Name}</option>)}
-								</select>
-								{/**  **/}
+                                    <option value=""> Selecciona un area </option>
+                                    {areas.map((area) => <option key={area.Name} value={area.Name}>{area.Name}</option>)}
+                                </select>
+                                {/**  **/}
                             </div>
                             <div>
                                 <label
@@ -823,9 +833,9 @@ export default function branchesPage() {
                 />
             )}
             {showAddForm &&
-                    <div className="pop">
-                        <FormComponent show={addBranch} />
-                    </div>}
+                <div className="pop">
+                    <FormComponent show={addBranch} />
+                </div>}
             {/* Encabezado de pagina*/}
             <div className='flex justify-center items-center p-4 m-4'>
                 <Logo
@@ -872,7 +882,7 @@ export default function branchesPage() {
                         </button>
                         <button
                             onClick={deletedBranch}
-                            className="buttonGray"
+                            className="buttonRed"
                         >
                             Delete
                         </button>

@@ -15,13 +15,13 @@ export async function goRestrictedRoute(router: AppRouterInstance, route: string
             if (route === "log_out") {
                 removeToken();
                 router.push('/');
-                return;
+                return true;
             }
             router.push(`/home/${route}/`);
-            return;
+            return true;
         }
         else{
-            throw new Error("You do not have access to that page");
+            return false;
         }
     } catch (error) {
         throw error;

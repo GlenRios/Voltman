@@ -60,6 +60,9 @@ h3 {
   @apply px-4 py-2 text-gray-800 dark:text-white bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-200
 }
 
+.buttonBlack{
+  @apply px-4 py-2 text-black dark:text-white bg-gray-400 dark:bg-gray-800 rounded-lg hover:bg-gray-500 dark:hover:bg-gray-700 transition duration-200
+}
 .buttonBlue{
   @apply px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200
 }
