@@ -16,7 +16,7 @@ const OverLimitConsult: React.FC = () => {
                 showAlert(true, "Please select a date", 1000)
                 return;
             }
-            const response = await fetch(`http://localhost:5050/api/consult/limitExceeded/${date}`, {
+            const response = await fetch(`http://localhost:5050/api/consult/limitExceeded/${date}/`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

@@ -29,7 +29,7 @@ const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
     const fetchAreasNames = async () => {
         try {
             if (!selectCompany) return;
-            const response = await fetch(`http://localhost:5050/api/consult/areas/${selectCompany}`, {
+            const response = await fetch(`http://localhost:5050/api/consult/areas/${selectCompany}/`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

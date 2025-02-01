@@ -16,7 +16,7 @@ const FormComponent: React.FC<{ show: any }> = ({ show }) => {
 
     try {
       // Petición POST al backend
-      const response = await fetch("http://localhost:5050/api/branch", {
+      const response = await fetch("http://localhost:5050/api/branch/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

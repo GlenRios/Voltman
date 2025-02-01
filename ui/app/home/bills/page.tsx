@@ -30,7 +30,7 @@ const DailyConsumptionPage: React.FC = () => {
   useEffect(() => { fetchBranches(); }, []);
   const fetchBranches = async () => {
     try {
-      const response = await fetch("http://localhost:5050/api/branch", {
+      const response = await fetch("http://localhost:5050/api/branch/", {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,

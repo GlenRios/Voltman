@@ -20,7 +20,7 @@ const ConsumptionPrediction: React.FC<{ names: string[] }> = ({ names }) => {
                 showAlert(true, "Please select a Branch", 1000)
                 return;
             }
-            const response = await fetch(`http://localhost:5050/api/consult/prediction/${selectedName}`, {
+            const response = await fetch(`http://localhost:5050/api/consult/prediction/${selectedName}/`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

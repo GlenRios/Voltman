@@ -17,7 +17,7 @@ export async function goRestrictedRoute(router: AppRouterInstance, route: string
                 router.push('/');
                 return;
             }
-            router.push(`/home/${route}`);
+            router.push(`/home/${route}/`);
             return;
         }
         else{

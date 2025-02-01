@@ -45,7 +45,7 @@ def handle_custom_error(e):
     return jsonify(response), e.status_code
 
 # Route to loggin
-@app.route("/api/user/login", methods= ['POST'])
+@app.route("/api/user/login/", methods= ['POST'])
 def login():
     data = request.json
     username= data['Username']
@@ -54,22 +54,21 @@ def login():
     return jsonify(token= token), 200
 
 # Route to get the list of users
-@app.route("/api/user/", methods=["GET"])
+@app.route("/api/user/", methods=["GET", "POST"])
 @jwt_required( optional=False )
 def get_users():
     username = get_jwt_identity()
-    users= uc.get_all_in_company(username)
-    return jsonify(users), 200
+    if request.method == "GET":
+        users= uc.get_all_in_company(username)
+        return jsonify(users), 200
 
-# Route to add a new user
-@app.route("/api/user", methods=["POST"])
-def add_user():
     new_user = request.json
     new_user=uc.post(new_user)
     return jsonify(new_user), 200
-    
+
 # Route to modify an existing user
-@app.route("/api/user/<int:user_id>", methods=["PUT"])
+@app.route("/api/user/<int:user_id>/", methods=["PUT"])
+@jwt_required( optional=False )
 def update_user(user_id):
     updated_user = request.json
     updated_user=uc.put(updated_user, user_id)
@@ -77,8 +76,10 @@ def update_user(user_id):
      
 
 # Route to delete an user
-@app.route("/api/user/<int:user_id>", methods=["DELETE"])
+@app.route("/api/user/<int:user_id>/", methods=["DELETE"])
+@jwt_required( optional=False )
 def delete_user(user_id):
+    print("hello")
     uc.delete(user_id)
     return jsonify({"message": "User deleted successfully"}), 200
 
@@ -174,12 +175,12 @@ def list_branch():
     company = cc.get(user.Company)
     return jsonify([company]), 200
 
-@app.route("/api/branch/info/<string:name>", methods= ['GET'])
+@app.route("/api/branch/info/<string:name>/", methods= ['GET'])
 def get_branch(name):
     company= cc.get(name)
     return jsonify(company), 200
 
-@app.route("/api/branch", methods=["POST",])
+@app.route("/api/branch/", methods=["POST",])
 @jwt_required(optional=False)
 def create_branch():
     data = request.json
@@ -190,13 +191,13 @@ def create_branch():
         return jsonify(new_company), 200
     return jsonify({'error':'You dont have permission'}), 405
 
-@app.route("/api/branch/<int:id>", methods=["PUT", "PATCH"])
+@app.route("/api/branch/<int:id>/", methods=["PUT", "PATCH"])
 def update_branch(id):
     data = request.json
     updated_company= cc.put(id, data)
     return jsonify(updated_company) , 200
 
-@app.route("/api/branch/formule/<int:id>", methods=["PUT", "PATCH"])
+@app.route("/api/branch/formule/<int:id>/", methods=["PUT", "PATCH"])
 @jwt_required(optional=False)
 def update_formule(id):
     data = request.json
@@ -207,7 +208,7 @@ def update_formule(id):
     updated_company= cc.update_formule(data, id)
     return jsonify(updated_company), 200
 
-@app.route("/api/branch/<int:id>", methods=["DELETE",])
+@app.route("/api/branch/<int:id>/", methods=["DELETE",])
 @jwt_required(optional=False)
 def delete_branch(id):
     username = get_jwt_identity()
@@ -219,7 +220,7 @@ def delete_branch(id):
 
 
 # area
-@app.route("/api/area/<int:id>", methods=['GET'])
+@app.route("/api/area/<int:id>/", methods=['GET'])
 def list_area(id):
     areas= ac.get_all(id)
     return jsonify(areas), 200
@@ -230,20 +231,20 @@ def create_area():
     new_area = ac.post(data)
     return jsonify(new_area), 200
 
-@app.route("/api/area/<int:id>", methods=["PUT", "PATCH"])
+@app.route("/api/area/<int:id>/", methods=["PUT", "PATCH"])
 def update_area(id):
     data = request.json
     updated_area= ac.put(id, data)
     return jsonify(updated_area), 200
 
-@app.route("/api/area/<int:id>", methods=["DELETE",])
+@app.route("/api/area/<int:id>/", methods=["DELETE",])
 def delete_area(id):
     ac.delete(id)
     return jsonify({'messagge': 'Area deleted successfully.'}), 200
 
 
 # equipment
-@app.route("/api/equipment/<int:id>", methods=['GET'])
+@app.route("/api/equipment/<int:id>/", methods=['GET'])
 def list_equipment(id):
     areas= ac.get_all(id)
     equipments= ec.get_all(areas)
@@ -255,13 +256,13 @@ def create_equipment():
     new_equipment = ec.post(data)
     return jsonify(new_equipment), 200
 
-@app.route("/api/equipment/<int:id>", methods=["PUT", "PATCH"])
+@app.route("/api/equipment/<int:id>/", methods=["PUT", "PATCH"])
 def update_equipment(id):
     data = request.json
     updated_equipment= ec.put(id, data)
     return jsonify(updated_equipment), 200
 
-@app.route("/api/equipment/<int:id>", methods=["DELETE",])
+@app.route("/api/equipment/<int:id>/", methods=["DELETE",])
 def delete_equipment(id):
     ec.delete(id)
     return jsonify({'message':'Equipment deleted successfully'})
@@ -271,7 +272,7 @@ USERS_PERMISSIONS=['SuperAdmin', 'Admin']
 BRANCHES_PERMISSIONS=['SuperAdmin', 'Admin', 'Manacher']
 BILLS_PERMISSIONS=['SuperAdmin', 'Manacher']
 
-@app.route("/api/access/<string:permission>", methods=["GET"])
+@app.route("/api/access/<string:permission>/", methods=["GET"])
 @jwt_required(optional=False)
 def protected(permission):
     username= get_jwt_identity()
@@ -301,14 +302,14 @@ def create_bill():
 def get_all_companies():
     return cc.get_all(), 200
 
-@app.route('/api/consult/areas/<string:company>', methods=['GET'])
+@app.route('/api/consult/areas/<string:company>/', methods=['GET'])
 def get_consult_areas(company):
     id= cc.get(company)['id']
     areas= ac.get_all(id)
     return jsonify(areas), 200
 
 
-@app.route('/api/consult/equipments/<string:Company>/<string:Name>', methods=['GET'])
+@app.route('/api/consult/equipments/<string:Company>/<string:Name>/', methods=['GET'])
 def get_equipments_in_area(Company, Name):
     id= ac.get_by_company(Company, Name)
     equips= ec.get_equipments_in_area(id)
@@ -328,17 +329,15 @@ def calculate_average_consume():
     answ= bc.calculate_monthly_average_consumption(data)
     return answ, 200
 
-@app.route('/api/consult/limitExceeded/<string:date>', methods=['GET'])
+@app.route('/api/consult/limitExceeded/<string:date>/', methods=['GET'])
 def limitExceeded(date):
     answ= bc.get_companies_limit_exceeded(date)
     return jsonify(answ), 200
 
 
-@app.route('/api/consult/prediction/<string:company>', methods=['GET'])
+@app.route('/api/consult/prediction/<string:company>/', methods=['GET'])
 def predict(company):
     answ= bc.predict_consume(company)
     return jsonify(answ), 200
 
 app.run(port= 5050,debug=True)
-
-

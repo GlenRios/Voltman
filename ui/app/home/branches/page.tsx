@@ -58,7 +58,7 @@ export default function branchesPage() {
     useEffect(() => { fetchBranches(); }, []);
     const fetchBranches = async () => {
         try {
-            const response = await fetch("http://localhost:5050/api/branch", {
+            const response = await fetch("http://localhost:5050/api/branch/", {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -86,7 +86,7 @@ export default function branchesPage() {
             if (!selectedBranch) {
                 showAlert(true, "Select a Branch", 5000);
             }
-            const response = await fetch(`http://localhost:5050/api/branch/info/${selectedBranch}`, {
+            const response = await fetch(`http://localhost:5050/api/branch/info/${selectedBranch}/`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -121,7 +121,7 @@ export default function branchesPage() {
     // Eliminar la sucursal seleccionada
     const deletedBranch = async () => {
         try {
-            const response = await fetch(`http://localhost:5050/api/branch/${branchInfo.id}`, {
+            const response = await fetch(`http://localhost:5050/api/branch/${branchInfo.id}/`, {
                 method: "DELETE",
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -151,7 +151,7 @@ export default function branchesPage() {
             else if (branchInfo.id === -1) {
                 throw new Error("Invalid branch id");
             }
-            const response = await fetch(`http://localhost:5050/api/branch/${branchInfo.id}`, {
+            const response = await fetch(`http://localhost:5050/api/branch/${branchInfo.id}/`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -181,7 +181,7 @@ export default function branchesPage() {
     // Editar la informcaion que solo el administrador puede cambiar
     const editRestInfoBranch = async () => {
         try {
-            const response = await fetch(`http://localhost:5050/api/branch/formule/${branchInfo.id}`, {
+            const response = await fetch(`http://localhost:5050/api/branch/formule/${branchInfo.id}/`, {
                 method: "PUT",
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -242,7 +242,7 @@ export default function branchesPage() {
             }
             else {
                 if (!showAreas) {
-                    const response = await fetch(`http://localhost:5050/api/area/${branchInfo.id}`, {
+                    const response = await fetch(`http://localhost:5050/api/area/${branchInfo.id}/`, {
                         method: 'GET',
                         headers: {
                             'Authorization': `Bearer ${token}`,
@@ -319,7 +319,7 @@ export default function branchesPage() {
     // Guarda los cambios realizados en el formulario de edición
     const handleSaveClick = async () => {
         try {
-            const response = await fetch(`http://localhost:5050/api/area/${editFormData.id}`, {
+            const response = await fetch(`http://localhost:5050/api/area/${editFormData.id}/`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -355,7 +355,7 @@ export default function branchesPage() {
     // Elimina un area
     const handleDeleteClick = async (id: number) => {
         try {
-            const response = await fetch(`http://localhost:5050/api/area/${id}`,
+            const response = await fetch(`http://localhost:5050/api/area/${id}/`,
                 {
                     method: "DELETE",
                     headers: {
@@ -423,7 +423,7 @@ export default function branchesPage() {
             }
             else {
                 if (!showEquipments) {
-                    const response = await fetch(`http://localhost:5050/api/equipment/${branchInfo.id}`, {
+                    const response = await fetch(`http://localhost:5050/api/equipment/${branchInfo.id}/`, {
                         method: 'GET',
                         headers: {
                             'Authorization': `Bearer ${token}`,
@@ -484,7 +484,7 @@ export default function branchesPage() {
     // Guarda los cambios realizados
     const handleSaveClickEq = async () => {
         try {
-            const response = await fetch(`http://localhost:5050/api/equipment/${editFormDataEq.id}`, {
+            const response = await fetch(`http://localhost:5050/api/equipment/${editFormDataEq.id}/`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -520,7 +520,7 @@ export default function branchesPage() {
     // Elimina un equipo
     const handleDeleteClickEq = async (id: number) => {
         try {
-            const response = await fetch(`http://localhost:5050/api/equipment/${id}`,
+            const response = await fetch(`http://localhost:5050/api/equipment/${id}/`,
                 {
                     method: "DELETE",
                     headers: {

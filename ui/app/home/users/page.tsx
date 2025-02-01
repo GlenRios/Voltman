@@ -41,7 +41,7 @@ export default function Page() {
     useEffect(() => { fetchBranches(); }, []);
     const fetchBranches = async () => {
         try {
-            const response = await fetch("http://localhost:5050/api/branch", {
+            const response = await fetch("http://localhost:5050/api/branch/", {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -64,7 +64,7 @@ export default function Page() {
     const fetchUsers = async () => {
         try {
             const token = getToken();
-            const response = await fetch("http://localhost:5050/api/user", {
+            const response = await fetch("http://localhost:5050/api/user/", {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -88,10 +88,13 @@ export default function Page() {
             return;
         }
         try {
-            const url = isEdit ? `http://127.0.0.1:5050/api/user/${id}` : 'http://127.0.0.1:5050/api/user';
+            const url = isEdit ? `http://127.0.0.1:5050/api/user/${id}/` : 'http://127.0.0.1:5050/api/user/';
             const response = await fetch(url, {
                 method: isEdit ? 'PUT' : 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(isEdit ? { id, Username, Company, Type, Password, NewPassword }
                     : { id, Username, Company, Type, Password })
             }
@@ -116,7 +119,7 @@ export default function Page() {
         const confirmed = window.confirm('Are you sure you want to delete the user?');
         if (confirmed) {
             try {
-                const response = await fetch(`http://127.0.0.1:5050/api/user/${id}`, { method: 'DELETE' });
+                const response = await fetch(`http://127.0.0.1:5050/api/user/${id}/`, { method: 'DELETE' });
                 if (!response.ok) throw new Error('Error deleting user');
                 setUsers(users.filter((user) => user.id !== id));
                 showNotification('User successfully deleted.', setNotification);
