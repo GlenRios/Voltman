@@ -10,24 +10,19 @@ from controllers import (
     bill_controller as bc
 )
 
-# from tests.test_db import build_test_db
-# build_test_db()
-
 path= "app/tests/test.db"
 if not os.path.exists(path):
     init_db()
     
 
 tester= Tester()
-from db.models.Bill import BillModel
-from db.repos import UserRepo, CompanyRepo, AreaRepo, EquipmentRepo, GroupRepo, BillRepo
+from db.repos import UserRepo, CompanyRepo, AreaRepo, EquipmentRepo, BillRepo
 from Use_Cases.Interfaces import IUser, ICompany, IArea, IEquipment, IBill
 
 db= SessionLocal()
 
 company_repo= CompanyRepo.CompanyRepo(db)
-group_repo= GroupRepo.GroupRepo(db)
-user_repo= UserRepo.UserRepo(db, company_repo, group_repo)
+user_repo= UserRepo.UserRepo(db, company_repo)
 area_repo = AreaRepo.AreaRepo(db, company_repo)
 equipment_repo = EquipmentRepo.EquipmentRepo(db, area_repo)
 bill_repo= BillRepo.BillRepo(db, company_repo)

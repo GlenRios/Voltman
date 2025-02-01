@@ -37,33 +37,22 @@ class Base:
 
     def __repr__(self):
         return self.__str__()
+
+DB_FILE = "app/tests/test.db"
     
-
-
-group_permission = Table(
-    'group_permission', Base.metadata,
-    Column('GroupID', Integer, ForeignKey('group_model.id'), primary_key=True),
-    Column('PermissionID', Integer, ForeignKey('permission_model.id'), primary_key=True)
-)
-
-    
-from db.models import User, Company, Area, Bill, Permission, Group, Equipment
+from db.models import User, Company, Area, Bill, Group, Equipment
 
 def init_db():
-    db_file = "app/tests/test.db"
+    """Inicializa la base de datos solo si no existe"""
+    if os.path.exists(DB_FILE):
+        print("✅ La base de datos ya existe. No se realizará ninguna acción.")
+        return
 
-    if os.path.exists(db_file):
-        os.remove(db_file)
+    print("🔄 Creando la base de datos...")
 
     Base.metadata.create_all(bind= engine)
 
     db= SessionLocal()
-    permissions= [
-        Permission.PermissionModel(Type= 'users'),
-        Permission.PermissionModel(Type= 'bills'),
-        Permission.PermissionModel(Type= 'branches'),
-        Permission.PermissionModel(Type= 'consult'),
-    ]
     
     groups=[
         Group.GroupModel(Name= 'SuperAdmin'),
@@ -73,7 +62,6 @@ def init_db():
     ]
 
     db.add_all(groups)
-    db.add_all(permissions)
 
     company= Company.CompanyModel(Limit= 100.0, Increase= 20.0, Extra_Percent= 15.0, Type= 'type0', Name= 'company0', Addr= 'addr0')        
     db.add(company)
@@ -84,6 +72,15 @@ def init_db():
     db.commit()
 
     db.close()
+
+def drop_db():
+    """Elimina la base de datos si existe."""
+    if os.path.exists(DB_FILE):
+        os.remove(DB_FILE)
+        print("🗑️ Base de datos eliminada correctamente.")
+    else:
+        print("⚠️ La base de datos no existe.")
+
 
 
 
