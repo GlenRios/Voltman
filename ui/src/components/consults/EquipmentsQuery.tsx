@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import EquipmentTable, { EquipmentTableProp } from "./EquipmentTable";
 import { useAlert } from "@/src/hooks/alertContxt";
 import Alert from "@/src/components/alerts/Alert";
+import { getToken } from '@/src/hooks/handleToken';
+
 
 const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
 
@@ -11,6 +13,7 @@ const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
     const [selectCompany, setSelectCompany] = useState<string>('')
     const [selectArea, setSelectArea] = useState<string>('')
     const [loading, SetLoading] = useState<boolean>(false)
+    const token = getToken();
 
     const handleSubmit = async () => {
         try {
@@ -32,6 +35,7 @@ const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
             const response = await fetch(`http://localhost:5050/api/consult/areas/${selectCompany}/`, {
                 method: 'GET',
                 headers: {
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 }
             });

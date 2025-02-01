@@ -77,12 +77,12 @@ def create_bills(n, company):
     BC.post(bills)
 
 
-# create_companies(10)
-# create_users(300)
-# create_areas(100)
-# create_equipments(300)
-# for company in list_companies:
-#     create_bills(1500, company)
+#create_companies(10)
+#create_users(300)
+#create_areas(100)
+#create_equipments(300)
+#for company in list_companies:
+#    create_bills(1500, company)
 
 
 

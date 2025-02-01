@@ -41,8 +41,8 @@ export default function branchesPage() {
     // nombre de la sucursal seleccionada
     const [selectedBranch, setSelectedBranch] = useState<string | null>(null);
     // maneja el cambio en la sucursal seleccionada
-    const handleSelectBranch = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedBranch(event.target.value);
+    const handleSelectBranch = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+        getBranchInfo();
     };
     // valores de los inputs:
     const [branchName, setBranchName] = useState<string>('');
@@ -83,10 +83,14 @@ export default function branchesPage() {
     // Obtener los datos de la sucursal seleccionada
     const getBranchInfo = async () => {
         try {
-            if (!selectedBranch) {
+            let branch = event.target.value;
+            setSelectedBranch(branch);
+
+            if (!event.target.value) {
+                return;
                 showAlert(true, "Select a Branch", 5000);
             }
-            const response = await fetch(`http://localhost:5050/api/branch/info/${selectedBranch}/`, {
+            const response = await fetch(`http://localhost:5050/api/branch/info/${branch}/`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -883,7 +887,7 @@ export default function branchesPage() {
             >
                 <option value="">Selecciona una sucursal</option>
                 {branchesName.map((branch, index) => (
-                    <option key={index} value={branch.name} onClick={getBranchInfo}>
+                    <option key={index} value={branch.name}>
                         {branch.name}
                     </option>
                 ))}

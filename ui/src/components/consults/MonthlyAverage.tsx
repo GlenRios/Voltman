@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { useAlert } from "@/src/hooks/alertContxt";
 import Alert from "@/src/components/alerts/Alert";
 import { LineChart } from "@/src/components/charts/LineChart";
+import { getToken } from '@/src/hooks/handleToken';
+
 
 interface respType {
     Name: string;
@@ -16,6 +18,7 @@ const MonthlyAverage: React.FC<{ names: string[] }> = ({ names }) => {
     const [selectors, setSelectors] = useState<string[]>([""]);
     const [responseData, setREsponseData] = useState<respType[]|null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const token = getToken();
 
     // Manejar cambio en un selector
     const handleSelectorChange = (index: number, value: string) => {
@@ -35,7 +38,10 @@ const MonthlyAverage: React.FC<{ names: string[] }> = ({ names }) => {
         try {
             const response = await fetch("http://localhost:5050/api/consult/averageMonthly/", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(selectors),
             });
 

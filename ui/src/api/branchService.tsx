@@ -4,10 +4,13 @@ import { getToken } from "../hooks/handleToken";
 
 
 export async function fetchBranchesNames(){
+    const token = getToken();
+
     try {
 		let response = await fetch("http://localhost:5050/api/consult/companies/", {
             method: 'GET',
             headers: {
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             }
         });

@@ -176,6 +176,7 @@ def list_branch():
     return jsonify([company]), 200
 
 @app.route("/api/branch/info/<string:name>/", methods= ['GET'])
+@jwt_required(optional=False)
 def get_branch(name):
     company= cc.get(name)
     return jsonify(company), 200
@@ -192,6 +193,7 @@ def create_branch():
     return jsonify({'error':'You dont have permission'}), 405
 
 @app.route("/api/branch/<int:id>/", methods=["PUT", "PATCH"])
+@jwt_required(optional=False)
 def update_branch(id):
     data = request.json
     updated_company= cc.put(id, data)
@@ -221,23 +223,27 @@ def delete_branch(id):
 
 # area
 @app.route("/api/area/<int:id>/", methods=['GET'])
+@jwt_required(optional=False)
 def list_area(id):
     areas= ac.get_all(id)
     return jsonify(areas), 200
 
 @app.route("/api/area/", methods=["POST",])
+@jwt_required(optional=False)
 def create_area():
     data = request.json
     new_area = ac.post(data)
     return jsonify(new_area), 200
 
 @app.route("/api/area/<int:id>/", methods=["PUT", "PATCH"])
+@jwt_required(optional=False)
 def update_area(id):
     data = request.json
     updated_area= ac.put(id, data)
     return jsonify(updated_area), 200
 
 @app.route("/api/area/<int:id>/", methods=["DELETE",])
+@jwt_required(optional=False)
 def delete_area(id):
     ac.delete(id)
     return jsonify({'messagge': 'Area deleted successfully.'}), 200
@@ -245,24 +251,28 @@ def delete_area(id):
 
 # equipment
 @app.route("/api/equipment/<int:id>/", methods=['GET'])
+@jwt_required(optional=False)
 def list_equipment(id):
     areas= ac.get_all(id)
     equipments= ec.get_all(areas)
     return jsonify(equipments), 200
 
 @app.route("/api/equipment/", methods=["POST",])
+@jwt_required(optional=False)
 def create_equipment():
     data = request.json
     new_equipment = ec.post(data)
     return jsonify(new_equipment), 200
 
 @app.route("/api/equipment/<int:id>/", methods=["PUT", "PATCH"])
+@jwt_required(optional=False)
 def update_equipment(id):
     data = request.json
     updated_equipment= ec.put(id, data)
     return jsonify(updated_equipment), 200
 
 @app.route("/api/equipment/<int:id>/", methods=["DELETE",])
+@jwt_required(optional=False)
 def delete_equipment(id):
     ec.delete(id)
     return jsonify({'message':'Equipment deleted successfully'})
@@ -293,16 +303,19 @@ def protected(permission):
     # return " ", (200 if uc.protected(role, permission) else 403)
 
 @app.route("/api/bill/", methods= ['POST'])
+@jwt_required(optional=False)
 def create_bill():
     data= request.json
     bc.post(data)
     return jsonify({'message':'Operation Successfully'}), 200
 
 @app.route("/api/consult/companies/", methods=['GET'])
+@jwt_required(optional=False)
 def get_all_companies():
     return cc.get_all(), 200
 
 @app.route('/api/consult/areas/<string:company>/', methods=['GET'])
+@jwt_required(optional=False)
 def get_consult_areas(company):
     id= cc.get(company)['id']
     areas= ac.get_all(id)
@@ -310,6 +323,7 @@ def get_consult_areas(company):
 
 
 @app.route('/api/consult/equipments/<string:Company>/<string:Name>/', methods=['GET'])
+@jwt_required(optional=False)
 def get_equipments_in_area(Company, Name):
     id= ac.get_by_company(Company, Name)
     equips= ec.get_equipments_in_area(id)
@@ -317,6 +331,7 @@ def get_equipments_in_area(Company, Name):
 
 
 @app.route('/api/consult/totalConsumption/', methods= ['POST',])
+@jwt_required(optional=False)
 def get_consume():
     data= request.json
     answ= bc.get_consume(data)
@@ -324,18 +339,21 @@ def get_consume():
     return jsonify(answ), 200
 
 @app.route('/api/consult/averageMonthly/', methods=['POST'])
+@jwt_required(optional=False)
 def calculate_average_consume():
     data= request.json
     answ= bc.calculate_monthly_average_consumption(data)
     return answ, 200
 
 @app.route('/api/consult/limitExceeded/<string:date>/', methods=['GET'])
+@jwt_required(optional=False)
 def limitExceeded(date):
     answ= bc.get_companies_limit_exceeded(date)
     return jsonify(answ), 200
 
 
 @app.route('/api/consult/prediction/<string:company>/', methods=['GET'])
+@jwt_required(optional=False)
 def predict(company):
     answ= bc.predict_consume(company)
     return jsonify(answ), 200

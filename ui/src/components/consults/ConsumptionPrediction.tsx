@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useAlert } from "@/src/hooks/alertContxt";
 import Alert from "@/src/components/alerts/Alert";
 import { LineChart } from "@/src/components/charts/LineChart";
+import { getToken } from '@/src/hooks/handleToken';
 
 
 const ConsumptionPrediction: React.FC<{ names: string[] }> = ({ names }) => {
@@ -12,6 +13,7 @@ const ConsumptionPrediction: React.FC<{ names: string[] }> = ({ names }) => {
     const [selectedName, setSelectName] = useState<string>('');
     const [prediction, setPrediction] = useState<number | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const token = getToken();
 
     const handleSubmit = async () => {
         setLoading(true);
@@ -23,8 +25,9 @@ const ConsumptionPrediction: React.FC<{ names: string[] }> = ({ names }) => {
             const response = await fetch(`http://localhost:5050/api/consult/prediction/${selectedName}/`, {
                 method: 'GET',
                 headers: {
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
-                },
+                }
             });
             const data = await response.json();
             if (!response.ok) {

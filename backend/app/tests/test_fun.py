@@ -142,17 +142,21 @@ def create_user(name="SuperAdmin", group_id=1, company_id=1):
     }
     return client.user.create(data)
 
-def create_company(name="blobcorp"):
+def create_company(name="BlobCorp"):
     data = {
         "Name": name,
-        #"Addr": "lol",
-        #"Extra_Percent"
     }
     return client.branch.create(data)
 
+def create_area(name="BlobCorp"):
+    data = {
+        "Name": name,
+        "Company": "company0",
+        "Responsible": "me",
+    }
+    return client.area.create(data)
 
 ## anon
-
 # auth
 
 
@@ -179,5 +183,13 @@ comp = create_company()
 comp["Name"] = "Anonon"
 client.branch.update(comp["id"], comp)
 res = any([c["Name"] == "Anonon" for c in client.branch.list()])
-client.branch.delete(branch["id"])
+client.branch.delete(comp["id"])
+assert res, "PUT failed"
+
+# area
+area = create_area()
+area["Name"] = "Anonon"
+client.area.update(area["id"], area)
+res = any([a["Name"] == "Anonon" for a in client.area.get(1)])
+client.area.delete(area["id"])
 assert res, "PUT failed"

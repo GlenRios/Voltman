@@ -14,7 +14,7 @@ class Tester:
     
     def create_users(self,n:int, companies, groups):
         users=[]
-        for _ in range(n): users.append(self.create_user(companies, roups))
+        for _ in range(n): users.append(self.create_user(companies, groups))
         return users
     
     def create_company(self):

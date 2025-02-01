@@ -3,12 +3,15 @@ import { useAlert } from "@/src/hooks/alertContxt";
 import { useState } from "react";
 import Alert from "../alerts/Alert";
 import ExceededTable, { ExceededTableProp } from "./ExceededTable";
+import { getToken } from '@/src/hooks/handleToken';
+
 
 const OverLimitConsult: React.FC = () => {
 
     const { showAlert, alertData } = useAlert();
     const [responseData, setResponseData] = useState<ExceededTableProp[] | null>(null)
     const [date, setDate] = useState<string>('');
+    const token = getToken();
 
     const handleSubmit = async () => {
         try {
@@ -19,8 +22,9 @@ const OverLimitConsult: React.FC = () => {
             const response = await fetch(`http://localhost:5050/api/consult/limitExceeded/${date}/`, {
                 method: 'GET',
                 headers: {
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
-                },
+                }
             });
             const data = await response.json();
             if (!response.ok) {

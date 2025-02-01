@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 import { useAlert } from "@/src/hooks/alertContxt";
 import Alert from "@/src/components/alerts/Alert";
 import { LineChart } from '../charts/LineChart';
+import { getToken } from '@/src/hooks/handleToken';
+
+
 interface TotalConsumptionProps {
     startDate: string;
     endDate: string;
@@ -19,6 +22,7 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
         Company: '',
     });
     const [selectedName, setSlelctedName] = useState<string>('')
+    const token = getToken();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -35,6 +39,7 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
             const response = await fetch("http://localhost:5050/api/consult/totalConsumption/", {
                 method: 'POST',
                 headers: {
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(formData)
