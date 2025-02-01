@@ -216,14 +216,14 @@ def create_branch():
     return jsonify({'error':'You dont have permission'}), 403
 
 @app.route("/api/branch/<int:id>/", methods=["PUT", "PATCH"])
-@user_permission_required # managers are allowed to update info for some reason
+@user_permission_required # managers are allowed to update info
 def update_branch(id):
     data = request.json
     updated_company= cc.put(id, data)
     return jsonify(updated_company) , 200
 
 @app.route("/api/branch/formule/<int:id>/", methods=["PUT", "PATCH"])
-@user_permission_required # managers are allowed to update info for some reason
+@user_permission_required # managers are allowed to update info
 def update_formule(id):
     data = request.json
     username= get_jwt_identity()
