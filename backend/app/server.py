@@ -9,6 +9,7 @@ from Configurations import BASE_DIR
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 import sys 
 from datetime import datetime
+from functools import wraps
 
 def import_from_path(module_name, file_path):
     """Import a module given its name and file path."""
@@ -38,6 +39,38 @@ jwt_ = JWTManager(app)
 CORS(app)
 api = Blueprint("api", __name__, url_prefix="/api")
 
+USER_PERMISSION = (
+    "SuperAdmin",
+    "Admin",
+    "Manacher", # lmao
+)
+
+ADMIN_PERMISSION = (
+    "SuperAdmin",
+    "Admin",
+)
+
+
+def permission_required(permission_group):
+    def external_wrapper(fun):
+        @wraps(fun)
+        def internal_wrapper(*args, **kwargs):
+            username = get_jwt_identity()
+            user = uc.get(username)
+            group = user.Type
+
+            if group not in permission_group:
+                raise CustomError("Not Allowed", 403)
+
+            return fun(*args, **kwargs)
+        return jwt_required(optional=False)(internal_wrapper)
+    return external_wrapper
+
+def user_permission_required(fun):
+    return permission_required(USER_PERMISSION)(fun)
+
+def admin_permission_required(fun):
+    return permission_required(ADMIN_PERMISSION)(fun)
 
 @app.errorhandler(CustomError)
 def handle_custom_error(e):
@@ -55,7 +88,7 @@ def login():
 
 # Route to get the list of users
 @app.route("/api/user/", methods=["GET", "POST"])
-@jwt_required( optional=False )
+@user_permission_required
 def get_users():
     username = get_jwt_identity()
     if request.method == "GET":
@@ -68,7 +101,7 @@ def get_users():
 
 # Route to modify an existing user
 @app.route("/api/user/<int:user_id>/", methods=["PUT"])
-@jwt_required( optional=False )
+@admin_permission_required
 def update_user(user_id):
     updated_user = request.json
     updated_user=uc.put(updated_user, user_id)
@@ -77,9 +110,8 @@ def update_user(user_id):
 
 # Route to delete an user
 @app.route("/api/user/<int:user_id>/", methods=["DELETE"])
-@jwt_required( optional=False )
+@admin_permission_required
 def delete_user(user_id):
-    print("hello")
     uc.delete(user_id)
     return jsonify({"message": "User deleted successfully"}), 200
 
@@ -128,10 +160,12 @@ def export_data(name, data):
     return result
 
 @app.route("/api/plugin/")
+@user_permission_required
 def plugin_list():
     return list(get_plugins())
 
 @app.route("/api/plugin/<name>/", methods=["POST",])
+@user_permission_required
 def plugin_export(name):
     """
     Wrapper function that, given a plugin and 
@@ -146,27 +180,16 @@ def plugin_export(name):
         "data": base64.b64encode(result).decode("utf8"),
     }
 
-BRANCH_READ_PERMISSION = (
-    "SuperAdmin",
-    "Admin",
-    "Manacher", # lmao
-)
-
-BRANCH_WRITE_PERMISSION = (
-    "SuperAdmin",
-    "Admin",
-)
-
 # branch
 
 @app.route("/api/branch/", methods= ['GET'])
-@jwt_required(optional=False)
+@user_permission_required
 def list_branch():
     username = get_jwt_identity()
     user= uc.get(username)
     group= user.Type
-    if group not in BRANCH_READ_PERMISSION:
-        return jsonify({'error': 'You have no permission'}) , 405
+    if group not in USER_PERMISSION:
+        return jsonify({'error': 'You have no permission'}) , 403
     
     if group == 'SuperAdmin':
         companies= cc.get_all()
@@ -176,13 +199,13 @@ def list_branch():
     return jsonify([company]), 200
 
 @app.route("/api/branch/info/<string:name>/", methods= ['GET'])
-@jwt_required(optional=False)
+@user_permission_required
 def get_branch(name):
     company= cc.get(name)
     return jsonify(company), 200
 
 @app.route("/api/branch/", methods=["POST",])
-@jwt_required(optional=False)
+@admin_permission_required
 def create_branch():
     data = request.json
     username = get_jwt_identity()
@@ -190,28 +213,28 @@ def create_branch():
     if user.Type== 'SuperAdmin':
         new_company = cc.post(data)
         return jsonify(new_company), 200
-    return jsonify({'error':'You dont have permission'}), 405
+    return jsonify({'error':'You dont have permission'}), 403
 
 @app.route("/api/branch/<int:id>/", methods=["PUT", "PATCH"])
-@jwt_required(optional=False)
+@user_permission_required # managers are allowed to update info for some reason
 def update_branch(id):
     data = request.json
     updated_company= cc.put(id, data)
     return jsonify(updated_company) , 200
 
 @app.route("/api/branch/formule/<int:id>/", methods=["PUT", "PATCH"])
-@jwt_required(optional=False)
+@user_permission_required # managers are allowed to update info for some reason
 def update_formule(id):
     data = request.json
     username= get_jwt_identity()
     user= uc.get(username)
-    if user.Type not in BRANCH_WRITE_PERMISSION:
-        return jsonify({'error': 'You dont have permission'}), 405
+    if user.Type not in ADMIN_PERMISSION:
+        return jsonify({'error': 'You dont have permission'}), 403
     updated_company= cc.update_formule(data, id)
     return jsonify(updated_company), 200
 
 @app.route("/api/branch/<int:id>/", methods=["DELETE",])
-@jwt_required(optional=False)
+@admin_permission_required
 def delete_branch(id):
     username = get_jwt_identity()
     user= uc.get(username)
@@ -223,27 +246,27 @@ def delete_branch(id):
 
 # area
 @app.route("/api/area/<int:id>/", methods=['GET'])
-@jwt_required(optional=False)
+@user_permission_required
 def list_area(id):
     areas= ac.get_all(id)
     return jsonify(areas), 200
 
 @app.route("/api/area/", methods=["POST",])
-@jwt_required(optional=False)
+@admin_permission_required
 def create_area():
     data = request.json
     new_area = ac.post(data)
     return jsonify(new_area), 200
 
 @app.route("/api/area/<int:id>/", methods=["PUT", "PATCH"])
-@jwt_required(optional=False)
+@admin_permission_required
 def update_area(id):
     data = request.json
     updated_area= ac.put(id, data)
     return jsonify(updated_area), 200
 
 @app.route("/api/area/<int:id>/", methods=["DELETE",])
-@jwt_required(optional=False)
+@admin_permission_required
 def delete_area(id):
     ac.delete(id)
     return jsonify({'messagge': 'Area deleted successfully.'}), 200
@@ -251,28 +274,28 @@ def delete_area(id):
 
 # equipment
 @app.route("/api/equipment/<int:id>/", methods=['GET'])
-@jwt_required(optional=False)
+@user_permission_required
 def list_equipment(id):
     areas= ac.get_all(id)
     equipments= ec.get_all(areas)
     return jsonify(equipments), 200
 
 @app.route("/api/equipment/", methods=["POST",])
-@jwt_required(optional=False)
+@admin_permission_required
 def create_equipment():
     data = request.json
     new_equipment = ec.post(data)
     return jsonify(new_equipment), 200
 
 @app.route("/api/equipment/<int:id>/", methods=["PUT", "PATCH"])
-@jwt_required(optional=False)
+@admin_permission_required
 def update_equipment(id):
     data = request.json
     updated_equipment= ec.put(id, data)
     return jsonify(updated_equipment), 200
 
 @app.route("/api/equipment/<int:id>/", methods=["DELETE",])
-@jwt_required(optional=False)
+@admin_permission_required
 def delete_equipment(id):
     ec.delete(id)
     return jsonify({'message':'Equipment deleted successfully'})
@@ -303,7 +326,7 @@ def protected(permission):
     # return " ", (200 if uc.protected(role, permission) else 403)
 
 @app.route("/api/bill/", methods= ['POST'])
-@jwt_required(optional=False)
+@user_permission_required
 def create_bill():
     data= request.json
     bc.post(data)
@@ -315,7 +338,7 @@ def get_all_companies():
     return cc.get_all(), 200
 
 @app.route('/api/consult/areas/<string:company>/', methods=['GET'])
-@jwt_required(optional=False)
+@user_permission_required
 def get_consult_areas(company):
     id= cc.get(company)['id']
     areas= ac.get_all(id)
@@ -323,7 +346,7 @@ def get_consult_areas(company):
 
 
 @app.route('/api/consult/equipments/<string:Company>/<string:Name>/', methods=['GET'])
-@jwt_required(optional=False)
+@user_permission_required
 def get_equipments_in_area(Company, Name):
     id= ac.get_by_company(Company, Name)
     equips= ec.get_equipments_in_area(id)

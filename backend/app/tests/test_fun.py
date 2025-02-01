@@ -132,13 +132,13 @@ headers["Are-you-stupid"] = "Yeah"
 client = Client(url=BASE_URL)
 # header required to get superuser faculties to prepare the data
 
-def create_user(name="SuperAdmin", group_id=1, company_id=1):
+def create_user(name="SuperAdmin", group="SuperAdmin", company="company0"):
     # global
     data = {
         "Username": name,
         "Password": "123",
-        "Type": "SuperAdmin",
-        "Company": "company0",
+        "Type": group,
+        "Company": company,
     }
     return client.user.create(data)
 
@@ -155,10 +155,6 @@ def create_area(name="BlobCorp"):
         "Responsible": "me",
     }
     return client.area.create(data)
-
-## anon
-# auth
-
 
 # login
 data = {
@@ -193,3 +189,22 @@ client.area.update(area["id"], area)
 res = any([a["Name"] == "Anonon" for a in client.area.get(1)])
 client.area.delete(area["id"])
 assert res, "PUT failed"
+
+
+# auth
+user = create_user(name="Anon", group="Manacher")
+
+su_token = headers["Authorization"]
+
+token = client.user.login.create({"Username": "Anon", "Password": "123"})
+headers["Authorization"] = f'Bearer {token["token"]}'
+client.headers.update(headers)
+
+res = client.user.delete(user["id"])
+
+assert res is None
+
+headers["Authorization"] = su_token
+client.headers.update(headers)
+
+client.user.delete(user["id"])
