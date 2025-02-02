@@ -1,5 +1,5 @@
 from flask import Blueprint, Flask, jsonify, request
-from main import EC as ec, AC as ac
+from Configurations.dependencies import EC as ec, AC as ac
 from Configurations.CustomError import CustomError
 from auth.permission import branch_management_permission_required
 

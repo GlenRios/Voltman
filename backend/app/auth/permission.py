@@ -1,7 +1,7 @@
 from functools import wraps
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from Configurations.CustomError import CustomError  
-from main import UC as uc
+from Configurations.dependencies import UC as uc
 
 USER_MANAGEMENT_PERMISSION=[
     'SuperAdmin',
@@ -41,7 +41,7 @@ def permission_required(permission_group):
         def internal_wrapper(*args, **kwargs):
             username = get_jwt_identity()
             user = uc.get(username)
-            group = user.Type  # Asegúrate de que el objeto user tenga el atributo Type
+            group = user.Type 
 
             if group not in permission_group:
                 raise CustomError("Not Allowed", 403)

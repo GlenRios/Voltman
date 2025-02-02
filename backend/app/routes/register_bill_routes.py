@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from main import BC as bc
+from Configurations.dependencies import BC as bc
 from auth.permission import register_consume_permission_required
 
 

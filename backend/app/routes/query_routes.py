@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
-from main import BC as bc, CC as cc, AC as ac, EC as ec
-from flask_jwt_extended import jwt_required
+from Configurations.dependencies import BC as bc, CC as cc, AC as ac, EC as ec, UC as uc
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 consult_bp = Blueprint("consult", __name__)
 
@@ -53,3 +53,13 @@ def limitExceeded(date):
 def predict(company):
     answ= bc.predict_consume(company)
     return jsonify(answ), 200
+
+@consult_bp.route('/alerts/', methods=['GET'])
+@jwt_required(optional=False)
+def show_alerts(company):
+    username= get_jwt_identity()
+    user = uc.get(username)
+    company= user.Company
+    answ= bc.get_alerts(company)
+    return jsonify(answ), 200
+

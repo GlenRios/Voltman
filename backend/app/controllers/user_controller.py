@@ -1,7 +1,6 @@
 from Configurations.CustomError import CustomError
 
 class UserController:
-    
     # Initialize the controller with interfaces for user and company operations
     def __init__(self, iuser, icompany):
         self.Iuser = iuser  # Interface for user operations

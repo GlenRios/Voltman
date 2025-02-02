@@ -104,3 +104,17 @@ class BillController():
         # Format the response
         answ = {'Prediction': pred, 'Data': data}
         return answ
+    
+    def get_alerts(self, company):
+        date= datetime.now().date()
+        # Get the month and year from the date
+        month = date.month
+        year = date.year    
+        # Fetch companies exceeding the limit using the Ibill interface
+        items = self.Ibill.get_companies_limit_exceeded(month, year)
+        # Format the response
+        answ=[]
+        for name, _ in items:
+            answ.append({'Name': name, 'Bool': name==company})
+
+        return answ    
