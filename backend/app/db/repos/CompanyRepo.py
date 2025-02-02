@@ -17,7 +17,7 @@ class CompanyRepo(BaseRepo):
     # Retrieves all companies from the database
     def get_all(self) -> list[CompanyModel]:
         # Returns a list of all CompanyModel entries in the database
-        return self.db.query(CompanyModel).all()
+        return self.db.query(CompanyModel).filter(CompanyModel.id != 1).all()
     
     # Retrieves all areas associated with a company by its ID
     def get_areas(self, id: int) -> list:

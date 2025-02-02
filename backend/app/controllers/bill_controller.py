@@ -3,7 +3,6 @@ from datetime import datetime, timedelta, date
 from Configurations.CustomError import CustomError
 
 class BillController():
-
     # Initialize the controller with the IBill interface
     def __init__(self, Ibill: IBill):
         self.Ibill = Ibill  # Interface for bill-related operations
@@ -86,7 +85,7 @@ class BillController():
         
         # Fetch companies exceeding the limit using the Ibill interface
         items = self.Ibill.get_companies_limit_exceeded(month, year)
-        
+        items.sort(key=lambda x: x[1])
         # Format the response
         answ = []
         for name, overlimit in items:

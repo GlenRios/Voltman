@@ -19,13 +19,16 @@ class UserController:
         # If the user is 'SuperAdmin', return all users
         if username == 'SuperAdmin':
             users = self.Iuser.get_all()
+            users = [item for item in users if item['Username'] != username]
             return users
         # Otherwise, get the company associated with the user
         user = self.Iuser.get_by_username(username)
         name_company = user.Company
         # Get users from that company
         users = self.Icompany.get_users(name_company)
-        return self.Iuser.convert(users)  # Converts the list of users to dictionaries
+        users = self.Iuser.convert(users)  # Converts the list of users to dictionaries
+        users = [item for item in users if item['Username'] != username]
+        return users
     
     # Get user by username
     def get(self, username: str):
