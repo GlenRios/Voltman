@@ -1,4 +1,5 @@
 from Configurations.conf_app import create_app
+from seed.poblate import poblate
 
 app = create_app()
 

@@ -1,5 +1,5 @@
 from flask import Blueprint, Flask, jsonify, request
-from main import AC as ac
+from Configurations.dependencies import AC as ac
 from Configurations.CustomError import CustomError
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity
 from auth.permission import branch_management_permission_required
