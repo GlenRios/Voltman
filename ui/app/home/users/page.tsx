@@ -80,6 +80,10 @@ export default function Page() {
             showAlert(true, 'Please complete all fields.', 3000);
             return;
         }
+		if ( Password.length < 8){
+			showAlert(true, 'Password must have at least 8 characters.', 3000);
+			return;
+		}
         try {
             const url = isEdit ? `http://127.0.0.1:5050/api/user/${id}/` : 'http://127.0.0.1:5050/api/user/';
             const response = await fetch(url, {
