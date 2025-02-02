@@ -76,7 +76,7 @@ const MonthlyAverage: React.FC<{ names: string[] }> = ({ names }) => {
                         onChange={(e) => handleSelectorChange(index, e.target.value)}
                         className="selector"
                     >
-                        <option value="">Select a Copmany</option>
+                        <option value="">Select a Company</option>
                         {names.map((option) => (
                             <option key={option} value={option}>
                                 {option}

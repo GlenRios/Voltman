@@ -727,7 +727,7 @@ export default function branchesPage() {
                                     htmlFor="Maintenance_Status"
                                     className="subtittle"
                                 >
-                                    Mantenance Status
+                                    Maintenance Status
                                 </label>
                                 <input
                                     id="Maintenance_Status"
@@ -1055,7 +1055,7 @@ export default function branchesPage() {
                     </div>
                     {showAreas &&
                         <div className="card">
-                            <h2 className="tittle">Áreas</h2>
+                            <h2 className="tittle">Areas</h2>
                             {/* Barra de busqueda de areas */}
                             <input
                                 type="text"

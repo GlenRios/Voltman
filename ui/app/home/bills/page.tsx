@@ -71,6 +71,13 @@ const DailyConsumptionPage: React.FC = () => {
   };
   // Registrar todos los datos de los formularios
   const handleSubmit = async () => {
+	// Comprueba que todas los registros tengan el campo compania seleccionado. No se comprueba si la compania es valida.
+	const formularioSinCompany = forms.filter( register => register.Company == "" );
+	if (formularioSinCompany.length){
+		showAlert(true, "Error: There are records without a branch selected.", 5000);
+		return;
+	}
+	
     setIsSubmitting(true);
     try {
       const response = await fetch('http://localhost:5050/api/bill/', {

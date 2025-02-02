@@ -98,7 +98,7 @@ export default function QueriesPage() {
                     height={100}>
                 </Logo>
                 <h2 className="tittlePage">
-                    Energy Consumption Consultations
+                    Energy Consumption Consults
                 </h2>
             </div>
             <div className='scale-90'>
@@ -113,9 +113,9 @@ export default function QueriesPage() {
                                 onChange={(e) => handleSelectQuery(query.id, e.target.value)}
                             >
                                 <option value="">Select a query</option>
-                                <option value="total">Total Consumption</option>
-                                <option value="average">Monthly Average</option>
-                                <option value="comparison">Efficiency Comparison</option>
+                                <option value="total">Total consumption</option>
+                                <option value="average">Monthly average</option>
+                                <option value="comparison">Efficiency comparison</option>
                                 <option value="equipments">Show equipments</option>
                                 <option value="exceeded">Identify branches</option>
                                 <option value="prediction">Predict consumption</option>

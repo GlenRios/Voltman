@@ -59,9 +59,9 @@ const ConsumptionPrediction: React.FC<{ names: string[] }> = ({ names }) => {
                     onChange={(e) => { setSelectName(e.target.value) }}
                     className="selector"
                 >
-                    <option value="">Selecciona una sucursal</option>
+                    <option value="">Select a company</option>
                     {names.map((name, index) => (
-                        <option className="text-black"
+                        <option className="text-black dark:text-white"
                             key={index}
                             value={name}
                         >

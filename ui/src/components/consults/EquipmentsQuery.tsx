@@ -13,6 +13,7 @@ const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
     const [selectCompany, setSelectCompany] = useState<string>('')
     const [selectArea, setSelectArea] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
+	const [updateEquipmentTable,setUpdateEquipmentTable] = useState<boolean>(false)
     const token = getToken();
 
     const handleSubmit = async () => {
@@ -23,6 +24,7 @@ const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
                 return;
             }
             setLoading(true);
+			setUpdateEquipmentTable(!updateEquipmentTable);
         }
         catch (error) {
             console.error(error);
@@ -76,7 +78,7 @@ const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
                 >
                     <option value="">Select a company</option>
                     {names.map((name, index) => (
-                        <option className="text-black"
+                        <option className="text-black dark:text-white"
                             key={index}
                             value={name}
                             onClick={() => { setSelectCompany(name) }}
@@ -94,7 +96,7 @@ const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
                 >
                     <option value="">Select a Area</option>
                     {areas && areas.map((name, index) => (
-                        <option className="text-black"
+                        <option className="text-black dark:text-white"
                             key={index}
                             value={name}
                             onClick={() => { setSelectArea(name) }}
@@ -107,13 +109,13 @@ const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
                     className="buttonGreen m-4 mb-0"
                     onClick={handleSubmit}
                 >
-                    Consultar
+                    Consult
                 </button>
             </div>
             {loading &&
                 <div>
                     {/* <button onClick={() => setLoading(false)} className="buttonRed m-4 mb-0">X</button> */}
-                    <EquipmentTable branch={selectCompany} area={selectArea} />
+                    <EquipmentTable branch={selectCompany} area={selectArea} key={updateEquipmentTable} />
                 </div>
             }
         </div>
