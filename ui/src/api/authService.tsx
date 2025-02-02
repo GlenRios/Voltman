@@ -1,5 +1,4 @@
 'use client';
-import Cookies from "js-cookie";
 import { setToken } from "../hooks/handleToken";
 
 export async function login(Username: string, Password: string): Promise<boolean> {
@@ -22,9 +21,7 @@ export async function login(Username: string, Password: string): Promise<boolean
         return true;
 
     } catch (error) {
-        // console.error(error);
-        // alert("Error connecting to the server");
-        throw error; // Throw the error to be handled by the code above
+        throw error;
     }
 }
 

@@ -71,7 +71,7 @@ export default function QueriesPage() {
             case 'average':
                 return <MonthlyAverage key={id} names={CompaniesNames} />;
             case 'comparison':
-                return <EfficiencyComparison key={id} names={CompaniesNames}/>;
+                return <EfficiencyComparison key={id} names={CompaniesNames} />;
             case 'equipments':
                 return <EquipmentQuery key={id} names={CompaniesNames} />;
             case 'exceeded':
@@ -84,7 +84,7 @@ export default function QueriesPage() {
     };
 
     return (
-        <div className="flex flex-col items-center min-h-screen p-2 relative fondo">
+        <div className="flex flex-col items-center min-h-screen p-4 relative fondo">
             {alertData.isVisible && (
                 <Alert
                     type={alertData.type}
@@ -105,8 +105,8 @@ export default function QueriesPage() {
                 <ButtonBack />
             </div>
             {queries.map((query) => (
-                <div key={query.id} className="card">
-                    <div className={`flex justify-between items-center ${query.type ? 'flex-col' : ''}`}>
+                <div key={query.id} className="card w-full lg:w-3/4 m-10">
+                    <div className={`flex justify-between items-center ${query.type ? 'flex-col' : 'flex-row'}`}>
                         {!query.type ? (
                             <select
                                 className="selector"
@@ -132,7 +132,6 @@ export default function QueriesPage() {
                     </div>
                 </div>
             ))}
-
             <button
                 className="buttonBlue"
                 onClick={handleAddQuery}

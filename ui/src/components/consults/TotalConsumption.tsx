@@ -57,7 +57,7 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
     }
 
     return (
-        <div className="p-4 rounded shadow">
+        <div className="flex flex-col item-center justify-center p-4 rounded shadow w-full">
             {alertData.isVisible && (
                 <Alert
                     type={alertData.type}
@@ -104,23 +104,21 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
                         </option>
                     ))}
                 </select>
-                <button
-                    className="buttonGreen m-4 mb-0"
-                    onClick={handleSubmit}
-                >
-                    Consult
-                </button>
             </div>
+            <button
+                className="buttonGreen m-4 mb-0"
+                onClick={handleSubmit}
+            >
+                Consult
+            </button>
             {totalConsumption &&
                 <div>
-
                     <div className='my-4'>
                         <h2 className="tittle" >
                             Total Consumption: {totalConsumption} kw
                         </h2>
-                        <LineChart data={responseData} index={'Date'} categories={["Value"]}  />
+                        <LineChart data={responseData} index={'Date'} categories={["Value"]} />
                     </div>
-
                 </div>}
         </div>
     );

@@ -12,16 +12,17 @@ const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
     const [areas, setAreas] = useState<string[] | null>(null);
     const [selectCompany, setSelectCompany] = useState<string>('')
     const [selectArea, setSelectArea] = useState<string>('')
-    const [loading, SetLoading] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
     const token = getToken();
 
     const handleSubmit = async () => {
         try {
+            setLoading(false);
             if (!selectCompany || !selectArea) {
                 showAlert(true, "Please complete all fields", 1000)
                 return;
             }
-            SetLoading(true);
+            setLoading(true);
         }
         catch (error) {
             console.error(error);
@@ -111,7 +112,7 @@ const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
             </div>
             {loading &&
                 <div>
-                    <button onClick={() => SetLoading(false)} className="buttonRed m-4 mb-0">X</button>
+                    {/* <button onClick={() => setLoading(false)} className="buttonRed m-4 mb-0">X</button> */}
                     <EquipmentTable branch={selectCompany} area={selectArea} />
                 </div>
             }

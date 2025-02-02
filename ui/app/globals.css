@@ -13,7 +13,10 @@ h2,
 h3 {
   @apply font-bold;
 }
-
+/* Ocultar el indicador de ruta estática en desarrollo */
+.nextjs-toast-route {
+  display: none !important;
+}
 /* Clase personalizada para botones */
 .succsess-alert {
   display: flex;

@@ -8,7 +8,7 @@ import Alert from "@/src/components/alerts/Alert";
 
 import Icons from "@/src/components/Icon";
 import Logo from "@/src/components/logo";
-// import LoginForm from "@/src/components/forms/LoginForm";
+import LoginForm from "@/src/components/forms/LoginForm";
 
 export default function LoginPage() {
 
@@ -20,18 +20,19 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      if (!Username || !Password) {
-        showAlert(true, "Please complete all fields.", 5000);
-        return;
-      }
-      const response = await login(Username, Password);
-      if (response) {
-        goHome(router);
+      if (!Username || !Password)
+        showAlert(true, "Please complete all fields.", 2500);
+
+      else {
+        const response = await login(Username, Password);
+        if (response) {
+          goHome(router);
+        }
       }
     } catch (error) {
       if (error instanceof Error) {
         const errorMessage = error.toString();
-        showAlert(true, errorMessage, 5000);
+        showAlert(true, errorMessage, 1500);
       }
     }
   }
@@ -45,7 +46,7 @@ export default function LoginPage() {
               width={30}
               height={30}>
             </Logo>
-            <h2 className="tittle">Voltman</h2>
+            <h2 className="text-2xl font-bold mb-2 text-black dark:text-gray-100">Voltman</h2>
           </div>
           <p className="text-black dark:text-gray-200 line-clamp-4">
             Voltman is a comprehensive solution designed to help you monitor, analyze, and optimize energy consumption in your company efficiently and in a personalized way.

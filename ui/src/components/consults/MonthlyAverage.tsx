@@ -59,7 +59,7 @@ const MonthlyAverage: React.FC<{ names: string[] }> = ({ names }) => {
     };
 
     return (
-        <div className="p-4 rounded shadow">
+        <div className="flex flex-col item-center justify-center p-4 rounded shadow w-full">
             {alertData.isVisible && (
                 <Alert
                     type={alertData.type}

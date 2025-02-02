@@ -124,6 +124,11 @@ export default function branchesPage() {
     }
     // Eliminar la sucursal seleccionada
     const deletedBranch = async () => {
+        if(!selectedBranch){
+            showAlert(true,"please first select a branch",4000);
+            return;
+        }
+            
         try {
             const response = await fetch(`http://localhost:5050/api/branch/${branchInfo.id}/`, {
                 method: "DELETE",
@@ -561,6 +566,7 @@ export default function branchesPage() {
     const filteredEquipments = equipments.filter((Equipment) =>
         Equipment.Area.toLowerCase().includes(searchQueryEq.toLowerCase())
     );
+    // Formulario para craer y editar Equipos
     const EquipmentForm = (onSubmit: () => void, onCancel: () => void, isAddForm: boolean) => {
 
         const handleChange = (e: { target: { name: any; value: any; }; }) => {
@@ -607,7 +613,7 @@ export default function branchesPage() {
                                     className="styleInput"
                                     required
                                 >
-                                    <option value=""> Selecciona un area </option>
+                                    <option value=""> Select a Area</option>
                                     {areas.map((area) => <option key={area.Name} value={area.Name}>{area.Name}</option>)}
                                 </select>
                                 {/**  **/}
@@ -895,7 +901,7 @@ export default function branchesPage() {
                 onChange={handleSelectBranch}
                 className="selector"
             >
-                <option value="">Selecciona una sucursal</option>
+                <option value="">Select a Branch</option>
                 {branchesName.map((branch, index) => (
                     <option key={index} value={branch.name}>
                         {branch.name}
