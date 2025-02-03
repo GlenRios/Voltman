@@ -10,7 +10,7 @@ const EquipmentTable: React.FC<EquipmentTableProp> = ({equipments}) => {
         <div className="p-4">
             <h2 className="subtittle text-xl">Equipments Info:</h2>
                 <div className="overflow-x-auto">
-                    <table className="styleTable">
+                    <table className="styleTable overflow-x-auto">
                         <thead>
                             <tr className="headRowTable">
                                 <th className="headColumn">Area</th>

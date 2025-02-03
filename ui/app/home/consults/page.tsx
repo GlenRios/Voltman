@@ -120,10 +120,10 @@ export default function QueriesPage() {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({}) // Agregar el html de la pagina al body
+                body: JSON.stringify({ data: document.documentElement.outerHTML })
             });
-            const data = await response.json();
             if (!response.ok) {
+                const data = await response.json();
                 showAlert(true, data.error, 2500)
                 return;
             }

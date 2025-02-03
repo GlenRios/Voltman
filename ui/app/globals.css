@@ -82,7 +82,7 @@ h3 {
 }
 
 .styleTable{
-  @apply w-full table-fixed border-collapse border rounded-xl border-gray-300 dark:border-gray-700
+  @apply w-full border-collapse border rounded-xl border-gray-300 dark:border-gray-700
 }
 
 .headColumn{
@@ -94,11 +94,11 @@ h3 {
 }
 
 .rowTable{
-  @apply odd:bg-gray-100 dark:odd:bg-gray-700
+  @apply odd:bg-gray-100 dark:odd:bg-gray-700 overflow-visible
 }
 
 .rowData{
-  @apply border text-gray-800 dark:text-gray-400 border-gray-300 dark:border-gray-900 p-2 overflow-hidden max-w-xs whitespace-nowrap m-1
+  @apply border text-gray-800 dark:text-gray-400 border-gray-300 dark:border-gray-900 p-2 overflow-hidden max-w-xs m-1
 }
 
 .pop{

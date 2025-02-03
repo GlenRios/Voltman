@@ -15,7 +15,7 @@ class EquipmentController:
     # Create new equipment
     def post(self, values: dict):
         # Convert the 'Installation_Date' to a date object
-        values['Installation_Date'] = datetime.strptime(values['Installation_Date'], '%Y-%m-%d').date()
+        values['Installation_Date'] = datetime.strptime(values['Installation_Date'], '%Y-%m-%d')
 
         # Check if the area exists by using the IArea interface
         area = self.Iarea.get_by_name(values['Area'], values['Company'])
@@ -34,7 +34,7 @@ class EquipmentController:
     # Update an equipment by its ID
     def put(self, id, values: dict):
         # Convert the 'Installation_Date' to a date object
-        values['Installation_Date'] = datetime.strptime(values['Installation_Date'], '%Y-%m-%d').date()
+        values['Installation_Date'] = datetime.strptime(values['Installation_Date'], "%Y-%m-%d %H:%M:%S")
 
         # Check if the area exists by using the IArea interface
         area = self.Iarea.get_by_name(values['Area'], values['Company'])

@@ -3,11 +3,10 @@ import { getToken } from "../../hooks/handleToken";
 import { useAlert } from "@/src/hooks/alertContxt";
 import Alert from "@/src/components/alerts/Alert";
 
-const FormComponent: React.FC<{ show: any }> = ({ show }) => {
+const FormComponent: React.FC<{ show: any, fetchNames: () => void }> = ({ show, fetchNames }) => {
 
   const { showAlert, alertData } = useAlert();
   const token = getToken();
-  const [message, setMessage] = useState<string>("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,7 +16,6 @@ const FormComponent: React.FC<{ show: any }> = ({ show }) => {
     const data = Object.fromEntries(formData.entries());
 
     try {
-      // Petición POST al backend
       const response = await fetch("http://localhost:5050/api/branch/", {
         method: "POST",
         headers: {
@@ -29,14 +27,14 @@ const FormComponent: React.FC<{ show: any }> = ({ show }) => {
 
       if (response.ok) {
         showAlert(false, "Operation was successful!", 1500);
+        fetchNames();
         handleCancel();
         return;
       } else {
-        const error = await response.json();
-        setMessage(`Error: ${error.message}`);
+        const data = await response.json();
+        showAlert(true, data.error, 2000);
       }
     } catch (error: any) {
-      setMessage("Failed to connect to the server.");
       showAlert(true, error.message, 2000);
     }
   };
@@ -168,29 +166,21 @@ const FormComponent: React.FC<{ show: any }> = ({ show }) => {
       </div>
 
       {/* Botones */}
-      <button
-        type="submit"
-        className="buttonBlue"
-      >
-        Submit
-      </button>
-      <button
-        type="button"
-        onClick={handleCancel}
-        className="buttonGray"
-      >
-        Cancel
-      </button>
-
-      {/* Mensaje de Respuesta */}
-      {message && (
-        <p
-          className={`mt-4 text-center text-sm ${message.startsWith("Success") ? "text-green-600" : "text-red-600"
-            }`}
+      <div className="text-center ">
+        <button
+          type="submit"
+          className="buttonBlue m-1"
         >
-          {message}
-        </p>
-      )}
+          Submit
+        </button>
+        <button
+          type="button"
+          onClick={handleCancel}
+          className="buttonGray m-1"
+        >
+          Cancel
+        </button>
+      </div>
     </form>
   );
 };

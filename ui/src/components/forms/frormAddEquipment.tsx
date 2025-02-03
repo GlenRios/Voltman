@@ -1,3 +1,4 @@
+import Equipment from "@/src/models/Equipments";
 import React, { useState } from "react";
 
 const EquipmentForm = ({ initialData, onSubmit, onCancel }) => {

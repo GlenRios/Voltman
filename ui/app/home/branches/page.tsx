@@ -16,14 +16,20 @@ import { useAlert } from "@/src/hooks/alertContxt";
 import Alert from "@/src/components/alerts/Alert";
 import Logo from "@/src/components/logo";
 import FormComponent from "@/src/components/forms/formAddBranch";
-import { Boton } from "@/src/components/buttons/buttons";
-
+import Option from "@/src/components/alerts/Option"
 
 export default function branchesPage() {
 
     const router = useRouter();
     const token = getToken();
     const { showAlert, alertData } = useAlert();
+    const [showOption, setShowOption] = useState<boolean>(false);
+    const [optionProp, setOptionProp] = useState<{ id: number, type: string }>({ id: 0, type: '' })
+
+    const showOptionAlert = (id: number, type: string) => {
+        setOptionProp({ id: id, type: type });
+        setShowOption(true);
+    }
 
     //============================== BRANCHES ==============================================
 
@@ -42,6 +48,16 @@ export default function branchesPage() {
     const [selectedBranch, setSelectedBranch] = useState<string | null>(null);
     // maneja el cambio en la sucursal seleccionada
     const handleSelectBranch = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+        if (showAreas) {
+            setShowAreas(false);
+            // fetchAreas();
+            // setShowAreas(true);
+        }
+        if (showEquipments) {
+            setShowEquipments(false);
+            // fetchEquipments();
+            // setShowEquipments(true);
+        }
         getBranchInfo(event);
     };
     // valores de los inputs:
@@ -67,7 +83,7 @@ export default function branchesPage() {
             });
             const data = await response.json();
             if (!response.ok) {
-                showAlert(true, data.error, 5000)
+                showAlert(true, data.error, 2500)
                 return;
             }
             const names = data.map((item: { id: number; Name: string; }) => ({
@@ -76,7 +92,7 @@ export default function branchesPage() {
             }))
             setBranchesName(names);
         } catch (error: any) {
-            showAlert(true, error.message, 5000);
+            showAlert(true, error.message, 2500);
         }
     };
     // Obtener los datos de la sucursal seleccionada
@@ -86,7 +102,7 @@ export default function branchesPage() {
             setSelectedBranch(branch);
 
             if (!event.target.value) {
-                showAlert(true, "Select a Branch", 5000);
+                showAlert(true, "Select a Branch", 2500);
                 return;
             }
             const response = await fetch(`http://localhost:5050/api/branch/info/${branch}/`, {
@@ -98,7 +114,7 @@ export default function branchesPage() {
             });
             const data = await response.json();
             if (!response.ok) {
-                showAlert(true, data.error, 5000);
+                showAlert(true, data.error, 2500);
                 return;
             }
             const info = {
@@ -119,13 +135,13 @@ export default function branchesPage() {
             setBranchIncrease(info.aumento);
 
         } catch (error: any) {
-            showAlert(true, error.message, 5000);
+            showAlert(true, error.message, 2500);
         }
     }
     // Eliminar la sucursal seleccionada
     const deletedBranch = async () => {
         if (!selectedBranch) {
-            showAlert(true, "please first select a branch", 4000);
+            showAlert(true, "please first select a branch", 2000);
             return;
         }
 
@@ -142,21 +158,23 @@ export default function branchesPage() {
             });
             const data = await response.json();
             if (!response.ok) {
-                showAlert(true, data.error, 5000);
+                showAlert(true, data.error, 2500);
                 return;
             }
             else {
-                showAlert(false, "Operation was successful!", 3000);
+                setSelectedBranch('');
+                fetchBranches();
+                showAlert(false, "Operation was successful!", 1500);
             }
         } catch (error: any) {
-            showAlert(true, error.message, 5000);
+            showAlert(true, error.message, 2500);
         }
     }
     // Editar la informacion basica de una Sucursal
     const editInfoBranch = async () => {
         try {
             if (!branchName || !branchType || !branchAddress || !branchLimit) {
-                showAlert(true, "Please complete all fields.", 5000);
+                showAlert(true, "Please complete all fields.", 2500);
             }
             else if (branchInfo.id === -1) {
                 throw new Error("Invalid branch id");
@@ -173,7 +191,7 @@ export default function branchesPage() {
             });
             const data = await response.json();
             if (!response.ok) {
-                showAlert(true, data.error, 5000);
+                showAlert(true, data.error, 2500);
                 return;
             }
             setBranchInfo({
@@ -185,9 +203,9 @@ export default function branchesPage() {
                 aumento: branchIncrease,
                 porciento: branchPercent,
             });
-            showAlert(false, "Operation was successful!", 3000);
+            showAlert(false, "Operation was successful!", 1500);
         } catch (error: any) {
-            showAlert(true, error.message, 5000);
+            showAlert(true, error.message, 2500);
         }
     }
     // Editar la informcaion que solo el administrador puede cambiar
@@ -205,12 +223,21 @@ export default function branchesPage() {
             });
             const data = await response.json();
             if (!response.ok) {
-                showAlert(true, data.error, 5000);
+                showAlert(true, data.error, 2500);
                 return;
             }
-            showAlert(false, "Operation was successful!", 3000)
+            setBranchInfo({
+                id: branchInfo.id,
+                name: branchName,
+                address: branchAddress,
+                type: branchType,
+                limit: branchLimit,
+                aumento: branchIncrease,
+                porciento: branchPercent,
+            });
+            showAlert(false, "Operation was successful!", 1500)
         } catch (error: any) {
-            showAlert(true, error.message, 5000);
+            showAlert(true, error.message, 2500);
         }
     }
     // Volver a poner los datos reales de la sucursal en los inputs (para los datos basicos)
@@ -253,27 +280,24 @@ export default function branchesPage() {
                 throw new Error("Please log in");
             }
             else {
-                if (!showAreas) {
-                    const response = await fetch(`http://localhost:5050/api/area/${branchInfo.id}/`, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                    if (!response.ok) {
-                        const data = await response.json();
-                        showAlert(true, data.error, 5000);
-                        return;
+                const response = await fetch(`http://localhost:5050/api/area/${branchInfo.id}/`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
                     }
-                    const data: Area[] = await response.json();
-                    setAreas(data);
-                    setShowAreas(true);
+                });
+                if (!response.ok) {
+                    const data = await response.json();
+                    showAlert(true, data.error, 2500);
+                    return;
                 }
-                setShowAreas(!showAreas);
+                const data: Area[] = await response.json();
+                setAreas(data);
+                setShowAreas(true);
             }
         } catch (error: any) {
-            showAlert(true, error.message, 5000);
+            showAlert(true, error.message, 2500);
         }
     }
     // Agrega una nueva área
@@ -291,17 +315,17 @@ export default function branchesPage() {
             });
             const data = await response.json();
             if (!response.ok) {
-                showAlert(true, data.error, 5000);
+                showAlert(true, data.error, 2500);
                 return;
             }
             else {
                 setAreas((prev) => [...prev, data]);
                 setNewArea({ Name: "", Responsible: "" });
                 setIsAdding(false);
-                showAlert(false, "Operation was successful!", 3000);
+                showAlert(false, "Operation was successful!", 1500);
             }
         } catch (error: any) {
-            showAlert(true, error.message, 5000);
+            showAlert(true, error.message, 2500);
         }
     };
     // Cancela la adición de una nueva área
@@ -345,7 +369,7 @@ export default function branchesPage() {
             });
             const data = await response.json();
             if (!response.ok) {
-                showAlert(true, data.error, 5000);
+                showAlert(true, data.error, 2500);
                 return;
             }
             else {
@@ -357,10 +381,10 @@ export default function branchesPage() {
                     )
                 );
                 setEditingId(null);
-                showAlert(false, "Operation was successful!", 3000);
+                showAlert(false, "Operation was successful!", 1500);
             }
         } catch (error: any) {
-            showAlert(true, error.message, 5000);
+            showAlert(true, error.message, 2500);
         }
     };
     // Cancela la edición 
@@ -381,14 +405,14 @@ export default function branchesPage() {
             );
             if (!response.ok) {
                 const data = await response.json();
-                showAlert(true, data.error, 5000);
+                showAlert(true, data.error, 2500);
                 return;
             }
             setAreas((prev) => prev.filter((area) => area.id !== id));
-            showAlert(false, "Operation was successful!", 3000);
+            showAlert(false, "Operation was successful!", 1500);
         }
         catch (error: any) {
-            showAlert(true, error.message, 5000);
+            showAlert(true, error.message, 2500);
         }
     };
     // Maneja el filtro por búsqueda
@@ -413,7 +437,7 @@ export default function branchesPage() {
         Estimated_Lifespan: 0,
         Maintenance_Status: "",
         CriticalEnergySystem: 0,
-        Usage_Frequency: 0,
+        Usage_Frequency: "",
         Energy_Efficiency: 0,
         Average_Daily_Consumption: 0
     };
@@ -437,27 +461,25 @@ export default function branchesPage() {
                 throw new Error("Please log in");
             }
             else {
-                if (!showEquipments) {
-                    const response = await fetch(`http://localhost:5050/api/equipment/${branchInfo.id}/`, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                    if (!response.ok) {
-                        const data = await response.json();
-                        showAlert(true, data.error, 5000);
-                        return;
+                const response = await fetch(`http://localhost:5050/api/equipment/${branchInfo.id}/`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
                     }
-                    const data: Equipment[] = await response.json();
-                    setEquipments(data);
-                    setShowEquipments(true);
+                });
+                if (!response.ok) {
+                    const data = await response.json();
+                    showAlert(true, data.error, 2500);
+                    return;
                 }
-                setShowEquipments(!showEquipments);
+                const data: Equipment[] = await response.json();
+                setEquipments(data);
+                setShowEquipments(true);
+                setShowEquipments(true);
             }
         } catch (error: any) {
-            showAlert(true, error.message, 5000);
+            showAlert(true, error.message, 2500);
         }
     }
     // Agrega un nuevo Equipo
@@ -475,17 +497,17 @@ export default function branchesPage() {
             });
             const data = await response.json();
             if (!response.ok) {
-                showAlert(true, data.error, 5000);
+                showAlert(true, data.error, 2500);
                 return;
             }
             else {
                 setEquipments((prev) => [...prev, data]);
                 setNewEquipment(defaultEq);
                 setIsAddingEq(false);
-                showAlert(false, "Operation was successful!", 3000);
+                showAlert(false, "Operation was successful!", 1500);
             }
         } catch (error: any) {
-            showAlert(true, error.message, 5000);
+            showAlert(true, error.message, 2500);
         }
     };
     // Cancela la creacion de un equipo
@@ -513,7 +535,7 @@ export default function branchesPage() {
             });
             const data = await response.json();
             if (!response.ok) {
-                showAlert(true, data.error, 5000);
+                showAlert(true, data.error, 2500);
                 return;
             }
             else {
@@ -524,11 +546,12 @@ export default function branchesPage() {
                             : Equipment
                     )
                 );
-                setEditingId(null);
-                showAlert(false, "Operation was successful!", 3000);
+                setEditingIdEq(null);
+                fetchEquipments();
+                showAlert(false, "Operation was successful!", 1500);
             }
         } catch (error: any) {
-            showAlert(true, error.message, 5000);
+            showAlert(true, error.message, 2500);
         }
     };
     // Cancela la edición 
@@ -549,13 +572,13 @@ export default function branchesPage() {
             );
             if (!response.ok) {
                 const data = await response.json();
-                showAlert(true, data.error, 5000);
+                showAlert(true, data.error, 2500);
                 return;
             }
             setEquipments((prev) => prev.filter((equipment) => equipment.id !== id));
-            showAlert(false, "Operation was successful!", 3000);
+            showAlert(false, "Operation was successful!", 1500);
         } catch (error: any) {
-            showAlert(true, error.message, 5000);
+            showAlert(true, error.message, 2500);
         }
     };
     // Maneja el filtro por búsqueda de los Equipos
@@ -592,222 +615,226 @@ export default function branchesPage() {
             <div className="card">
 
                 <form className="space-y-4 bg-transparent" onSubmit={handleCreate}>
+                    {alertData.isVisible && (
+                        <Alert
+                            type={alertData.type}
+                            message={alertData.message}
+                            onClose={() => showAlert(false, "", 0)}
+                        />
+                    )}
                     <h2 className="tittle">
                         {isAddForm ? "New Equipment" : "Edit Equipment"}
                     </h2>
-                    <div className="flex flex-row gap-2">
-                        <div className="flex flex-col gap-2">
-                            <div>
-                                <label
-                                    htmlFor="Area"
-                                    className="subtittle"
-                                >
-                                    Area
-                                </label>
-                                {/** Cambios **/}
-                                <select
-                                    id="Area"
-                                    name="Area"
-                                    value={isAddForm ? newEquipment.Area : editFormDataEq.Area}
-                                    onChange={handleChange}
-                                    className="styleInput"
-                                    required
-                                >
-                                    <option value=""> Select a Area</option>
-                                    {areas.map((area) => <option key={area.Name} value={area.Name}>{area.Name}</option>)}
-                                </select>
-                                {/**  **/}
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="Brand"
-                                    className="subtittle"
-                                >
-                                    Brand
-                                </label>
-                                <input
-                                    id="Brand"
-                                    name="Brand"
-                                    type="text"
-                                    value={isAddForm ? newEquipment.Brand : editFormDataEq.Brand}
-                                    onChange={handleChange}
-                                    className="styleInput"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="Model"
-                                    className="subtittle"
-                                >
-                                    Model
-                                </label>
-                                <input
-                                    id="Model"
-                                    name="Model"
-                                    type="text"
-                                    value={isAddForm ? newEquipment.Model : editFormDataEq.Model}
-                                    onChange={handleChange}
-                                    className="styleInput"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="Type"
-                                    className="subtittle"
-                                >
-                                    Type
-                                </label>
-                                <input
-                                    id="Type"
-                                    name="Type"
-                                    type="text"
-                                    value={isAddForm ? newEquipment.Type : editFormDataEq.Type}
-                                    onChange={handleChange}
-                                    className="styleInput"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="Nominal_Capacity"
-                                    className="subtittle"
-                                >
-                                    Nominal Capacity
-                                </label>
-                                <input
-                                    id="Nominal_Capacity"
-                                    name="Nominal_Capacity"
-                                    type="number"
-                                    value={isAddForm ? newEquipment.Nominal_Capacity : editFormDataEq.Nominal_Capacity}
-                                    onChange={handleChange}
-                                    className="styleInput"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="Installation_Date"
-                                    className="subtittle"
-                                >
-                                    Installation Date
-                                </label>
-                                <input
-                                    id="Installation_Date"
-                                    name="Installation_Date"
-                                    type="Date"
-                                    value={isAddForm ? newEquipment.Installation_Date.split(" ")[0] : editFormDataEq.Installation_Date.split(" ")[0]}
-                                    onChange={handleChange}
-                                    className="styleInput"
-                                    required
-                                />
-                            </div>
+                    <div className="grid grid-cols-2 gap-2">
+                        <div>
+                            <label
+                                htmlFor="Area"
+                                className="subtittle"
+                            >
+                                Area
+                            </label>
+                            {/** Cambios **/}
+                            <select
+                                id="Area"
+                                name="Area"
+                                value={isAddForm ? newEquipment.Area : editFormDataEq.Area}
+                                onChange={handleChange}
+                                className="styleInput"
+                                required
+                            >
+                                <option value=""> Select a Area</option>
+                                {areas.map((area) => <option key={area.Name} value={area.Name}>{area.Name}</option>)}
+                            </select>
+                            {/**  **/}
                         </div>
-                        <div className="flex flex-col gap-2">
-                            <div>
-                                <label
-                                    htmlFor="Estimated_Lifespan"
-                                    className="subtittle"
-                                >
-                                    Estimated Lifespan (years)
-                                </label>
-                                <input
-                                    id="Estimated_Lifespan"
-                                    name="Estimated_Lifespan"
-                                    type="number"
-                                    value={isAddForm ? newEquipment.Estimated_Lifespan : editFormDataEq.Estimated_Lifespan}
-                                    onChange={handleChange}
-                                    className="styleInput"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="Maintenance_Status"
-                                    className="subtittle"
-                                >
-                                    Maintenance Status
-                                </label>
-                                <input
-                                    id="Maintenance_Status"
-                                    name="Maintenance_Status"
-                                    type="text"
-                                    value={isAddForm ? newEquipment.Maintenance_Status : editFormDataEq.Maintenance_Status}
-                                    onChange={handleChange}
-                                    className="styleInput"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="CriticalEnergySystem"
-                                    className="subtittle"
-                                >
-                                    Critical Energy System
-                                </label>
-                                <input
-                                    id="CriticalEnergySystem"
-                                    name="CriticalEnergySystem"
-                                    type="number"
-                                    value={isAddForm ? newEquipment.CriticalEnergySystem : editFormDataEq.CriticalEnergySystem}
-                                    onChange={handleChange}
-                                    className="styleInput"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="Usage_Frequency"
-                                    className="subtittle"
-                                >
-                                    Usage Frequency
-                                </label>
-                                <input
-                                    id="Usage_Frequency"
-                                    name="Usage_Frequency"
-                                    type="text"
-                                    value={isAddForm ? newEquipment.Usage_Frequency : editFormDataEq.Usage_Frequency}
-                                    onChange={handleChange}
-                                    className="styleInput"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="Energy_Efficiency"
-                                    className="subtittle"
-                                >
-                                    Energy Efficiency
-                                </label>
-                                <input
-                                    id="Energy_Efficiency"
-                                    name="Energy_Efficiency"
-                                    type="number"
-                                    value={isAddForm ? newEquipment.Energy_Efficiency : editFormDataEq.Energy_Efficiency}
-                                    onChange={handleChange}
-                                    className="styleInput"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label
-                                    htmlFor="Average_Daily_Consumption"
-                                    className="subtittle"
-                                >
-                                    Average Daily Consumption
-                                </label>
-                                <input
-                                    id="Average_Daily_Consumption"
-                                    name="Average_Daily_Consumption"
-                                    type="number"
-                                    value={isAddForm ? newEquipment.Average_Daily_Consumption : editFormDataEq.Average_Daily_Consumption}
-                                    onChange={handleChange}
-                                    className="styleInput"
-                                    required
-                                />
-                            </div>
+                        <div>
+                            <label
+                                htmlFor="Brand"
+                                className="subtittle"
+                            >
+                                Brand
+                            </label>
+                            <input
+                                id="Brand"
+                                name="Brand"
+                                type="text"
+                                value={isAddForm ? newEquipment.Brand : editFormDataEq.Brand}
+                                onChange={handleChange}
+                                className="styleInput"
+                                required
+                            />
                         </div>
+                        <div>
+                            <label
+                                htmlFor="Model"
+                                className="subtittle"
+                            >
+                                Model
+                            </label>
+                            <input
+                                id="Model"
+                                name="Model"
+                                type="text"
+                                value={isAddForm ? newEquipment.Model : editFormDataEq.Model}
+                                onChange={handleChange}
+                                className="styleInput"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label
+                                htmlFor="Type"
+                                className="subtittle"
+                            >
+                                Type
+                            </label>
+                            <input
+                                id="Type"
+                                name="Type"
+                                type="text"
+                                value={isAddForm ? newEquipment.Type : editFormDataEq.Type}
+                                onChange={handleChange}
+                                className="styleInput"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label
+                                htmlFor="Nominal_Capacity (kw)"
+                                className="subtittle">
+                                Nominal Capacity
+                            </label>
+                            <input
+                                type="number"
+                                id="Nominal_Capacity"
+                                name="Nominal_Capacity"
+                                value={isAddForm ? newEquipment.Nominal_Capacity : editFormDataEq.Nominal_Capacity}
+                                onChange={handleChange}
+                                className="styleInput"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                htmlFor="Installation_Date"
+                                className="subtittle"
+                            >
+                                Installation Date
+                            </label>
+                            <input
+                                id="Installation_Date"
+                                name="Installation_Date"
+                                type="Date"
+                                value={isAddForm ? newEquipment.Installation_Date : editFormDataEq.Installation_Date.split(" ")[0]}
+                                onChange={handleChange}
+                                className="styleInput"
+                                required
+                            />
+                        </div>
+
+                        <div>
+                            <label
+                                htmlFor="Estimated_Lifespan"
+                                className="subtittle"
+                            >
+                                Estimated Lifespan (years)
+                            </label>
+                            <input
+                                id="Estimated_Lifespan"
+                                name="Estimated_Lifespan"
+                                type="number"
+                                value={isAddForm ? newEquipment.Estimated_Lifespan : editFormDataEq.Estimated_Lifespan}
+                                onChange={handleChange}
+                                className="styleInput"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label
+                                htmlFor="Maintenance_Status"
+                                className="subtittle"
+                            >
+                                Maintenance Status
+                            </label>
+                            <input
+                                id="Maintenance_Status"
+                                name="Maintenance_Status"
+                                type="text"
+                                value={isAddForm ? newEquipment.Maintenance_Status : editFormDataEq.Maintenance_Status}
+                                onChange={handleChange}
+                                className="styleInput"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label
+                                htmlFor="CriticalEnergySystem"
+                                className="subtittle"
+                            >
+                                Critical Energy System
+                            </label>
+                            <select
+                                id="CriticalEnergySystem"
+                                name="CriticalEnergySystem"
+                                value={isAddForm ? newEquipment.CriticalEnergySystem : editFormDataEq.CriticalEnergySystem}
+                                onChange={handleChange}
+                                className="styleInput"
+                                required>
+                                <option value="Critical">Critical</option>
+                                <option value="No Critical">No Critical</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label
+                                htmlFor="Usage_Frequency"
+                                className="subtittle"
+                            >
+                                Usage Frequency
+                            </label>
+                            <input
+                                id="Usage_Frequency"
+                                name="Usage_Frequency"
+                                type="text"
+                                value={isAddForm ? newEquipment.Usage_Frequency : editFormDataEq.Usage_Frequency}
+                                onChange={handleChange}
+                                className="styleInput"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label
+                                htmlFor="Energy_Efficiency"
+                                className="subtittle"
+                            >
+                                Energy Efficiency
+                            </label>
+                            <input
+                                id="Energy_Efficiency"
+                                name="Energy_Efficiency"
+                                type="number"
+                                value={isAddForm ? newEquipment.Energy_Efficiency : editFormDataEq.Energy_Efficiency}
+                                onChange={handleChange}
+                                className="styleInput"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label
+                                htmlFor="Average_Daily_Consumption"
+                                className="subtittle"
+                            >
+                                Average Daily Consumption
+                            </label>
+                            <input
+                                id="Average_Daily_Consumption"
+                                name="Average_Daily_Consumption"
+                                type="number"
+                                value={isAddForm ? newEquipment.Average_Daily_Consumption : editFormDataEq.Average_Daily_Consumption}
+                                onChange={handleChange}
+                                className="styleInput"
+                                required
+                            />
+                        </div>
+
                     </div>
                     <div className="flex flex-row items-center justify-center text-center gap-2">
                         <button
@@ -838,9 +865,29 @@ export default function branchesPage() {
                     onClose={() => showAlert(false, "", 0)}
                 />
             )}
+            {/* {showOption &&
+                (optionProp.type === 'Branch') ?
+                <Option
+                    message={'Are you sure you want to delete the branch?'}
+                    onAcept={() => { setShowOption(false); deletedBranch(); }}
+                    onCancel={() => { setShowOption(false) }}
+                /> :
+                (optionProp.type === 'Area') ?
+                    <Option
+                        message={'Are you sure you want to delete the Area?'}
+                        onAcept={() => { setShowOption(false); handleDeleteClick(optionProp.id); }}
+                        onCancel={() => { setShowOption(false) }}
+                    /> :
+                    (optionProp.type === 'Equipment') ?
+                        <Option
+                            message={'Are you sure you want to delete the Equipment?'}
+                            onAcept={() => { setShowOption(false); handleDeleteClick(optionProp.id); }}
+                            onCancel={() => { setShowOption(false) }}
+                        /> : <></>
+            } */}
             {showAddForm &&
                 <div className="pop">
-                    <FormComponent show={addBranch} />
+                    <FormComponent show={addBranch} fetchNames={() => fetchBranches()} />
                 </div>}
             {/* Encabezado de pagina*/}
             <div className='flex justify-center items-center p-4 m-4'>
@@ -887,7 +934,7 @@ export default function branchesPage() {
                             New
                         </button>
                         <button
-                            onClick={deletedBranch}
+                            onClick={() => deletedBranch()}
                             className="buttonRed"
                         >
                             Delete
@@ -1029,7 +1076,7 @@ export default function branchesPage() {
                             {/* Botones */}
                             <div className="flex justify-end space-x-2">
                                 <button
-                                    onClick={restRestrictInfoBranch}
+                                    onClick={() => restRestrictInfoBranch()}
                                     className="buttonGray"
                                 >
                                     Restart
@@ -1047,7 +1094,7 @@ export default function branchesPage() {
                     {/* Areas information */}
                     <div className="m-4">
                         <button
-                            onClick={() => fetchAreas()}
+                            onClick={() => { showAreas ? setShowAreas(false) : fetchAreas() }}
                             className="buttonBlue"
                         >
                             {showAreas ? "Hide Areas" : "Show Areas"}
@@ -1200,7 +1247,7 @@ export default function branchesPage() {
                     {/* Equipments info*/}
                     <div className="m-4">
                         <button
-                            onClick={() => fetchEquipments()}
+                            onClick={() => { showEquipments ? setShowEquipments(false) : fetchEquipments() }}
                             className="buttonBlue"
                         >
                             {showEquipments ? "Hide Equipments" : "Show Equipments"}
@@ -1253,7 +1300,7 @@ export default function branchesPage() {
                                                         <td className="rowData">
                                                             {item.Model}
                                                         </td>
-                                                        <td className="rowData">
+                                                        <td className="rowData text-center">
                                                             <button
                                                                 onClick={() => handleEditClickEq(item)}
                                                                 className="buttonBlue mr-2"
@@ -1267,7 +1314,6 @@ export default function branchesPage() {
                                                                 Delete
                                                             </button>
                                                         </td>
-
                                                     </tr>
                                                 ))}
                                             </tbody>

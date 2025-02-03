@@ -19,7 +19,6 @@ export default function Page() {
     const [Username, setName] = useState('');
     const [Company, setCompany] = useState('');
     const [Type, setType] = useState('');
-    const [notification, setNotification] = useState<string | null>(null);
     const [Password, setPassword] = useState('');
     const [NewPassword, setNewPassword] = useState('');
     const [showForm, setShowForm] = useState(false);
@@ -30,7 +29,6 @@ export default function Page() {
     const [showOption, setShowOption] = useState<boolean>(false);
     const [idSelect, setIdSelect] = useState(0);
     // obtener los nombres de las sucursales a las que el usuario tiene acceso
-    useEffect(() => { fetchBranches(); }, []);
     const fetchBranches = async () => {
         try {
             const response = await fetch("http://localhost:5050/api/branch/", {
@@ -139,6 +137,7 @@ export default function Page() {
 
     // mostrar formulario de editar con los datos de usuario
     const handleEditUser = (user: User) => {
+        fetchBranches();
         setName(user.Username);
         setCompany(user.Company);
         setType(user.Type);
@@ -191,15 +190,10 @@ export default function Page() {
                     User management!
                 </h2>
             </div>
-
-            {notification && (
-                <div className="mb-4 p-4 h-10 bg-green-100 text-green-700 rounded">
-                    {notification}
-                </div>
-            )}
             <ButtonBack />
             <button
                 onClick={() => {
+                    fetchBranches();
                     setShowForm(true);
                     setIsEdit(false);
                     setName('');
@@ -223,7 +217,7 @@ export default function Page() {
                 />
             </div>
 
-            <div className="card">
+            <div className="card overflow-x-auto">
                 <table className="styleTable">
                     <thead>
                         <tr className='headRowTable'>
@@ -240,7 +234,7 @@ export default function Page() {
                                     <td className="rowData">{user.Username}</td>
                                     <td className="rowData">{user.Company}</td>
                                     <td className="rowData">{user.Type}</td>
-                                    <td className="rowData text-center">
+                                    <td className="rowData text-center whitespace-nowrap">
                                         <button
                                             onClick={() => handleEditUser(user)}
                                             className="buttonBlue mr-2"

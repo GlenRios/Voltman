@@ -25,8 +25,7 @@ export default function Home() {
     // Obtener lista de alertas
     const fetchAlerts = async () => {
         try {
-            const response: any = getToken();
-            return await fetch("http://localhost:5050/api/consult/alerts/", {
+            const response = await fetch("http://localhost:5050/api/consult/alerts/", {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -34,7 +33,7 @@ export default function Home() {
                 }
             });
             if (!response.ok) {
-                const data = response.json();
+                const data = await response.json();
                 showAlert(true, data.error, 2500);
                 return;
             }

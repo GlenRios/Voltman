@@ -30,7 +30,7 @@ class BillController():
         # Ensure the dates are valid
         if start_date > end_date:
             raise CustomError("Invalid input, EndDate can't be less than StartDate", 400)
-        elif end_date > (datetime.now().date()- timedelta(days= 2)):
+        elif end_date >= datetime.now().date():
             raise CustomError("Invalid date, it is equal or bigger than today's date", 400)
         
         # Get the company name from the input
@@ -75,7 +75,7 @@ class BillController():
         date = datetime.strptime(date, "%Y-%m-%d").date()
         
         # Ensure the date is not in the future
-        if date > (datetime.now().date()-timedelta(days= 2)):
+        if date >= datetime.now().date():
             raise CustomError("Invalid date, it is equal or bigger than today's date", 400)
         
         # Get the month and year from the date
@@ -128,7 +128,7 @@ class BillController():
         # Ensure the dates are valid
         if start_date > end_date:
             raise CustomError("Invalid input, EndDate can't be less than StartDate", 400)
-        elif end_date > (datetime.now().date()- timedelta(days=2)):
+        elif end_date >= datetime.now().date():
             raise CustomError("Invalid date, it is equal or bigger than today's date", 400)
         
         company= values['Company']
@@ -145,15 +145,15 @@ class BillController():
     
     # Compare the consumption before and after a date
     def compare_consumption(self, values: dict):
-        today= datetime.now().date()- timedelta(days=2)
+        today= datetime.now().date()
 
         date= datetime.strptime(values['Date'], '%Y-%m-%d').date()
-        if date> today: 
+        if date >= today: 
             raise CustomError("Invalid date, it is equal or bigger than today's date", 400)
         
         company= values['Name']
         
-        after_date = datetime.now().date()- timedelta(days=2)
+        after_date = datetime.now().date()- timedelta(days=1)
         before_date = date - timedelta(days= (after_date - date).days)
 
         total_before, bills_before, total_after, bills_after= self.Ibill.compare_consumption(company, before_date, date, after_date)

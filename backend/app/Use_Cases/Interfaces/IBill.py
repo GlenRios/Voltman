@@ -25,8 +25,10 @@ class IBill:
         """
         Calculates the total consumption and retrieves the bills in the specified date range.
         """
-        consume = self.repo.get_consume(company, start_date, end_date)
         bills = self.get_bills_in_range(start_date, end_date, company)
+        consume= 0
+        for bill in bills:
+            consume += bill.DailyConsumption 
         return consume, bills
 
     def get_monthly_consumption(self, bills: list[Bill]):
