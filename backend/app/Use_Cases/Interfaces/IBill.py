@@ -100,15 +100,14 @@ class IBill:
         """
         Calculate the total cost and retrieves the costs in the specific date range
         """
-        bills= self.get_bills_in_range(company, start_day, end_day)
+        bills= self.get_bills_in_range(start_day, end_day, company)
 
         cost= 0
-        answ= []
-
+        
         for bill in bills:
             cost+= bill.Cost
 
-        return cost, answ
+        return cost, bills
     
     def compare_consumption(self, company, before_date, date, after_date):
 

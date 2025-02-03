@@ -139,7 +139,7 @@ class BillController():
         data= []
 
         for bill in bills:
-            data.append({'Date': bill.Date, 'Cost': bill.Cost})
+            data.append({'Date': bill.Date, 'Value': bill.Cost})
 
         answ= {'Total': cost, 'Data': data}    
         return answ

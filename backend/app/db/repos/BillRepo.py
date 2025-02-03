@@ -106,7 +106,7 @@ class BillRepo(BaseRepo):
         overlimit = prev_overlimit - daily_consumption
 
         # Calculates the cost of the bill, considering the extra percent and increase rate
-        cost = (1 + company.Extra_Percent) * daily_consumption + company.Increase
+        cost = (1 + company.Extra_Percent/100) * daily_consumption + company.Increase
 
         # Returns the data that can be used to create a new bill model
         return {'BillDate': values['Date'],

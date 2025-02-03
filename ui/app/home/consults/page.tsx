@@ -11,6 +11,7 @@ import { useAlert } from "@/src/hooks/alertContxt";
 import Alert from "@/src/components/alerts/Alert";
 import OverLimitConsult from '@/src/components/consults/OverLimitConsult';
 import ConsumptionPrediction from '@/src/components/consults/ConsumptionPrediction';
+import TotalCost from '@/src/components/consults/TotalCost';
 // import { saveAs } from 'file-saver' //Libreria para descargar archivo
 interface Query {
     id: number;
@@ -40,6 +41,7 @@ export default function QueriesPage() {
             const data = await response.json();
             if (!response.ok) {
                 showAlert(true, data.error, 2500)
+                return;
             }
             if (data) {
                 const names: string[] = data.map((item: { Name: string; }) => item.Name)
@@ -49,11 +51,11 @@ export default function QueriesPage() {
             showAlert(true, error.message, 1500);
         }
     };
-
+    // Agregar consulta
     const handleAddQuery = () => {
         setQueries([...queries, { id: Date.now(), type: null }]);
     };
-
+    // Maneja los selectores de las consultas
     const handleSelectQuery = (id: number, type: string) => {
         setQueries(
             queries.map((query) =>
@@ -61,11 +63,11 @@ export default function QueriesPage() {
             )
         );
     };
-
+    // Removef consulta
     const handleRemoveQuery = (id: number) => {
         setQueries(queries.filter((query) => query.id !== id)); // Eliminar la consulta por ID
     };
-
+    // Renderizar los componentes de las consultas
     const renderQueryComponent = (type: string | null, id: number) => {
         switch (type) {
             case 'total':
@@ -80,11 +82,12 @@ export default function QueriesPage() {
                 return <OverLimitConsult key={id} />;
             case 'prediction':
                 return <ConsumptionPrediction key={id} names={CompaniesNames} />;
+            case 'cost':
+                return <TotalCost key={id} names={CompaniesNames} />
             default:
                 return null;
         }
     };
-
     // obtener lista de formatos
     useEffect(() => {
         const getFormats = async () => {
@@ -99,6 +102,7 @@ export default function QueriesPage() {
                 const data = await response.json();
                 if (!response.ok) {
                     showAlert(true, data.error, 2500)
+                    return;
                 }
                 setFormats(data);
             } catch (error: any) {
@@ -107,7 +111,6 @@ export default function QueriesPage() {
         }
         getFormats();
     }, []);
-
     // importar al formato seleccionado
     const importAs = async () => {
         try {
@@ -122,13 +125,13 @@ export default function QueriesPage() {
             const data = await response.json();
             if (!response.ok) {
                 showAlert(true, data.error, 2500)
+                return;
             }
             // Logica de descarga 
         } catch (error: any) {
             showAlert(true, error.message, 1500);
         }
     }
-
 
     return (
         <div className="flex flex-col items-center min-h-screen p-4 relative fondo">
@@ -160,7 +163,7 @@ export default function QueriesPage() {
                     <select className='selector'
                         onChange={(e) => { setSelectedFormats(e.target.value) }}>
                         <option value="">Select a Format</option>
-                        {formats.map((format,index) => (
+                        {formats.map((format, index) => (
                             <option key={index} value={format}>{format}</option>
                         ))}
                     </select>
@@ -186,6 +189,7 @@ export default function QueriesPage() {
                             >
                                 <option value="">Select a query</option>
                                 <option value="total">Total Consumption</option>
+                                <option value="cost">Total Cost</option>
                                 <option value="average">Monthly Average</option>
                                 <option value="comparison">Efficiency Comparison</option>
                                 <option value="equipments">Show equipments</option>
@@ -210,7 +214,6 @@ export default function QueriesPage() {
             >
                 New
             </button>
-
         </div>
     );
 }

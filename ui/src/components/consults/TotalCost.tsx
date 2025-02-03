@@ -5,18 +5,17 @@ import Alert from "@/src/components/alerts/Alert";
 import { LineChart } from '../charts/LineChart';
 import { getToken } from '@/src/hooks/handleToken';
 
-
-interface TotalConsumptionProps {
+interface TotalCostProps {
     startDate: string;
     endDate: string;
     Company: string;
 }
 
-const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
+const TotalCost: React.FC<{ names: string[] }> = ({ names }) => {
 
     const { showAlert, alertData } = useAlert();
-    const [responseData, setResponseData] = useState([])
-    const [formData, setFormData] = useState<TotalConsumptionProps>({
+    const [responseData, setResponseData] = useState(null)
+    const [formData, setFormData] = useState<TotalCostProps>({
         startDate: '',
         endDate: '',
         Company: '',
@@ -28,16 +27,16 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
-    const [totalConsumption, setTotalConsumption] = useState<number | null>(null);
+    const [totalCost, setTotalCost] = useState<number | null>(null);
 
     const handleSubmit = async () => {
         try {
-            setTotalConsumption(null);
+            setTotalCost(null);
             if (!formData.Company || !formData.startDate || !formData.endDate) {
                 showAlert(true, "Please complete all fields", 1500)
                 return;
             }
-            const response = await fetch("http://localhost:5050/api/consult/totalConsumption/", {
+            const response = await fetch("http://localhost:5050/api/consult/getCost/", {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -50,11 +49,12 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
                 showAlert(true, data.error, 2500)
                 return;
             }
-            setTotalConsumption(Math.abs(data.Total));
-            setResponseData(data.Data);
+            setTotalCost(Math.abs(data.Total));
+            await setResponseData(data.Data);
+            console.log(responseData);
 
-        } catch (error:any) {
-            showAlert(true,error.message,1500);
+        } catch (error: any) {
+            showAlert(true, error.message, 1500);
         }
     }
 
@@ -67,7 +67,7 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
                     onClose={() => showAlert(false, "", 0)}
                 />
             )}
-            <h1 className="tittle">Total Consumption:</h1>
+            <h1 className="tittle">Total Cost:</h1>
             <label htmlFor="startDate" className='subtittle'>start day:</label>
             <input
                 type="date"
@@ -110,17 +110,19 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
             >
                 Consult
             </button>
-            {totalConsumption &&
+            {totalCost &&
                 <div>
                     <div className='my-4'>
                         <h2 className="tittle" >
-                            Total Consumption: {totalConsumption} kw
+                            Total Cost: {totalCost}
                         </h2>
-                        <LineChart data={responseData} index={'Date'} categories={["Value"]} />
+                        {responseData &&
+                            <LineChart data={responseData} index={'Date'} categories={["Value"]} />
+                        }
                     </div>
                 </div>}
         </div>
     );
 };
 
-export default TotalConsumption;
+export default TotalCost;
