@@ -1,0 +1,109 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos globales personalizados */
+body {
+  @apply bg-gray-100 text-gray-800; /* Fondo gris claro y texto oscuro */
+  font-family: "Inter", sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  @apply font-bold;
+}
+/* Ocultar el indicador de ruta estática en desarrollo */
+.nextjs-toast-route {
+  display: none !important;
+}
+/* Clase personalizada para botones */
+.succsess-alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 3rem;
+  border-radius: 0.5rem;
+  background-color: #232531; /* Fondo */
+  padding: 0.5rem 1rem;
+  color: #fff; /* Texto */
+  gap: 0.5rem;
+}
+
+.fondo{
+  @apply bg-[url('http://localhost:3000/images/claro3.jpg')] dark:bg-[url('http://localhost:3000/images/oscuro2.jpg')] bg-cover bg-no-repeat bg-center bg-fixed
+}
+
+.selector{
+  @apply w-auto max-w-64 border border-gray-700 rounded-lg p-2 text-lg dark:bg-gray-800 dark:text-white
+}
+
+.card{
+  @apply p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md m-4
+}
+
+.tittlePage{
+  @apply text-4xl font-extrabold text-center text-black dark:text-white
+}
+
+.tittle{
+  @apply text-xl font-bold text-gray-800 dark:text-white mb-4
+}
+
+.subtittle{
+  @apply block text-gray-700 dark:text-gray-300 mb-1
+}
+
+.styleInput{
+  @apply w-full px-3 py-2 text-gray-800 dark:text-white bg-gray-100 dark:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500
+}
+
+.buttonGray{
+  @apply px-4 py-2 text-gray-800 dark:text-white bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition duration-200
+}
+
+.buttonBlack{
+  @apply px-4 py-2 text-black dark:text-white bg-gray-400 dark:bg-gray-800 rounded-lg hover:bg-gray-500 dark:hover:bg-gray-700 transition duration-200
+}
+.buttonBlue{
+  @apply px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200
+}
+
+.buttonRed{
+  @apply px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600 transition duration-200
+}
+
+.buttonGreen{
+  @apply px-4 py-2 text-white bg-green-500 rounded-lg hover:bg-green-600 transition duration-200 max-w-64
+}
+.containerTable{
+  @apply overflow-y-auto max-h-64 rounded-xl
+}
+
+.styleTable{
+  @apply w-full border-collapse border rounded-xl border-gray-300 dark:border-gray-700
+}
+
+.headColumn{
+  @apply border border-gray-300 dark:border-gray-900 p-2 text-center w-1/3 overflow-hidden max-w-xs whitespace-nowrap m-1
+}
+
+.headRowTable{
+  @apply bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300
+}
+
+.rowTable{
+  @apply odd:bg-gray-100 dark:odd:bg-gray-700 overflow-visible
+}
+
+.rowData{
+  @apply border text-gray-800 dark:text-gray-400 border-gray-300 dark:border-gray-900 p-2 overflow-hidden max-w-xs m-1
+}
+
+.pop{
+  @apply overflow-y-auto max-h-screen fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50
+}
+.consult{
+  @apply flex flex-col justify-center p-4 rounded shadow-lg w-full
+}

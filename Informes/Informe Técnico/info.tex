@@ -1,0 +1,136 @@
+\documentclass[12pt]{article}
+\usepackage{longtable}
+\usepackage{booktabs} % Para usar toprule y midrule
+
+\title{Diccionario de Datos}
+\author{Tu Nombre}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Introducción}
+
+\newpage
+
+\section*{Diccionario de Datos}
+
+El diccionario de datos describe la estructura de la base de datos utilizada en el sistema de gestión de consumo energético empresarial. A continuación se detallan los modelos y sus respectivos atributos, así como las relaciones entre ellos.
+
+
+\begin{longtable}{|l|l|l|l|l|l|l|}
+    \toprule
+    \textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Longitud} & \textbf{PK} & \textbf{FK} & \textbf{Restricciones} & \textbf{Descripción} \\
+    \midrule
+    \endfirsthead
+    \toprule
+    \textbf{Campo} & \textbf{Tipo de Dato} & \textbf{Longitud} & \textbf{PK} & \textbf{FK} & \textbf{Restricciones} & \textbf{Descripción} \\
+    \midrule
+    \endhead
+    \midrule
+    \endfoot
+    \bottomrule
+    \endlastfoot
+    
+    Company & id & Integer & Sí & No & Auto Increment & Identificador único de la compañía. \\
+    \hline
+    Company & Limit & Float & No & No & Not Null, Default 0 & Límite de consumo asignado a la compañía. \\
+    \hline
+    Company & Increase & Float & No & No & Not Null, Default 20 & Porcentaje de aumento para el cálculo de costos. \\
+    \hline
+    Company & Extra\_Percent & Float & No & No & Not Null, Default 15 & Porcentaje adicional para el cálculo de costos. \\
+    \hline
+    Company & Reading & Integer & No & No & Default 0 & Última lectura registrada del consumo. \\
+    \hline
+    Company & Last\_Reading & Integer & No & No & Default 0 & Lectura anterior registrada. \\
+    \hline
+    Company & Type & String & No & No & Not Null, Default "" & Tipo de compañía (ej. categoría de empresa). \\
+    \hline
+    Company & Name & String & No & No & Not Null, Unique & Nombre de la compañía (único). \\
+    \hline
+    Company & Addr & String & No & No & Not Null, Unique, Default "" & Dirección de la compañía (única). \\
+    \hline
+    Company & areas & Relación & No & Sí & & Relación con el modelo de \texttt{Area}. \\
+    \hline
+    Company & bills & Relación & No & Sí & & Relación con el modelo de \texttt{Bill}. \\
+    \hline
+    Company & people & Relación & No & Sí & & Relación con el modelo de \texttt{User}. \\
+    \hline
+    User & id & Integer & Sí & No & Auto Increment & Identificador único del usuario. \\
+    \hline
+    User & Username & String & No & No & Unique, Not Null & Nombre de usuario (único). \\
+    \hline
+    User & Password & String & No & No & Not Null & Contraseña del usuario. \\
+    \hline
+    User & CompanyID & Integer & No & Sí & Foreign Key & Identificador de la compañía a la que pertenece el usuario. \\
+    \hline
+    User & GroupID & Integer & No & Sí & Foreign Key & Identificador del grupo al que pertenece el usuario. \\
+    \hline
+    User & company & Relación & No & Sí & & Relación con el modelo de \texttt{Company}. \\
+    \hline
+    User & group & Relación & No & Sí & & Relación con el modelo de \texttt{Group}. \\
+    \hline
+    Area & id & Integer & Sí & No & Auto Increment & Identificador único del área. \\
+    \hline
+    Area & CompanyID & Integer & No & Sí & Foreign Key & Identificador de la compañía a la que pertenece el área. \\
+    \hline
+    Area & Name & String & No & No & Not Null & Nombre del área (ej. "Oficina", "Almacén"). \\
+    \hline
+    Area & Responsible & String & No & No & Not Null & Persona responsable del área. \\
+    \hline
+    Area & company & Relación & No & Sí & & Relación con el modelo de \texttt{Company}. \\
+    \hline
+    Area & equipments & Relación & No & Sí & & Relación con el modelo de \texttt{Equipment}. \\
+    \hline
+    Equipment & id & Integer & Sí & No & Auto Increment & Identificador único del equipo. \\
+    \hline
+    Equipment & AreaID & Integer & No & Sí & Foreign Key & Identificador del área a la que pertenece el equipo. \\
+    \hline
+    Equipment & AverageDailyConsumption & Float & No & No & Not Null, Default 0 & Consumo promedio diario del equipo. \\
+    \hline
+    Equipment & MaintenanceStatus & String & No & No & Not Null, Default "" & Estado de mantenimiento del equipo. \\
+    \hline
+    Equipment & EnergyEfficiency & Float & No & No & Not Null, Default 0 & Eficiencia energética del equipo. \\
+    \hline
+    Equipment & NominalCapacity & Float & No & No & Not Null, Default 0 & Capacidad nominal del equipo. \\
+    \hline
+    Equipment & EstimatedLifespan & Float & No & No & Not Null, Default 0 & Vida útil estimada del equipo. \\
+    \hline
+    Equipment & InstallationDate & DateTime & No & No & Not Null & Fecha de instalación del equipo. \\
+    \hline
+    Equipment & UsageFrequency & String & No & No & Not Null, Default "" & Frecuencia de uso del equipo. \\
+    \hline
+    Equipment & Type & String & No & No & Not Null, Default "" & Tipo de equipo. \\
+    \hline
+    Equipment & Brand & String & No & No & Not Null, Default "" & Marca del equipo. \\
+    \hline
+    Equipment & Model & String & No & No & Not Null, Default "" & Modelo del equipo. \\
+    \hline
+    Equipment & CriticalEnergySystem & String & No & No & Not Null, Default "" & Indica si el equipo es parte de un sistema crítico. \\
+    \hline
+    Group & id & Integer & Sí & No & Auto Increment & Identificador único del grupo. \\
+    \hline
+    Group & Name & String & No & No & Not Null & Nombre del grupo (ej. Admin, Usuario). \\
+    \hline
+    Group & people & Relación & No & Sí & & Relación con el modelo de \texttt{User}. \\
+    \hline
+    Bill & id & Integer & Sí & No & Auto Increment & Identificador único de la factura. \\
+    \hline
+    Bill & BillDate & Date & No & No & Not Null & Fecha de emisión de la factura. \\
+    \hline
+    Bill & CompanyID & Integer & No & Sí & Foreign Key & Identificador de la compañía a la que pertenece la factura. \\
+    \hline
+    Bill & Reading & Float & No & No & Not Null & Lectura registrada en la factura. \\
+    \hline
+    Bill & DailyConsumption & Float & No & No & Not Null & Consumo diario registrado en la factura. \\
+    \hline
+    Bill & Cost & Float & No & No & Not Null & Costo asociado al consumo registrado. \\
+    \hline
+    Bill & OverLimit & Integer & No
+
+\end{longtable}
+
+
+
+\end{document}
