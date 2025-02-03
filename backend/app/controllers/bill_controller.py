@@ -105,6 +105,7 @@ class BillController():
         answ = {'Prediction': pred, 'Data': data}
         return answ
     
+    # Retrieves the companies that exceeded the consumption limit for the actual month
     def get_alerts(self, company):
         date= datetime.now().date()
         # Get the month and year from the date
@@ -117,4 +118,47 @@ class BillController():
         for name, _ in items:
             answ.append({'Name': name, 'Bool': name==company})
 
-        return answ    
+        return answ  
+
+    # Calculate the cost of a company in an especific range of time
+    def get_cost(self, values: dict):
+        # Parse the start and end dates from the input
+        start_date = datetime.strptime(values['startDate'], '%Y-%m-%d').date()
+        end_date = datetime.strptime(values['endDate'], "%Y-%m-%d").date()
+        
+        # Ensure the dates are valid
+        if start_date > end_date:
+            raise CustomError("Invalid input, EndDate can't be less than StartDate", 400)
+        elif end_date > datetime.now().date():
+            raise CustomError("Invalid date, it is bigger than today's date", 400)
+        
+        company= values['Company']
+
+        cost, bills= self.Ibill.get_cost(company, start_date, end_date)
+
+        data= []
+
+        for bill in bills:
+            data.append({'Date': bill.Date, 'Cost': bill.Cost})
+
+        answ= {'Total': cost, 'Data': data}    
+        return answ
+    
+    # Compare the consumption before and after a date
+    def compare_consumption(self, values: dict):
+        
+        date= datetime.strptime(values['Date'], '%Y-%m-%d').date()
+        company= values['Name']
+        
+        after_date = datetime.now().date()- timedelta(days=1)
+        before_date = date - timedelta(days= (after_date - date).days)
+
+        total_before, bills_before, total_after, bills_after= self.Ibill.compare_consumption(company, before_date, date, after_date)
+
+        answ={'TotalAfter': total_after, 'TotalBefore': total_before}
+        answ['DataAfter'] = [{"Date": bill.Date, "Value": bill.DailyConsumption} for bill in bills_after]
+        answ['DataBefore'] = [{"Date": bill.Date, "Value": bill.DailyConsumption} for bill in bills_before]
+        return answ
+
+
+

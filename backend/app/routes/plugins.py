@@ -68,7 +68,7 @@ def export_data(name, data):
 def plugin_list():
     return list(get_plugins())
 
-@plugin_bp.route("/<name>/", methods=["POST",])
+@plugin_bp.route("/<string:name>/", methods=["POST",])
 @jwt_required(optional=False)
 def plugin_export(name):
     """

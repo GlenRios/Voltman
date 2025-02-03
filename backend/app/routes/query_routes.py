@@ -56,10 +56,26 @@ def predict(company):
 
 @consult_bp.route('/alerts/', methods=['GET'])
 @jwt_required(optional=False)
-def show_alerts(company):
+def show_alerts():
     username= get_jwt_identity()
     user = uc.get(username)
     company= user.Company
     answ= bc.get_alerts(company)
     return jsonify(answ), 200
+
+@consult_bp.route('/getCost/', methods=['POST'])
+@jwt_required(optional=False)
+def get_cost():
+    data= request.json
+    answ= bc.get_cost(data)
+    return jsonify(answ), 200
+
+@consult_bp.route('/compareConsumption/', methods=['POST'])
+@jwt_required(optional=False)
+def compare_consumption():
+    data= request.json
+    answ= bc.compare_consumption(data)
+    return jsonify(answ), 200
+
+
 

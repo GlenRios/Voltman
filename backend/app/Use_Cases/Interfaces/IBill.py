@@ -95,3 +95,28 @@ class IBill:
                 del current_group[0]  # Remove the first element to keep only the last 3 months
 
         return total / max(len(group_sums), 1), group_sums  # Return the average of 3-month sums and individual sums
+    
+    def get_cost(self, company, start_day, end_day):
+        """
+        Calculate the total cost and retrieves the costs in the specific date range
+        """
+        bills= self.get_bills_in_range(company, start_day, end_day)
+
+        cost= 0
+        answ= []
+
+        for bill in bills:
+            cost+= bill.Cost
+
+        return cost, answ
+    
+    def compare_consumption(self, company, before_date, date, after_date):
+
+        total_before, bills_before= self.calculate_consume(before_date, date, company)
+
+        total_after, bills_after= self.calculate_consume(date, after_date, company)
+
+        return total_before, bills_before, total_after, bills_after
+
+
+
