@@ -189,7 +189,7 @@ export default function QueriesPage() {
                             >
                                 <option value="">Select a query</option>
                                 <option value="total">Total consumption</option>
-                                <option value="cost">Total Ccost</option>
+                                <option value="cost">Total Cost</option>
                                 <option value="average">Monthly average</option>
                                 <option value="comparison">Efficiency comparison</option>
                                 <option value="equipments">Show equipments</option>

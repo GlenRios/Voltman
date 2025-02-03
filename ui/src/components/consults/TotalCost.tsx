@@ -95,7 +95,7 @@ const TotalCost: React.FC<{ names: string[] }> = ({ names }) => {
             >
                 <option value="">Select a Company</option>
                 {names.map((name, index) => (
-                    <option className="text-black"
+                    <option className="text-black dark:text-white"
                         key={index}
                         value={name}
                         onClick={() => { setSlelctedName(name) }}
