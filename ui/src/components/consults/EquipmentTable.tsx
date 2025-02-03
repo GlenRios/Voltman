@@ -1,5 +1,3 @@
-import React, { useState, useEffect } from 'react';
-import { fetchEquipments } from '@/src/api/EquipmentService';
 import Equipment from '@/src/models/Equipments';
 
 export interface EquipmentTableProp {
@@ -19,14 +17,14 @@ const EquipmentTable: React.FC<EquipmentTableProp> = ({equipments}) => {
                                 <th className="headColumn">Brand</th>
                                 <th className="headColumn">Model</th>
                                 <th className="headColumn">Type</th>
-                                <th className="headColumn">Nominal Capacity</th>
+                                <th className="headColumn">Nominal Capacity (kw)</th>
                                 <th className="headColumn">Installation Date</th>
                                 <th className="headColumn">Estimated Lifespan</th>
                                 <th className="headColumn">Mantenance Status</th>
                                 <th className="headColumn">Critical Energy System</th>
                                 <th className="headColumn">Usage Frequency</th>
                                 <th className="headColumn">Energy Efficiency</th>
-                                <th className="headColumn">Average Daily Consumption</th>
+                                <th className="headColumn">Average Daily Consumption (kw)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -43,7 +41,7 @@ const EquipmentTable: React.FC<EquipmentTableProp> = ({equipments}) => {
                                     <td className="rowData">{item.CriticalEnergySystem}</td>
                                     <td className="rowData">{item.Usage_Frequency}</td>
                                     <td className="rowData">{item.Energy_Efficiency}</td>
-                                    <td className="rowData">{item.Average_Daily_Consumption}</td>
+                                    <td className="rowData">{Math.abs(item.Average_Daily_Consumption)}</td>
                                 </tr>
                             ))}
                         </tbody>

@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { getToken } from "../../hooks/handleToken";
+import { useAlert } from "@/src/hooks/alertContxt";
+import Alert from "@/src/components/alerts/Alert";
 
 const FormComponent: React.FC<{ show: any }> = ({ show }) => {
 
+  const { showAlert, alertData } = useAlert();
   const token = getToken();
   const [message, setMessage] = useState<string>("");
-  const [showForm, setShowForm] = useState<boolean>(true);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,15 +28,16 @@ const FormComponent: React.FC<{ show: any }> = ({ show }) => {
       });
 
       if (response.ok) {
-        const result = await response.json();
-        setMessage(`Success: ${result.message}`);
+        showAlert(false, "Operation was successful!", 1500);
+        handleCancel();
+        return;
       } else {
         const error = await response.json();
         setMessage(`Error: ${error.message}`);
       }
-    } catch (error) {
+    } catch (error: any) {
       setMessage("Failed to connect to the server.");
-      console.error("Error:", error);
+      showAlert(true, error.message, 2000);
     }
   };
   const handleCancel = () => {
@@ -46,6 +49,13 @@ const FormComponent: React.FC<{ show: any }> = ({ show }) => {
       onSubmit={handleSubmit}
       className="card"
     >
+      {alertData.isVisible && (
+        <Alert
+          type={alertData.type}
+          message={alertData.message}
+          onClose={() => showAlert(false, "", 0)}
+        />
+      )}
       <h2 className="tittle">
         Formulario
       </h2>

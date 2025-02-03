@@ -9,7 +9,7 @@ export default interface Equipment {
     Estimated_Lifespan: number;
     Maintenance_Status: string;
     CriticalEnergySystem: number;
-    Usage_Frequency: number;
+    Usage_Frequency: string;
     Energy_Efficiency: number;
     Average_Daily_Consumption: number;
 }
