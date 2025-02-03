@@ -89,7 +89,7 @@ export default function QueriesPage() {
     useEffect(() => {
         const getFormats = async () => {
             try {
-                const response = await fetch("http://localhost:5050/api/?", {
+                const response = await fetch("http://localhost:5050/api/plugin/", {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
@@ -105,18 +105,19 @@ export default function QueriesPage() {
                 showAlert(true, error.message, 1500);
             }
         }
+        getFormats();
     }, []);
 
     // importar al formato seleccionado
     const importAs = async () => {
         try {
-            const response = await fetch("http://localhost:5050/api/?", {
+            const response = await fetch(`http://localhost:5050/api/plugin/${selectedFormats}`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ Format:selectedFormats , }) // Agregar el html de la pagina al body
+                body: JSON.stringify({}) // Agregar el html de la pagina al body
             });
             const data = await response.json();
             if (!response.ok) {
@@ -159,12 +160,12 @@ export default function QueriesPage() {
                     <select className='selector'
                         onChange={(e) => { setSelectedFormats(e.target.value) }}>
                         <option value="">Select a Format</option>
-                        {formats.map((format) => (
-                            <option value={format}>{format}</option>
+                        {formats.map((format,index) => (
+                            <option key={index} value={format}>{format}</option>
                         ))}
                     </select>
                     <button
-                        onClick={() => { }}
+                        onClick={() => importAs()}
                         className="w-10 h-10 items-center hover:scale-110 transition-all">
                         <img
                             src="/images/import.png"
