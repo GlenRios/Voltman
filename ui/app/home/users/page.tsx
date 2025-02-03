@@ -103,11 +103,11 @@ export default function Page() {
                 } else {
                     setUsers([...users, user]);
                 }
-                showAlert(false, isEdit ? 'User successfully updated.' : 'User successfully added.', 3000);
+                showAlert(false, isEdit ? 'User successfully updated.' : 'User successfully added.', 1500);
                 resetForm();
             }
         } catch (error: any) {
-            showAlert(true, error.message, 5000);
+            showAlert(true, error.message, 2500);
         }
     };
     // Eliminar Ususario
@@ -123,13 +123,13 @@ export default function Page() {
             });
             const data = await response.json();
             if (!response.ok) {
-                showAlert(true, data.error, 5000);
+                showAlert(true, data.error, 2500);
                 return;
             }
             setUsers(users.filter((user) => user.id !== id));
-            showAlert(false, 'User successfully deleted.', 2000);
+            showAlert(false, 'User successfully deleted.', 1500);
         } catch (error: any) {
-            showAlert(true, error.message, 5000);
+            showAlert(true, error.message, 2500);
         }
     };
 
@@ -236,11 +236,10 @@ export default function Page() {
                                     <td className="rowData">{user.Username}</td>
                                     <td className="rowData">{user.Company}</td>
                                     <td className="rowData">{user.Type}</td>
-                                    {/* <td className="rowData">{user.Password}</td> */}
-                                    <td className="flex  flex-col md:flex-row justify-center gap-1 w-auto">
+                                    <td className="rowData text-center">
                                         <button
                                             onClick={() => handleEditUser(user)}
-                                            className="buttonBlue"
+                                            className="buttonBlue mr-2"
                                         >
                                             ✏️
                                         </button>
@@ -320,7 +319,7 @@ export default function Page() {
                                 <select
                                     value={Company}
                                     onChange={e => setCompany(e.target.value)}
-                                    className="selector"
+                                    className="styleInput"
                                 >
                                     <option value="">Select a company</option>
                                     {branches.map((branch) => <option key={branch} value={branch}>{branch}</option>)}
@@ -332,7 +331,7 @@ export default function Page() {
                                 <select
                                     value={Type}
                                     onChange={e => setType(e.target.value)}
-                                    className="selector"
+                                    className="styleInput"
                                 >
                                     <option value="">Select a type</option>
                                     <option value="Analyst">Analyst</option>

@@ -1,37 +1,49 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { FaTrash } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import { goRestrictedRoute } from '@/src/hooks/handleRouts';
 import Notification from '@/src/models/Notification';
 import Logo from '@/src/components/logo';
 import { useAlert } from "@/src/hooks/alertContxt";
 import Alert from "@/src/components/alerts/Alert";
+import { getToken } from '@/src/hooks/handleToken';
 
 export default function Home() {
 
     //Variables
+    const token = getToken();
     const router = useRouter();
     const { showAlert, alertData } = useAlert();
-    const notificationsData: Notification[] = [
-        { id: 1, title: 'Consumo Alto ', message: 'El consumo eléctrico superó el límite establecido.' },];
+    const [notificationsData, setNotificationsData] = useState<Notification[]>([]);
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedNotification, setSelectedNotification] = useState<Notification | null>(null);
     const buttons = [{ name: 'Consult', route: 'consults' },
-        { name: 'Register', route: 'bills' },
-        { name: 'Users', route: 'users' },
-        { name: 'Branches', route: 'branches' },
-        { name: 'Log out', route: 'log_out' }
+    { name: 'Register', route: 'bills' },
+    { name: 'Users', route: 'users' },
+    { name: 'Branches', route: 'branches' },
+    { name: 'Log out', route: 'log_out' }
     ];
-
-    // Abrir una notificacion
-    const openNotification = (notification: Notification) => {
-        setSelectedNotification(notification);
-    };
-    // Cerrar una notificacion
-    const closeModal = () => {
-        setSelectedNotification(null);
-    };
+    // Obtener lista de alertas
+    const fetchAlerts = async () => {
+        try {
+            const response: any = getToken();
+            return await fetch("http://localhost:5050/api/consult/alerts/", {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!response.ok) {
+                const data = response.json();
+                showAlert(true, data.error, 2500);
+                return;
+            }
+            const data: Notification[] = await response.json();
+            setNotificationsData(data);
+        } catch (error: any) {
+            showAlert(true, error.message, 2500);
+        }
+    }
     // Eliminar una notificacion
     function handleDeleteNotification(id: number): void {
         throw new Error('Function not implemented.');
@@ -49,7 +61,7 @@ export default function Home() {
             showAlert(true, error.message, 5000);
         }
     };
-    
+
     return (
         <div className="flex h-screen flex-col lg:flex-row">
             {alertData.isVisible && (
@@ -66,15 +78,12 @@ export default function Home() {
                 </div>
                 <div className="p-4 overflow-y-auto border-2 border-gray-900">
                     <ul>
-                        {notificationsData.map((notification) => (
+                        {notificationsData.map((notification, index) => (
                             <li
-                                key={notification.id}
+                                key={index}
                                 className="mb-2 flex items-center justify-between cursor-pointer hover:bg-gray-700 p-2 rounded"
                             >
-                                <span onClick={() => openNotification(notification)}>🔔 {notification.title}</span>
-                                <button onClick={() => handleDeleteNotification(notification.id)}>
-                                    <FaTrash className="text-red-500 hover:text-red-700" />
-                                </button>
+                                <h2>{notification.Bool ? '🔔' : ''}{notification.Name}</h2>
                             </li>
                         ))}
                     </ul>
@@ -85,7 +94,10 @@ export default function Home() {
             <div className="flex-1 flex flex-col dark:bg-gray-900">
                 {/* Botón para abrir la barra lateral */}
                 <button
-                    onClick={() => setIsOpen(!isOpen)}
+                    onClick={() => {
+                        !isOpen ? fetchAlerts() : {};
+                        setIsOpen(!isOpen)
+                    }}
                     className="flex flex-col fixed top-8 right-8 z-50 items-center justify-center group"
                 >
                     <img
@@ -126,7 +138,6 @@ export default function Home() {
                             className="w-24 h-24 bg-transparent transform transition-all duration-200 hover:scale-125 text-black dark:text-white">
                             <img
                                 src={`/images/${item.name}.png`}
-                                // alt={item.name.charAt(0).toUpperCase() + item.name.slice(1)}
                                 className="w-full h-full object-contain dark:filter dark:brightness-0 dark:invert"
                             />
                             {item.name}
@@ -134,24 +145,6 @@ export default function Home() {
                     ))}
                 </div>
             </div>
-
-            {/* open notification */}
-            {selectedNotification && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 
-                                    flex items-center justify-center z-50">
-                    <div className="bg-white dark:bg-slate-600 p-6 
-                                    rounded-lg shadow-xl w-96 shadow-black">
-                        <h3 className="text-xl font-semibold mb-2">{selectedNotification.title}</h3>
-                        <p className="mb-4">{selectedNotification.message}</p>
-                        <button
-                            onClick={closeModal}
-                            className="bg-blue-600 text-black px-4 py-2 rounded hover:bg-blue-700"
-                        >
-                            Cerrar
-                        </button>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };

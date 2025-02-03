@@ -32,6 +32,7 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
 
     const handleSubmit = async () => {
         try {
+            setTotalConsumption(null);
             if (!formData.Company || !formData.startDate || !formData.endDate) {
                 showAlert(true, "Please complete all fields", 5000)
                 return;
@@ -57,7 +58,7 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
     }
 
     return (
-        <div className="flex flex-col item-center justify-center p-4 rounded shadow w-full">
+        <div className="consult">
             {alertData.isVisible && (
                 <Alert
                     type={alertData.type}
@@ -65,48 +66,45 @@ const TotalConsumption: React.FC<{ names: string[] }> = ({ names }) => {
                     onClose={() => showAlert(false, "", 0)}
                 />
             )}
-            <h2 className="tittle">Total Consumption:</h2>
-
-            <div className="grid grid-cols">
-                <label htmlFor="startDate" className='subtittle'>start day:</label>
-                <input
-                    type="date"
-                    name="startDate"
-                    value={formData.startDate}
-                    onChange={handleChange}
-                    className="styleInput"
-                    placeholder="Fecha de inicio"
-                />
-                <label htmlFor="endDate" className='subtittle'>end day:</label>
-                <input
-                    type="date"
-                    name="endDate"
-                    value={formData.endDate}
-                    onChange={handleChange}
-                    className="styleInput"
-                    placeholder="Fecha de fin"
-                />
-                <label htmlFor="Company" className='subtittle'>company:</label>
-                <select
-                    name="Company"
-                    value={selectedName}
-                    onChange={handleChange}
-                    className="styleInput"
-                >
-                    <option value="">Select a Company</option>
-                    {names.map((name, index) => (
-                        <option className="text-black"
-                            key={index}
-                            value={name}
-                            onClick={() => { setSlelctedName(name) }}
-                        >
-                            {name}
-                        </option>
-                    ))}
-                </select>
-            </div>
+            <h1 className="tittle">Total Consumption:</h1>
+            <label htmlFor="startDate" className='subtittle'>start day:</label>
+            <input
+                type="date"
+                name="startDate"
+                value={formData.startDate}
+                onChange={handleChange}
+                className="styleInput"
+                placeholder="Fecha de inicio"
+            />
+            <label htmlFor="endDate" className='subtittle'>end day:</label>
+            <input
+                type="date"
+                name="endDate"
+                value={formData.endDate}
+                onChange={handleChange}
+                className="styleInput"
+                placeholder="Fecha de fin"
+            />
+            <label htmlFor="Company" className='subtittle'>company:</label>
+            <select
+                name="Company"
+                value={selectedName}
+                onChange={handleChange}
+                className="styleInput"
+            >
+                <option value="">Select a Company</option>
+                {names.map((name, index) => (
+                    <option className="text-black"
+                        key={index}
+                        value={name}
+                        onClick={() => { setSlelctedName(name) }}
+                    >
+                        {name}
+                    </option>
+                ))}
+            </select>
             <button
-                className="buttonGreen m-4 mb-0"
+                className="buttonGreen mt-4"
                 onClick={handleSubmit}
             >
                 Consult

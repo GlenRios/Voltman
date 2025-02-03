@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAlert } from "@/src/hooks/alertContxt";
 import Alert from "@/src/components/alerts/Alert";
 import { LineChart } from "@/src/components/charts/LineChart";
@@ -16,7 +16,7 @@ const MonthlyAverage: React.FC<{ names: string[] }> = ({ names }) => {
 
     const { showAlert, alertData } = useAlert();
     const [selectors, setSelectors] = useState<string[]>([""]);
-    const [responseData, setREsponseData] = useState<respType[]|null>(null);
+    const [responseData, setREsponseData] = useState<respType[] | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const token = getToken();
 
@@ -35,6 +35,12 @@ const MonthlyAverage: React.FC<{ names: string[] }> = ({ names }) => {
     // Enviar los datos al backend
     const handleConsult = async () => {
         setIsSubmitting(true);
+        setSelectors(selectors.filter(name => name !== ''));
+        if(selectors.length === 0){
+            setREsponseData(null);
+            setIsSubmitting(false);
+            return;
+        }
         try {
             const response = await fetch("http://localhost:5050/api/consult/averageMonthly/", {
                 method: "POST",
@@ -42,7 +48,7 @@ const MonthlyAverage: React.FC<{ names: string[] }> = ({ names }) => {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(selectors),
+                body: JSON.stringify(selectors.filter(name => name !== '')),
             });
 
             const data = await response.json();
@@ -50,16 +56,19 @@ const MonthlyAverage: React.FC<{ names: string[] }> = ({ names }) => {
                 showAlert(true, data.error, 5000);
                 return;
             }
-            setREsponseData(data);
-        } catch (error) {
-            console.error(error);
+            if (data && data.length !== 0)
+                setREsponseData(data);
+            else
+                setREsponseData(null);
+        } catch (error:any) {
+            showAlert(true,error.message,2000);
         } finally {
             setIsSubmitting(false);
         }
     };
 
     return (
-        <div className="flex flex-col item-center justify-center p-4 rounded shadow w-full">
+        <div className="consult">
             {alertData.isVisible && (
                 <Alert
                     type={alertData.type}
@@ -70,11 +79,11 @@ const MonthlyAverage: React.FC<{ names: string[] }> = ({ names }) => {
             <h1 className="tittle">Monthly Average</h1>
             <label htmlFor="Companies" className="subtittle">Companies:</label>
             {selectors.map((selected, index) => (
-                <div key={index} className="mb-4">
+                <div key={index} className="mb-4 flex flex-row gap-1">
                     <select
                         value={selected}
                         onChange={(e) => handleSelectorChange(index, e.target.value)}
-                        className="selector"
+                        className="styleInput"
                     >
                         <option value="">Select a Copmany</option>
                         {names.map((option) => (
@@ -83,28 +92,33 @@ const MonthlyAverage: React.FC<{ names: string[] }> = ({ names }) => {
                             </option>
                         ))}
                     </select>
+                    <button
+                        className="buttonRed"
+                        onClick={() => setSelectors(selectors.filter((s, n) => n !== index))}>
+                        X
+                    </button>
                 </div>
+
             ))}
             <div className="flex flex-row gap-2">
                 <button onClick={addSelector} className="buttonBlue">
-                Add Company
-            </button>
+                    Add Company
+                </button>
 
-            <button
-                onClick={handleConsult}
-                disabled={isSubmitting}
-                className={`buttonGreen ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-                    }`}
-            >
-                Consult  
-            </button>
+                <button
+                    onClick={handleConsult}
+                    disabled={isSubmitting}
+                    className={`buttonGreen ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                        }`}
+                >
+                    Consult
+                </button>
             </div>
-            {responseData  && 
-                    <div>
-                        <LineChart data={responseData} index={'Date'} categories={selectors}  />
-                        
-                    </div>    
-                }
+            {responseData &&
+                <div>
+                    <LineChart data={responseData} index={'Date'} categories={selectors} />
+                </div>
+            }
         </div>
     );
 };

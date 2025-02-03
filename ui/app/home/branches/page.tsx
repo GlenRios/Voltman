@@ -124,11 +124,11 @@ export default function branchesPage() {
     }
     // Eliminar la sucursal seleccionada
     const deletedBranch = async () => {
-        if(!selectedBranch){
-            showAlert(true,"please first select a branch",4000);
+        if (!selectedBranch) {
+            showAlert(true, "please first select a branch", 4000);
             return;
         }
-            
+
         try {
             const response = await fetch(`http://localhost:5050/api/branch/${branchInfo.id}/`, {
                 method: "DELETE",
@@ -593,7 +593,7 @@ export default function branchesPage() {
 
                 <form className="space-y-4 bg-transparent" onSubmit={handleCreate}>
                     <h2 className="tittle">
-                        {newEquipment.Area ? "Edit Equipment" : "Add Equipment"}
+                        {isAddForm ? "New Equipment" : "Edit Equipment"}
                     </h2>
                     <div className="flex flex-row gap-2">
                         <div className="flex flex-col gap-2">
@@ -1105,7 +1105,7 @@ export default function branchesPage() {
                                                 <td className="rowData text-center">
                                                     <button
                                                         onClick={handleAddArea}
-                                                        className="buttonGreen"
+                                                        className="buttonGreen mr-2"
                                                     >
                                                         Add
                                                     </button>
@@ -1153,7 +1153,7 @@ export default function branchesPage() {
                                                                 onClick={handleCancelClick}
                                                                 className="buttonGray"
                                                             >
-                                                                Cance
+                                                                Cancel
                                                             </button>
                                                         </td>
                                                     </>
