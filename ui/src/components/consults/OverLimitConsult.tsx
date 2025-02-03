@@ -5,7 +5,6 @@ import Alert from "../alerts/Alert";
 import ExceededTable, { ExceededTableProp } from "./ExceededTable";
 import { getToken } from '@/src/hooks/handleToken';
 
-
 const OverLimitConsult: React.FC = () => {
 
     const { showAlert, alertData } = useAlert();
@@ -26,19 +25,21 @@ const OverLimitConsult: React.FC = () => {
                     'Content-Type': 'application/json'
                 }
             });
-            const data = await response.json();
             if (!response.ok) {
-                showAlert(true, data.error, 5000)
+                const data = await response.json();
+                showAlert(true, data.error, 2300)
+                return;
             }
+            const data:ExceededTableProp[] = await response.json();
             setResponseData(data);
 
-        } catch (Error) {
-            console.error(Error)
+        } catch (error:any) {
+            showAlert(true,error.message,1500);
         }
     }
 
     return (
-        <div className="p-4 rounded shadow">
+        <div className="consult">
             {alertData.isVisible && (
                 <Alert
                     type={alertData.type}
@@ -58,7 +59,7 @@ const OverLimitConsult: React.FC = () => {
                     placeholder="Fecha de inicio"
                 />
                 <button
-                    className="buttonGreen m-2"
+                    className="buttonGreen mb-4"
                     onClick={handleSubmit}
                 >
                     Consult

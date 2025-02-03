@@ -4,6 +4,8 @@ import EquipmentTable, { EquipmentTableProp } from "./EquipmentTable";
 import { useAlert } from "@/src/hooks/alertContxt";
 import Alert from "@/src/components/alerts/Alert";
 import { getToken } from '@/src/hooks/handleToken';
+import { fetchEquipments } from "@/src/api/EquipmentService";
+import Equipment from "@/src/models/Equipments";
 
 
 const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
@@ -12,24 +14,8 @@ const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
     const [areas, setAreas] = useState<string[] | null>(null);
     const [selectCompany, setSelectCompany] = useState<string>('')
     const [selectArea, setSelectArea] = useState<string>('')
-    const [loading, setLoading] = useState<boolean>(false)
-	const [updateEquipmentTable,setUpdateEquipmentTable] = useState<boolean>(false)
     const token = getToken();
-
-    const handleSubmit = async () => {
-        try {
-            setLoading(false);
-            if (!selectCompany || !selectArea) {
-                showAlert(true, "Please complete all fields", 1000)
-                return;
-            }
-            setLoading(true);
-			setUpdateEquipmentTable(!updateEquipmentTable);
-        }
-        catch (error) {
-            console.error(error);
-        }
-    };
+    const [responseData, setRedponseData] = useState<Equipment[] | null>(null);
 
     useEffect(() => { getAreas(); }, [selectCompany])
     const fetchAreasNames = async () => {
@@ -50,16 +36,34 @@ const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
             const names = data.map((item: { Name: any; }) => (item.Name))
             setAreas(names);
         }
-        catch (error) {
-            console.error(error);
+        catch (error: any) {
+            showAlert(true, error.message, 2000);
         }
     }
     const getAreas = () => {
         fetchAreasNames();
     }
 
+    // Pedir los Equipos
+    const getEquipments = async () => {
+        try {
+            const response = await fetchEquipments(selectCompany, selectArea)
+            if (!response.ok) {
+                setRedponseData(null);
+                const data = await response.json();
+                throw new Error(data.error);
+            }
+            const result: Equipment[] = await response.json();
+            setRedponseData(result);
+        }
+        catch (error: any) {
+            showAlert(true, error.message, 2000);
+        }
+    };
+
+
     return (
-        <div className="p-4 rounded shadow">
+        <div className="consult">
             {alertData.isVisible && (
                 <Alert
                     type={alertData.type}
@@ -67,55 +71,52 @@ const EquipmentQuery: React.FC<{ names: string[] }> = ({ names }) => {
                     onClose={() => showAlert(false, "", 0)}
                 />
             )}
-            <h2 className="tittle">Consult Equipments:</h2>
-            <div className="grid grid-cols-1">
-                <label htmlFor="Company" className="subtittle">company:</label>
-                <select
-                    name="company"
-                    value={selectCompany}
-                    onChange={(e) => setSelectCompany(e.target.value)}
-                    className="selector"
-                >
-                    <option value="">Select a company</option>
-                    {names.map((name, index) => (
-                        <option className="text-black dark:text-white"
-                            key={index}
-                            value={name}
-                            onClick={() => { setSelectCompany(name) }}
-                        >
-                            {name}
-                        </option>
-                    ))}
-                </select>
-                <label htmlFor="Company" className="subtittle">area:</label>
-                <select
-                    name="Area"
-                    value={selectArea}
-                    onChange={(e) => setSelectArea(e.target.value)}
-                    className="selector"
-                >
-                    <option value="">Select a Area</option>
-                    {areas && areas.map((name, index) => (
-                        <option className="text-black dark:text-white"
-                            key={index}
-                            value={name}
-                            onClick={() => { setSelectArea(name) }}
-                        >
-                            {name}
-                        </option>
-                    ))}
-                </select>
-                <button
-                    className="buttonGreen m-4 mb-0"
-                    onClick={handleSubmit}
-                >
-                    Consult
-                </button>
-            </div>
-            {loading &&
+            <h1 className="tittle">Consult Equipments:</h1>
+            <label htmlFor="Company" className="subtittle">company:</label>
+            <select
+                name="company"
+                value={selectCompany}
+                onChange={(e) => setSelectCompany(e.target.value)}
+                className="styleInput"
+            >
+                <option value="">Select a company</option>
+                {names.map((name, index) => (
+                    <option className="text-black"
+                        key={index}
+                        value={name}
+                        onClick={() => { setSelectCompany(name) }}
+                    >
+                        {name}
+                    </option>
+                ))}
+            </select>
+            <label htmlFor="Company" className="subtittle">area:</label>
+            <select
+                name="Area"
+                value={selectArea}
+                onChange={(e) => setSelectArea(e.target.value)}
+                className="styleInput"
+            >
+                <option value="">Select a Area</option>
+                {areas && areas.map((name, index) => (
+                    <option className="text-black dark:text-white"
+                        key={index}
+                        value={name}
+                        onClick={() => { setSelectArea(name) }}
+                    >
+                        {name}
+                    </option>
+                ))}
+            </select>
+            <button
+                className="buttonGreen mt-4"
+                onClick={getEquipments}
+            >
+                Consult
+            </button>
+            {responseData &&
                 <div>
-                    {/* <button onClick={() => setLoading(false)} className="buttonRed m-4 mb-0">X</button> */}
-                    <EquipmentTable branch={selectCompany} area={selectArea} key={updateEquipmentTable} />
+                    <EquipmentTable equipments={responseData} />
                 </div>
             }
         </div>

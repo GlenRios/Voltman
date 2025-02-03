@@ -25,6 +25,7 @@ class BillRepo(BaseRepo):
         # Returns the difference in reading, calculating consumption
         return (end_consumption.Reading if end_consumption else 0) - (start_consumption.Reading if start_consumption else 0)
     
+    
     # Retrieves bills for a given company in a specified date range
     def get_in_date_range(self, company: str, start_date: date, end_date: date):
         idCompany = self.company_repo.get_byName(company).id
@@ -105,7 +106,7 @@ class BillRepo(BaseRepo):
         overlimit = prev_overlimit - daily_consumption
 
         # Calculates the cost of the bill, considering the extra percent and increase rate
-        cost = (1 + company.Extra_Percent) * daily_consumption + company.Increase
+        cost = (1 + company.Extra_Percent/100) * daily_consumption + company.Increase
 
         # Returns the data that can be used to create a new bill model
         return {'BillDate': values['Date'],
