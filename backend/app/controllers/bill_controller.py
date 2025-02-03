@@ -115,6 +115,6 @@ class BillController():
         # Format the response
         answ=[]
         for name, _ in items:
-            answ.append({'Name': name, 'Bool': name==company})
+            answ.append({'Name': name, 'Bool': (name==company)})
 
         return answ    

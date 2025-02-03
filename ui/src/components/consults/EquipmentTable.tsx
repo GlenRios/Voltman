@@ -3,44 +3,14 @@ import { fetchEquipments } from '@/src/api/EquipmentService';
 import Equipment from '@/src/models/Equipments';
 
 export interface EquipmentTableProp {
-    branch: string,
-    area: string
+    equipments : Equipment[]
 }
 
-const EquipmentTable: React.FC<EquipmentTableProp> = ({ branch, area }) => {
-    const [data, setData] = useState<Equipment[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setIsLoading(true);
-
-                const response = await fetchEquipments(branch, area)
-                if (!response.ok) {
-                    throw new Error('Error al obtener los datos');
-                }
-                const result: Equipment[] = await response.json();
-                setData(result);
-            }
-            catch (error) {
-                alert(error);
-            }
-            finally {
-                setIsLoading(false);
-            }
-        };
-
-        fetchData();
-    }, []);
-
+const EquipmentTable: React.FC<EquipmentTableProp> = ({equipments}) => {
+    
     return (
         <div className="p-4">
             <h2 className="subtittle text-xl">Equipments Info:</h2>
-
-            {isLoading ? (
-                <p className="text-gray-500">Loading...</p>
-            ) : (
                 <div className="overflow-x-auto">
                     <table className="styleTable">
                         <thead>
@@ -60,7 +30,7 @@ const EquipmentTable: React.FC<EquipmentTableProp> = ({ branch, area }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {data.map((item, index) => (
+                            {equipments.map((item, index) => (
                                 <tr key={index} className="rowTable">
                                     <td className="rowData">{item.Area}</td>
                                     <td className="rowData">{item.Brand}</td>
@@ -79,7 +49,6 @@ const EquipmentTable: React.FC<EquipmentTableProp> = ({ branch, area }) => {
                         </tbody>
                     </table>
                 </div>
-            )}
         </div>
     );
 };

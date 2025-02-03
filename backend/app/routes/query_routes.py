@@ -56,7 +56,7 @@ def predict(company):
 
 @consult_bp.route('/alerts/', methods=['GET'])
 @jwt_required(optional=False)
-def show_alerts(company):
+def show_alerts():
     username= get_jwt_identity()
     user = uc.get(username)
     company= user.Company

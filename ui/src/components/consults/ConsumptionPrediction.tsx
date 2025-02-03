@@ -42,7 +42,7 @@ const ConsumptionPrediction: React.FC<{ names: string[] }> = ({ names }) => {
     }
 
     return (
-        <div className="p-4 rounded shadow flex flex-col item-center justify-center">
+        <div className="consult">
             {alertData.isVisible && (
                 <Alert
                     type={alertData.type}
@@ -57,9 +57,9 @@ const ConsumptionPrediction: React.FC<{ names: string[] }> = ({ names }) => {
                     name="Company"
                     value={selectedName}
                     onChange={(e) => { setSelectName(e.target.value) }}
-                    className="selector"
+                    className="styleInput"
                 >
-                    <option value="">Selecciona una sucursal</option>
+                    <option value="">Select a branch</option>
                     {names.map((name, index) => (
                         <option className="text-black"
                             key={index}
