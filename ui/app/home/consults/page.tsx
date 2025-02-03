@@ -114,20 +114,42 @@ export default function QueriesPage() {
     // importar al formato seleccionado
     const importAs = async () => {
         try {
-            const response = await fetch(`http://localhost:5050/api/plugin/${selectedFormats}`, {
+            const response = await fetch(`http://localhost:5050/api/plugin/${selectedFormats}/`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ data: document.documentElement.outerHTML })
+                body: JSON.stringify({ data: document.getElementsByClassName("card")[0].outerHTML  })
+                //body: JSON.stringify({ data: "<html><body><p>hello wolrd</p></body></html>" })
+                //body: JSON.stringify({ data: document.body.outerHTML  })
             });
             if (!response.ok) {
                 const data = await response.json();
                 showAlert(true, data.error, 2500)
                 return;
             }
-            // Logica de descarga 
+            // Logica de descarga
+            //console.log(document.getElementsByClassName("consult")[0].outerHTML)
+            let data = await response.json()
+            data = atob(data.data)
+            console.log(data)
+            // let byteNumbers = new Array(data.length)
+            // for(let i=0;i<byteNumbers.length;i++){
+            //     byteNumbers[i] = data.charCodeAt(i)
+            // }
+            // let byteArray = new Uint8Array(byteNumbers)
+            // const url = window.URL.createObjectURL(new Blob([data],{type: "application/pdf"}))
+            // const link = document.createElement("a")
+            // link.href = url
+            // link.download = "download.pdf"
+            // document.body.appendChild(link)
+            // link.click()
+            // document.body.removeChild(link)
+            // window.URL.revokeObjectURL(url)
+
+
+            
         } catch (error: any) {
             showAlert(true, error.message, 1500);
         }

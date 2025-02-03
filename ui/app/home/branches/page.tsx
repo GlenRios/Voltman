@@ -1300,7 +1300,7 @@ export default function branchesPage() {
                                                         <td className="rowData">
                                                             {item.Model}
                                                         </td>
-                                                        <td className="rowData text-center">
+                                                        <td className="rowData text-center whitespace-nowrap">
                                                             <button
                                                                 onClick={() => handleEditClickEq(item)}
                                                                 className="buttonBlue mr-2"
