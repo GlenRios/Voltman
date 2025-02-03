@@ -1,5 +1,5 @@
-from Configurations.database import SessionLocal
-from db.models import Group, Company, User
+from app.Configurations.database import SessionLocal
+from app.db.models import Group, Company, User
 
 def seed_data():
     db= SessionLocal()

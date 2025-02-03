@@ -1,13 +1,13 @@
-from db.models.User import UserModel
-from db.repos.BaseRepo import BaseRepo
-from domain.User import User
-from db.models.Group import GroupModel
+from app.db.models.User import UserModel
+from app.db.repos.BaseRepo import BaseRepo
+from app.domain.User import User
+from app.db.models.Group import GroupModel
 
 class UserRepo(BaseRepo):
     
     # Initializes the repository and sets up additional repository dependencies (company_repo and group_repo)
-    def __init__(self, db, company_repo):
-        super().__init__(db, UserModel)  # Calls the parent constructor to initialize with the UserModel
+    def __init__(self, company_repo):
+        super().__init__(UserModel)  # Calls the parent constructor to initialize with the UserModel
         self.company_repo = company_repo  # Assigns the company repository to access company-related data
     
     # Retrieves a user by their username

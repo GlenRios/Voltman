@@ -1,19 +1,19 @@
 from flask import Flask
 from flask_cors import CORS
-from Configurations import ConfigApp
-from auth.jwt_extension import init_jwt
-from Configurations.database import Base, SessionLocal, engine
+from app.Configurations import ConfigApp
+from app.auth.jwt_extension import init_jwt
+from app.Configurations.database import Base, engine, Base, SessionLocal
 from flask_migrate import Migrate
 
 # Import Blueprints for different routes
-from routes.user_routes import user_bp
-from routes.company_routes import branch_bp
-from routes.area_routes import area_bp
-from routes.equipments_routes import equips_bp
-from routes.access import access_bp
-from routes.register_bill_routes import bill_bp
-from routes.query_routes import consult_bp
-from routes.plugins import plugin_bp
+from app.routes.user_routes import user_bp
+from app.routes.company_routes import branch_bp
+from app.routes.area_routes import area_bp
+from app.routes.equipments_routes import equips_bp
+from app.routes.access import access_bp
+from app.routes.register_bill_routes import bill_bp
+from app.routes.query_routes import consult_bp
+from app.routes.plugins import plugin_bp
 
 # Register routes for the app
 def register_routes(app):
@@ -27,8 +27,8 @@ def register_routes(app):
     app.register_blueprint(plugin_bp, url_prefix='/api/plugin')
 
 from flask import jsonify
-from Configurations.CustomError import CustomError
-from seed.seed_data import seed_data
+from app.Configurations.CustomError import CustomError
+from app.seed.seed_data import seed_data
 
 # Error handlers for the app
 def register_error_handlers(app):
@@ -54,12 +54,11 @@ def create_app():
     init_jwt(app)
     CORS(app)
 
-    # Crear tablas si no existen
-    Base.metadata.create_all(bind=engine)
-    # Insertar datos base
-    seed_data()
+    with app.app_context():
+        Base.metadata.create_all(bind=engine)
+        seed_data()
     # Inicializar Flask-Migrate
-    Migrate(app, engine)
+    migrate = Migrate(app, engine, base=Base)
 
     register_routes(app)
     register_error_handlers(app)

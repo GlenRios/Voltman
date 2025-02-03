@@ -1,11 +1,12 @@
 from sqlalchemy.orm import Session 
 from sqlalchemy.exc import IntegrityError, NoResultFound
-from Configurations.CustomError import CustomError
+from app.Configurations.CustomError import CustomError
+from app.Configurations.database import SessionLocal
 
 class BaseRepo:
     # Constructor para inicializar la conexión de la base de datos y el modelo
-    def __init__(self, db: Session, Model):
-        self.db = db
+    def __init__(self, Model):
+        self.db = SessionLocal()
         self.Model = Model
 
     # Método para crear un nuevo registro en la base de datos

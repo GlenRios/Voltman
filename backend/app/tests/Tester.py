@@ -18,12 +18,30 @@ class Tester:
         return users
     
     def create_company(self):
+        branch_types = [
+            "Corporate Office",
+            "Distribution Center",
+            "Production Plant",
+            "Retail Store",
+            "Warehouse",
+            "Customer Service Branch",
+            "Data Center",
+            "Service Station",
+            "Administrative Building",
+            "Laboratory",
+            "Factory",
+            "University Campus",
+            "Hospital or Clinic",
+            "Hotel",
+            "Supermarket",
+        ]
         return {'Limit': self.fake.pyfloat(min_value=4000.00, max_value= 6000.00, right_digits=2),
-                'Increase': 20,
-                'Extra_Percent': 15,
-                'Type': f'type{random.randint(1, 10) }',
+                'Increase': random.randint(20, 60),
+                'Extra_Percent': random.randint(10, 50),
+                'Type': random.choice(branch_types),
                 'Name': self.fake.company(),
-                'Addr': self.fake.address()}
+                'Addr': self.fake.address()
+                }
 
     def create_companies(self, n: int):
         companies=[]
@@ -32,47 +50,47 @@ class Tester:
     
     def create_area(self, companies):
         # Lista de posibles áreas dentro de una compañía
-        areas_empresa = [
-            "Recursos Humanos",
-            "Finanzas",
-            "Contabilidad",
-            "Administración",
-            "Ventas",
+        company_areas = [
+            "Human Resources",
+            "Finance",
+            "Accounting",
+            "Administration",
+            "Sales",
             "Marketing",
-            "Atención al Cliente",
-            "Soporte Técnico",
-            "Desarrollo de Producto",
-            "Investigación y Desarrollo (I+D)",
-            "Producción",
-            "Logística",
-            "Almacén",
-            "Compras",
-            "Tecnología de la Información (TI)",
-            "Seguridad Informática",
-            "Mantenimiento",
-            "Calidad",
-            "Seguridad y Salud Ocupacional",
-            "Relaciones Públicas",
-            "Asesoría Legal",
-            "Servicio Postventa",
-            "Innovación",
-            "Planeación Estratégica",
-            "Control de Gestión",
-            "Auditoría Interna",
-            "Proyectos Especiales",
-            "Operaciones",
-            "Sostenibilidad y Responsabilidad Social",
-            "Diseño Gráfico",
-            "Desarrollo Web",
-            "Capacitación y Desarrollo",
-            "Seguridad Física",
-            "Relaciones Industriales",
-            "Medio Ambiente",
-            "Gestión de Energía",
-            "Expansión y Nuevos Negocios"
+            "Customer Service",
+            "Technical Support",
+            "Product Development",
+            "Research and Development (R&D)",
+            "Production",
+            "Logistics",
+            "Warehouse",
+            "Purchasing",
+            "Information Technology (IT)",
+            "Cybersecurity",
+            "Maintenance",
+            "Quality",
+            "Occupational Health and Safety",
+            "Public Relations",
+            "Legal Advisory",
+            "After-Sales Service",
+            "Innovation",
+            "Strategic Planning",
+            "Management Control",
+            "Internal Audit",
+            "Special Projects",
+            "Operations",
+            "Sustainability and Corporate Social Responsibility",
+            "Graphic Design",
+            "Web Development",
+            "Training and Development",
+            "Physical Security",
+            "Industrial Relations",
+            "Environment",
+            "Energy Management",
+            "Expansion and New Business"
         ]
 
-        return {'Name': random.choice(areas_empresa)+ self.fake.text(6), 'Company': random.choice(companies), 'Responsible': self.fake.name()}
+        return {'Name': random.choice(company_areas)+ self.fake.text(6), 'Company': random.choice(companies), 'Responsible': self.fake.name()}
     
     def create_areas(self, n: int, companies):
         areas=[]
@@ -81,68 +99,9 @@ class Tester:
     
     def create_equipment(self, areas):
         area= random.choice(areas)
-        equipos_electricos = [
-            # Oficinas y espacios administrativos
-            "Computadora de escritorio",
-            "Laptop",
-            "Impresora",
-            "Fotocopiadora",
-            "Escáner",
-            "Monitor",
-            "Teléfono IP",
-            "Ruteador de red",
-            "Switch de red",
-            "Luminaria LED",
-            "Aire acondicionado de pared",
-            "Sistema de videoconferencia",
 
-            # Áreas industriales y talleres
-            "Motor eléctrico",
-            "Compresor de aire",
-            "Taladro eléctrico",
-            "Sierra eléctrica",
-            "Soldadora",
-            "Sistema de extracción de polvo",
-            "Horno industrial",
-            "Bomba de agua",
-            "Transformador",
-            "Sistema de automatización (PLC)",
-            "Panel HMI",
-
-            # Cocinas y comedores
-            "Refrigerador",
-            "Microondas",
-            "Horno eléctrico",
-            "Máquina de café",
-            "Tostadora",
-            "Dispensador de agua fría y caliente",
-            "Licuadora industrial",
-
-            # Sistemas de seguridad y soporte
-            "Cámara de seguridad (CCTV)",
-            "Servidor",
-            "UPS (Uninterruptible Power Supply)",
-            "Detector de humo",
-            "Detector de monóxido de carbono",
-            "Panel de control de alarmas",
-            "Estación de carga para vehículos eléctricos",
-
-            # Áreas de almacenamiento
-            "Montacargas eléctrico",
-            "Estantería móvil automatizada",
-            "Sensor de temperatura",
-            "Sensor de humedad",
-            "Puerta automática",
-
-            # Áreas generales
-            "Ventilador industrial",
-            "Calentador de ambiente",
-            "Tablero eléctrico",
-            "Generador eléctrico de respaldo",
-            "Sistema de paneles solares"
-        ]
-        # Lista de marcas para equipos eléctricos
-        marcas_equipos = [
+            
+        equipment_brands = [
             "Samsung",
             "LG",
             "Sony",
@@ -196,10 +155,176 @@ class Tester:
             "Corsair"
         ]
 
+        maintenance_statuses = [
+            "Operational",
+            "Under Repair",
+            "Scheduled Maintenance",
+            "Decommissioned",
+            "Pending Inspection",
+            "Partially Operational",
+            "Requires Upgrade",
+            "Energy Optimization Required",
+            "Critical Failure",
+            "Awaiting Spare Parts",
+            "Under Performance Review",
+            "Newly Installed",
+            "Temporarily Out of Service"
+        ]
+
+        usage_frequencies = [
+            "Daily",
+            "Multiple times per day",
+            "Weekly",
+            "Bi-weekly",
+            "Monthly",
+            "Seasonal",
+            "Occasionally",
+            "Continuous Operation",
+            "On-Demand",
+            "Peak Hours Only",
+            "Night-Shift Only",
+            "Rarely Used",
+            "24/7 Operation"
+        ]
+        
+        electrical_equipment_kw = {
+            # Offices and administrative spaces
+            "Desktop computer": 0.3,  # 300W
+            "Laptop": 0.06,  # 60W
+            "Printer": 0.5,  # 500W (Laser)
+            "Photocopier": 1.2,  # 1200W
+            "Scanner": 0.2,  # 200W
+            "Monitor": 0.05,  # 50W
+            "IP phone": 0.01,  # 10W
+            "Network router": 0.015,  # 15W
+            "Network switch": 0.05,  # 50W
+            "LED light": 0.02,  # 20W
+            "Wall-mounted air conditioner": 3.5,  # 3.5 kW
+            "Videoconferencing system": 0.1,  # 100W
+
+            # Industrial areas and workshops
+            "Electric motor": 5.0,  # 5 kW (variable depending on application)
+            "Air compressor": 7.5,  # 7.5 kW
+            "Electric drill": 0.8,  # 800W
+            "Electric saw": 1.5,  # 1500W
+            "Welder": 10.0,  # 10 kW
+            "Dust extraction system": 4.0,  # 4 kW
+            "Industrial oven": 15.0,  # 15 kW
+            "Water pump": 3.0,  # 3 kW
+            "Transformer": 50.0,  # 50 kW (depends on size)
+            "Automation system (PLC)": 0.5,  # 500W
+            "HMI panel": 0.3,  # 300W
+
+            # Kitchens and dining areas
+            "Refrigerator": 0.15,  # 150W
+            "Microwave": 1.2,  # 1.2 kW
+            "Electric oven": 2.0,  # 2 kW
+            "Coffee machine": 1.0,  # 1 kW
+            "Toaster": 0.8,  # 800W
+            "Cold and hot water dispenser": 0.5,  # 500W
+            "Industrial blender": 1.5,  # 1500W
+
+            # Security and support systems
+            "Security camera (CCTV)": 0.01,  # 10W
+            "Server": 1.0,  # 1 kW
+            "UPS (Uninterruptible Power Supply)": 3.0,  # 3 kW
+            "Smoke detector": 0.005,  # 5W
+            "Carbon monoxide detector": 0.005,  # 5W
+            "Alarm control panel": 0.03,  # 30W
+            "Electric vehicle charging station": 22.0,  # 22 kW
+
+            # Storage areas
+            "Electric forklift": 10.0,  # 10 kW
+            "Automated mobile shelving": 2.0,  # 2 kW
+            "Temperature sensor": 0.002,  # 2W
+            "Humidity sensor": 0.002,  # 2W
+            "Automatic door": 0.75,  # 750W
+
+            # General areas
+            "Industrial fan": 1.5,  # 1.5 kW
+            "Space heater": 2.5,  # 2.5 kW
+            "Electrical panel": 0.3,  # 300W (depends on connected equipment)
+            "Backup generator": 100.0,  # 100 kW (depends on size)
+            "Solar panel system": 5.0  # 5 kW (depends on installation)
+        }
+
+        daily_power_consumption_kw = {
+            # Offices and administrative spaces
+            "Desktop computer": 2.4,  # (300W * 8h)
+            "Laptop": 0.48,  # (60W * 8h)
+            "Printer": 1.5,  # (500W * 3h intermittent use)
+            "Photocopier": 3.6,  # (1200W * 3h)
+            "Scanner": 0.6,  # (200W * 3h)
+            "Monitor": 0.4,  # (50W * 8h)
+            "IP phone": 0.08,  # (10W * 8h)
+            "Network router": 0.36,  # (15W * 24h)
+            "Network switch": 1.2,  # (50W * 24h)
+            "LED light": 0.16,  # (20W * 8h)
+            "Wall-mounted air conditioner": 28,  # (3.5kW * 8h)
+            "Videoconferencing system": 0.5,  # (100W * 5h)
+
+            # Industrial areas and workshops
+            "Electric motor": 40,  # (5kW * 8h)
+            "Air compressor": 60,  # (7.5kW * 8h)
+            "Electric drill": 2.4,  # (800W * 3h intermittent use)
+            "Electric saw": 4.5,  # (1.5kW * 3h)
+            "Welder": 50,  # (10kW * 5h)
+            "Dust extraction system": 32,  # (4kW * 8h)
+            "Industrial oven": 120,  # (15kW * 8h)
+            "Water pump": 24,  # (3kW * 8h)
+            "Transformer": 200,  # (50kW * 4h intermittent use)
+            "Automation system (PLC)": 4,  # (500W * 8h)
+            "HMI panel": 2.4,  # (300W * 8h)
+
+            # Kitchens and dining areas
+            "Refrigerator": 1.8,  # (150W * 12h, compressor doesn't work all day)
+            "Microwave": 1.2,  # (1.2kW * 1h)
+            "Electric oven": 6,  # (2kW * 3h)
+            "Coffee machine": 3,  # (1kW * 3h)
+            "Toaster": 0.4,  # (800W * 0.5h)
+            "Cold and hot water dispenser": 2.5,  # (500W * 5h)
+            "Industrial blender": 0.3,  # (1.5kW * 0.2h)
+
+            # Security and support systems
+            "Security camera (CCTV)": 0.24,  # (10W * 24h)
+            "Server": 24,  # (1kW * 24h)
+            "UPS (Uninterruptible Power Supply)": 9,  # (3kW * 3h backup)
+            "Smoke detector": 0.12,  # (5W * 24h)
+            "Carbon monoxide detector": 0.12,  # (5W * 24h)
+            "Alarm control panel": 0.72,  # (30W * 24h)
+            "Electric vehicle charging station": 44,  # (22kW * 2h charge)
+
+            # Storage areas
+            "Electric forklift": 50,  # (10kW * 5h)
+            "Automated mobile shelving": 6,  # (2kW * 3h)
+            "Temperature sensor": 0.048,  # (2W * 24h)
+            "Humidity sensor": 0.048,  # (2W * 24h)
+            "Automatic door": 3,  # (750W * 4h intermittent use)
+
+            # General areas
+            "Industrial fan": 12,  # (1.5kW * 8h)
+            "Space heater": 20,  # (2.5kW * 8h)
+            "Electrical panel": 2.4,  # (300W * 8h)
+            "Backup generator": 400,  # (100kW * 4h use)
+            "Solar panel system": -20  # (-5kW * 4h generation)
+        }
+
+        electrical_equipment = list(electrical_equipment_kw.keys())
+
+        type= random.choice(electrical_equipment)
+
         return{'Area': area[0], 'Company': area[1], 
-               'Type':random.choice(equipos_electricos),
-               'Brand': random.choice(marcas_equipos),
-               'Installation_Date': self.fake.date_between(start_date="-1000d", end_date="today").strftime("%Y-%m-%d")
+               'Type':type,
+               'Brand': random.choice(equipment_brands),
+               'Installation_Date': self.fake.date_between(start_date="-1000d", end_date="today").strftime("%Y-%m-%d"),
+               'Maintenance_Status': random.choice(maintenance_statuses),
+               'Usage_Frequency': random.choice(usage_frequencies),
+               'Model': self.fake.bothify(text="Model-####"),
+               'CriticalEnergySystem': "Critical" if self.fake.boolean(chance_of_getting_true=30) else "No-Critical",
+               'Estimated_Lifespan': random.randint(3, 20),
+               'Nominal_Capacity': electrical_equipment_kw[type],
+               'Energy_Efficiency': random.randint(50, 96),
+               'Average_Daily_Consumption': daily_power_consumption_kw[type]
                }
     
     def create_equipments(self, n: int, areas):
@@ -216,7 +341,3 @@ class Tester:
             str_date= actual_date.strftime("%Y-%m-%d")
             bills.append({'Date': str_date , 'Company': company, 'Reading': reading})    
         return bills    
-
-
-
-

@@ -1,7 +1,7 @@
 from flask import Blueprint, Flask, jsonify, request
-from Configurations.dependencies import EC as ec, AC as ac
-from Configurations.CustomError import CustomError
-from auth.permission import branch_management_permission_required
+from app.Configurations.dependencies import EC as ec, AC as ac
+from app.Configurations.CustomError import CustomError
+from app.auth.permission import branch_management_permission_required
 
 
 equips_bp = Blueprint("equipment", __name__)

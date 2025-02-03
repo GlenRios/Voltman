@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 
 class Equipment:
     """
@@ -7,7 +7,7 @@ class Equipment:
     and other relevant attributes for managing the equipment in the system.
     """
 
-    def __init__(self, id: int, area: str, average_daily_consumption: float, maintenance_status: str, energy_efficiency: float, nominal_capacity: float, estimated_lifespan: float, installation_date: datetime, usage_frequency: str, type: str, brand: str, model: str, criticalEnergySystem: str):
+    def __init__(self, id: int, area: str, average_daily_consumption: float, maintenance_status: str, energy_efficiency: float, nominal_capacity: float, estimated_lifespan: float, installation_date: date, usage_frequency: str, type: str, brand: str, model: str, criticalEnergySystem: str):
         self.id = id  # Unique identifier for the equipment
         self.Area = area  # The area where the equipment is installed
         self.Average_Daily_Consumption = average_daily_consumption  # The average daily consumption of the equipment (e.g., kWh)

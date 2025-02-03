@@ -1,4 +1,3 @@
-from db.repos.EquipmentRepo import EquipmentRepo
 
 class IEquipment:
     """
@@ -6,7 +5,7 @@ class IEquipment:
     It acts as an intermediary between the API layer and the repository layer for equipment data management.
     """
 
-    def __init__(self, repo: EquipmentRepo):
+    def __init__(self, repo):
         """
         Initializes the IEquipment service with the provided Equipment repository.
         :param repo: The Equipment repository that handles data persistence.

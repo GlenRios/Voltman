@@ -1,4 +1,4 @@
-from Configurations.CustomError import CustomError
+from app.Configurations.CustomError import CustomError
 
 class UserController:
     # Initialize the controller with interfaces for user and company operations

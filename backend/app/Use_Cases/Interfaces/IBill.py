@@ -1,9 +1,8 @@
-from db.repos.BillRepo import BillRepo
-from domain.Bill import Bill
+from app.domain.Bill import Bill
 
 class IBill:
     
-    def __init__(self, repo: BillRepo):
+    def __init__(self, repo):
         self.repo = repo
 
     def create(self, values: dict):

@@ -1,6 +1,4 @@
-from db.repos.AreaRepo import AreaRepo
-from domain.Area import Area
-from Configurations.CustomError import CustomError
+from app.Configurations.CustomError import CustomError
 
 class IArea:
     """
@@ -8,7 +6,7 @@ class IArea:
     and the repository layer for managing areas in the system.
     """
 
-    def __init__(self, repo: AreaRepo):
+    def __init__(self, repo):
         """
         Initialize the IArea service with the provided Area repository.
         :param repo: The Area repository that handles data persistence.

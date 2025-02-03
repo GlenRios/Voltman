@@ -15,7 +15,11 @@ class ConfigApp:
     
     # Token expiration times
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)  # Access token expires in 1 hour
-    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=7)  # Refresh token expires in 7 days
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(days=7)  # Refresh token expires in 7 day
+    
+    SQLALCHEMY_DATABASE_URI = "sqlite:///app/tests/test.db"  # Ruta a tu BD
+    SQLALCHEMY_TRACK_MODIFICATIONS = False  # Para evitar advertencias de SQLAlchemy
+
     
 # Define the base directory of the project
 BASE_DIR = Path(__file__).parent.parent

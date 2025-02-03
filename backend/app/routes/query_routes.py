@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from Configurations.dependencies import BC as bc, CC as cc, AC as ac, EC as ec, UC as uc
+from app.Configurations.dependencies import BC as bc, CC as cc, AC as ac, EC as ec, UC as uc
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 consult_bp = Blueprint("consult", __name__)

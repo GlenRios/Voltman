@@ -1,8 +1,8 @@
 from flask import Blueprint, Flask, jsonify, request
-from Configurations.dependencies import AC as ac
-from Configurations.CustomError import CustomError
+from app.Configurations.dependencies import AC as ac
+from app.Configurations.CustomError import CustomError
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity
-from auth.permission import branch_management_permission_required
+from app.auth.permission import branch_management_permission_required
 
 
 area_bp = Blueprint("area", __name__)

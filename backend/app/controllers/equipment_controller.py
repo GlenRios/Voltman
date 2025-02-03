@@ -1,12 +1,10 @@
-from Configurations.CustomError import CustomError
-from Use_Cases.Interfaces.IArea import IArea
-from Use_Cases.Interfaces.IEquipment import IEquipment
+from app.Configurations.CustomError import CustomError
 from datetime import datetime
 
 class EquipmentController:
 
     # Initialize the controller with the IEquipment and IArea interfaces
-    def __init__(self, iequipment: IEquipment, iarea: IArea):
+    def __init__(self, iequipment, iarea):
         self.Iequipment = iequipment  # Interface for equipment-related operations
         self.Iarea = iarea  # Interface for area-related operations
 

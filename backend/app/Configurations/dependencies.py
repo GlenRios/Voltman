@@ -1,7 +1,6 @@
-from Configurations.database import SessionLocal
-from db.repos import UserRepo, CompanyRepo, AreaRepo, EquipmentRepo, BillRepo
-from Use_Cases.Interfaces import IUser, ICompany, IArea, IEquipment, IBill
-from controllers import (
+from app.db.repos import UserRepo, CompanyRepo, AreaRepo, EquipmentRepo, BillRepo
+from app.Use_Cases.Interfaces import IUser, ICompany, IArea, IEquipment, IBill
+from app.controllers import (
     user_controller as uc,
     company_controller as cc,
     area_controller as ac,
@@ -9,13 +8,11 @@ from controllers import (
     bill_controller as bc
 )
 
-db= SessionLocal()
-
-company_repo= CompanyRepo.CompanyRepo(db)
-user_repo= UserRepo.UserRepo(db, company_repo)
-area_repo = AreaRepo.AreaRepo(db, company_repo)
-equipment_repo = EquipmentRepo.EquipmentRepo(db, area_repo)
-bill_repo= BillRepo.BillRepo(db, company_repo)
+company_repo= CompanyRepo.CompanyRepo()
+user_repo= UserRepo.UserRepo(company_repo)
+area_repo = AreaRepo.AreaRepo(company_repo)
+equipment_repo = EquipmentRepo.EquipmentRepo(area_repo)
+bill_repo= BillRepo.BillRepo(company_repo)
 
 Icompany= ICompany.ICompany(company_repo)
 Iuser= IUser.IUser(user_repo)

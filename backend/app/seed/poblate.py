@@ -1,5 +1,5 @@
-from tests.Tester import Tester
-from Configurations.dependencies import UC, CC, AC, EC, BC
+from app.tests.Tester import Tester
+from app.Configurations.dependencies import UC, CC, AC, EC, BC
 from datetime import datetime, date, timedelta
 
 def poblate(company: int, users: int, areas: int, equipments: int, registers: int):
@@ -25,7 +25,7 @@ def poblate(company: int, users: int, areas: int, equipments: int, registers: in
     for e in equips: EC.post(e)
 
     for c in list_companies:
-        date= datetime.now().date()- timedelta(days= registers)
+        date= datetime.now().date()- timedelta(days= registers + 1)
         bills= tester.create_bills(registers, date, c)
         BC.post(bills)
 

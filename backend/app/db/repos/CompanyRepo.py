@@ -1,13 +1,13 @@
-from db.models.Company import CompanyModel
-from db.repos.BaseRepo import BaseRepo
-from domain.Company import Company
+from app.db.models.Company import CompanyModel
+from app.db.repos.BaseRepo import BaseRepo
+from app.domain.Company import Company
 
 class CompanyRepo(BaseRepo):
     
     # Initializes the repository by calling the parent constructor
     # and passing the CompanyModel as the model to interact with
-    def __init__(self, db):
-        super().__init__(db, CompanyModel)
+    def __init__(self):
+        super().__init__(CompanyModel)
 
     # Retrieves a company by its name
     def get_byName(self, name: str) -> CompanyModel:

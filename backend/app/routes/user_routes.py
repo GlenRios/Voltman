@@ -1,9 +1,9 @@
 from flask import Blueprint, Flask, jsonify, request
-from Configurations.dependencies import UC as uc
-from Configurations.CustomError import CustomError
-from Configurations import BASE_DIR
+from app.Configurations.dependencies import UC as uc
+from app.Configurations.CustomError import CustomError
+from app.Configurations import BASE_DIR
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity
-from auth.permission import user_management_permission_required
+from app.auth.permission import user_management_permission_required
 
 user_bp = Blueprint("user", __name__)
 

@@ -1,5 +1,3 @@
-from db.repos.CompanyRepo import CompanyRepo
-from domain.Company import Company
 
 class ICompany:
     """
@@ -8,7 +6,7 @@ class ICompany:
     the controller (or API layer) and the repository layer.
     """
 
-    def __init__(self, repo: CompanyRepo):
+    def __init__(self, repo):
         """
         Initialize the service with the provided repository.
         :param repo: The Company repository that handles data persistence.

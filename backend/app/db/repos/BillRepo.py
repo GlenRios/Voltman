@@ -1,18 +1,17 @@
-from db.models.Bill import BillModel
-from db.repos.BaseRepo import BaseRepo
-from domain.Bill import Bill
-from domain.Company import Company
-from db.repos.CompanyRepo import CompanyRepo
+from app.db.models.Bill import BillModel
+from app.db.repos.BaseRepo import BaseRepo
+from app.domain.Bill import Bill
+from app.db.repos.CompanyRepo import CompanyRepo
 from datetime import timedelta, date
-from Configurations.CustomError import CustomError
+from app.Configurations.CustomError import CustomError
 from sqlalchemy import extract
 
 
 class BillRepo(BaseRepo):
     
     # Initializes the BillRepo by inheriting from the BaseRepo and injecting the company_repo for handling company data
-    def __init__(self, db , company_repo: CompanyRepo):
-        super().__init__(db, BillModel)  # Calls the parent constructor with BillModel
+    def __init__(self,company_repo: CompanyRepo):
+        super().__init__(BillModel)  # Calls the parent constructor with BillModel
         self.company_repo = company_repo  # Stores the company repository instance for accessing company-related data
     
     # Calculates the consumption between two dates for a given company
@@ -23,7 +22,9 @@ class BillRepo(BaseRepo):
         start_consumption = self.db.query(BillModel.Reading).filter(BillModel.BillDate == start_date, BillModel.CompanyID == idCompany).first()
         end_consumption = self.db.query(BillModel.Reading).filter(BillModel.BillDate == end_date, BillModel.CompanyID == idCompany).first()
         # Returns the difference in reading, calculating consumption
-        return (end_consumption.Reading if end_consumption else 0) - (start_consumption.Reading if start_consumption else 0)
+        if not end_consumption:
+            raise CustomError("Invalid EndDate", 400)
+        return end_consumption.Reading - (start_consumption.Reading if start_consumption else 0)
     
     
     # Retrieves bills for a given company in a specified date range

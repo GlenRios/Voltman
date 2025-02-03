@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
-from Configurations.dependencies import BC as bc
-from auth.permission import register_consume_permission_required
+from app.Configurations.dependencies import BC as bc
+from app.auth.permission import register_consume_permission_required
 
 
 bill_bp = Blueprint("bill", __name__)

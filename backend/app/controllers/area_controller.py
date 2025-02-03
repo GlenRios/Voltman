@@ -1,10 +1,8 @@
-from Use_Cases.Interfaces.ICompany import ICompany
-from Use_Cases.Interfaces.IArea import IArea
 
 class AreaController:
 
     # Initialize the controller with the IArea and ICompany interfaces for area and company operations
-    def __init__(self, iarea: IArea, icompany: ICompany):
+    def __init__(self, iarea, icompany):
         self.Iarea = iarea  # Interface for area-related operations
         self.Icompany = icompany  # Interface for company-related operations
 

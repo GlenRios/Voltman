@@ -1,7 +1,7 @@
 from functools import wraps
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from Configurations.CustomError import CustomError  
-from Configurations.dependencies import UC as uc
+from app.Configurations.CustomError import CustomError  
+from app.Configurations.dependencies import UC as uc
 
 USER_MANAGEMENT_PERMISSION=[
     'SuperAdmin',

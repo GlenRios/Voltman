@@ -1,10 +1,9 @@
-from Use_Cases.Interfaces.IBill import IBill
-from datetime import datetime, timedelta, date
-from Configurations.CustomError import CustomError
+from datetime import datetime, timedelta
+from app.Configurations.CustomError import CustomError
 
 class BillController():
     # Initialize the controller with the IBill interface
-    def __init__(self, Ibill: IBill):
+    def __init__(self, Ibill):
         self.Ibill = Ibill  # Interface for bill-related operations
 
     # Create new bills from the provided values
@@ -14,8 +13,8 @@ class BillController():
             val['Date'] = datetime.strptime(val['Date'], "%Y-%m-%d").date()
             
             # Ensure the bill date is not in the future
-            if val['Date'] > datetime.now().date():
-                raise CustomError("Invalid date, it is bigger than today's date", 400)
+            if val['Date'] > (datetime.now().date()- timedelta(days= 1)):
+                raise CustomError("Invalid date, it is equal or bigger than today's date", 400)
             
             # Create the bill using the Ibill interface
             self.Ibill.create(val)
@@ -31,8 +30,8 @@ class BillController():
         # Ensure the dates are valid
         if start_date > end_date:
             raise CustomError("Invalid input, EndDate can't be less than StartDate", 400)
-        elif end_date > datetime.now().date():
-            raise CustomError("Invalid date, it is bigger than today's date", 400)
+        elif end_date > (datetime.now().date()- timedelta(days= 2)):
+            raise CustomError("Invalid date, it is equal or bigger than today's date", 400)
         
         # Get the company name from the input
         company = values['Company']
@@ -76,8 +75,8 @@ class BillController():
         date = datetime.strptime(date, "%Y-%m-%d").date()
         
         # Ensure the date is not in the future
-        if date > datetime.now().date():
-            raise CustomError("Invalid date, it is bigger than today's date", 400)
+        if date > (datetime.now().date()-timedelta(days= 2)):
+            raise CustomError("Invalid date, it is equal or bigger than today's date", 400)
         
         # Get the month and year from the date
         month = date.month
@@ -129,8 +128,8 @@ class BillController():
         # Ensure the dates are valid
         if start_date > end_date:
             raise CustomError("Invalid input, EndDate can't be less than StartDate", 400)
-        elif end_date > datetime.now().date():
-            raise CustomError("Invalid date, it is bigger than today's date", 400)
+        elif end_date > (datetime.now().date()- timedelta(days=2)):
+            raise CustomError("Invalid date, it is equal or bigger than today's date", 400)
         
         company= values['Company']
 
@@ -146,19 +145,20 @@ class BillController():
     
     # Compare the consumption before and after a date
     def compare_consumption(self, values: dict):
-        
+        today= datetime.now().date()- timedelta(days=2)
+
         date= datetime.strptime(values['Date'], '%Y-%m-%d').date()
+        if date> today: 
+            raise CustomError("Invalid date, it is equal or bigger than today's date", 400)
+        
         company= values['Name']
         
-        after_date = datetime.now().date()- timedelta(days=1)
+        after_date = datetime.now().date()- timedelta(days=2)
         before_date = date - timedelta(days= (after_date - date).days)
 
         total_before, bills_before, total_after, bills_after= self.Ibill.compare_consumption(company, before_date, date, after_date)
 
         answ={'TotalAfter': total_after, 'TotalBefore': total_before}
-        answ['DataAfter'] = [{"Date": bill.Date, "Value": bill.DailyConsumption} for bill in bills_after]
-        answ['DataBefore'] = [{"Date": bill.Date, "Value": bill.DailyConsumption} for bill in bills_before]
+        answ['DataAfter'] = [{"Date": bill.Date, "Value": bill.Cost/max(1, bill.DailyConsumption)} for bill in bills_after]
+        answ['DataBefore'] = [{"Date": bill.Date, "Value": bill.Cost/max(1, bill.DailyConsumption)} for bill in bills_before]
         return answ
-
-
-

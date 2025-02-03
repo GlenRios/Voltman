@@ -1,12 +1,12 @@
-from db.models.Area import AreaModel
-from db.repos.BaseRepo import BaseRepo
-from domain.Area import Area
+from app.db.models.Area import AreaModel
+from app.db.repos.BaseRepo import BaseRepo
+from app.domain.Area import Area
 
 class AreaRepo(BaseRepo):
     
     # Constructor for AreaRepo class, inherits from BaseRepo and injects company_repo for company data handling
-    def __init__(self, db , company_repo):
-        super().__init__(db, AreaModel)  # Calls the parent constructor to initialize AreaModel
+    def __init__(self, company_repo):
+        super().__init__(AreaModel)  # Calls the parent constructor to initialize AreaModel
         self.company_repo = company_repo  # Stores the company repository instance for accessing company data
     
     # Retrieves an AreaModel instance by area name and company name

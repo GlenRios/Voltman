@@ -8,12 +8,14 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 sys.path.append(str(Path(__file__).parent.parent))
-from Configurations.db_configuration import TEST_DB_URL as ENGINE, Base
 from Use_Cases.Interfaces.IUser import IUser
 from Use_Cases import liquidate_bill, total_consumption, over_consumption, average_consumption, predict_consumption, compare_consumption
 from db.repos.UserRepo import UserRepo
 from db.repos.CompanyRepo import CompanyRepo
 from db.models.Group import GroupModel
+
+ENGINE = "sqlite:///app/tests/unit_test.db" 
+from Configurations.database import Base
 
 def build_test_db(
         name=ENGINE,

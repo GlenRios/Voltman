@@ -1,14 +1,14 @@
-from db.models.Equipment import EquipmentModel
-from db.repos.BaseRepo import BaseRepo
-from db.repos.AreaRepo import AreaRepo
-from domain.Equipment import Equipment
+from app.db.models.Equipment import EquipmentModel
+from app.db.repos.BaseRepo import BaseRepo
+from app.db.repos.AreaRepo import AreaRepo
+from app.domain.Equipment import Equipment
 import datetime
 
 class EquipmentRepo(BaseRepo):
     
     # Initializes the repository with the database session, the EquipmentModel, and the AreaRepo instance
-    def __init__(self, db, area_repo: AreaRepo):
-        super().__init__(db, EquipmentModel)  # Calls the parent constructor to initialize with EquipmentModel
+    def __init__(self, area_repo: AreaRepo):
+        super().__init__(EquipmentModel)  # Calls the parent constructor to initialize with EquipmentModel
         self.area_repo = area_repo  # Assigns the AreaRepo to access area-related data
     
     # Converts an EquipmentModel instance (from the database) to a domain Equipment instance

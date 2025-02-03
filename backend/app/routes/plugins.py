@@ -1,6 +1,6 @@
 import base64
 import importlib
-from Configurations import BASE_DIR
+from app.Configurations import BASE_DIR
 import sys 
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required

@@ -15,6 +15,8 @@ SessionLocal = scoped_session(sessionmaker(autocommit=False, autoflush=False, bi
 # Definir una Base personalizada para los modelos
 Base = declarative_base()
 
+Base.metadata.bind = engine  
+
 @as_declarative()
 class Base:
     """Automated table name, surrogate pk, and serializing"""

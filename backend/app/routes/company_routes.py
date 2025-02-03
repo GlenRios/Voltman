@@ -1,9 +1,8 @@
 from flask import Blueprint, Flask, jsonify, request
-from Configurations.dependencies import CC as cc, UC as uc
-from Configurations.CustomError import CustomError
-from Configurations import BASE_DIR
+from app.Configurations.dependencies import CC as cc, UC as uc
+from app.Configurations.CustomError import CustomError
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity
-from auth.permission import branch_management_permission_required, branch_edit_formule_permission_required, branch_post_delete_permission_required
+from app.auth.permission import branch_management_permission_required, branch_edit_formule_permission_required, branch_post_delete_permission_required
 
 branch_bp = Blueprint("branch", __name__)
 

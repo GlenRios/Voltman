@@ -1,10 +1,8 @@
-from Configurations.CustomError import CustomError
-from Use_Cases.Interfaces.ICompany import ICompany
 
 class CompanyController:
 
     # Initialize the controller with the ICompany interface for company-related operations
-    def __init__(self, icompany: ICompany):
+    def __init__(self, icompany):
         self.Icompany = icompany  # Interface for company operations
 
     # Get a company by its name

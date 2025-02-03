@@ -1,6 +1,4 @@
-from domain.User import User
-from db.repos.UserRepo import UserRepo
-from Configurations.CustomError import CustomError
+from app.Configurations.CustomError import CustomError
 
 class IUser:
     """
@@ -8,7 +6,7 @@ class IUser:
     It acts as an intermediary between the API layer and the repository layer.
     """
 
-    def __init__(self, repo: UserRepo):
+    def __init__(self, repo):
         """
         Initialize the IUser service with the provided User repository.
         :param repo: The User repository that handles data persistence.
